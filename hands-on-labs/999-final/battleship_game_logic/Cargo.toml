@@ -1,0 +1,7 @@
+[package]
+name = "battleship_game_logic"
+version = "0.1.0"
+authors = ["Rainer <rainer@software-architects.at>"]
+edition = "2018"
+
+[dependencies]
