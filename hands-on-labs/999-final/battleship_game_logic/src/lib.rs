@@ -1,5 +1,9 @@
 pub mod board_content {
-    use std::{fmt, ops::{Index, IndexMut}};
+    use std::{
+        cmp::Ordering,
+        fmt,
+        ops::{Index, IndexMut},
+    };
 
     #[derive(Debug, Copy, Clone, PartialEq)]
     // Read more about Copy and Clone traits at https://doc.rust-lang.org/std/marker/trait.Copy.html
@@ -100,12 +104,12 @@ pub mod board_content {
         type Output = SquareContent;
 
         fn index(&self, ix: usize) -> &Self::Output {
-            if ix >= BOARD_SIZE {
-                panic!("Index out of bounds");
+            // Read more about std::cmp at https://doc.rust-lang.org/std/cmp/enum.Ordering.html
+            match ix.cmp(&BOARD_SIZE) {
                 // Read more about panicing at https://doc.rust-lang.org/rust-by-example/error/panic.html
+                Ordering::Greater | Ordering::Equal => panic!("Index out of bounds"),
+                _ => &self.board_content[ix],
             }
-
-            &self.board_content[ix]
         }
     }
 
