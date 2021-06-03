@@ -1,0 +1,110 @@
+/*
+    Learnings in this module:
+
+    * Create an enum
+    * Generate trait implementations with `derive`
+    * Learn about various important fundamental traits
+    * Basic unit testing
+
+    Recommended readings for this module:
+
+    * `derive` macro: https://doc.rust-lang.org/reference/procedural-macros.html#derive-macros
+    * `Copy` and `Clone` traits: https://doc.rust-lang.org/std/marker/trait.Copy.html
+    * `PartialEq` and `Eq` traits: https://doc.rust-lang.org/std/cmp/trait.PartialEq.html
+    * Enums: https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html
+    * `Default` trait: https://doc.rust-lang.org/std/default/trait.Default.html
+    * Standard prelude (reason why we do not need to import e.g. `Default`): https://doc.rust-lang.org/std/prelude/index.html
+    * `match` keyword at https://doc.rust-lang.org/rust-by-example/flow_control/match.html
+    * `From` and `Into` traits: https://doc.rust-lang.org/rust-by-example/conversion/from_into.html
+    * `panic` macro: https://doc.rust-lang.org/std/macro.panic.html
+    * Unit testing: https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
+*/
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum SquareContent {
+    Water,
+    Ship,
+    HitShip,
+    SunkenShip,
+    Unknown,
+}
+
+impl Default for SquareContent {
+    fn default() -> Self {
+        SquareContent::Unknown
+    }
+}
+
+impl From<u8> for SquareContent {
+    fn from(value: u8) -> Self {
+        match value {
+            0 => SquareContent::Water,
+            1 => SquareContent::Ship,
+            2 => SquareContent::HitShip,
+            3 => SquareContent::SunkenShip,
+            4 => SquareContent::Unknown,
+            v => panic!("Cannot convert {} to square content", v),
+        }
+    }
+}
+
+impl Into<u8> for SquareContent {
+    fn into(self) -> u8 {
+        match self {
+            SquareContent::Water => 0,
+            SquareContent::Ship => 1,
+            SquareContent::HitShip => 2,
+            SquareContent::SunkenShip => 3,
+            SquareContent::Unknown => 4,
+        }
+    }
+}
+
+impl Into<char> for SquareContent {
+    fn into(self) -> char {
+        match self {
+            SquareContent::Water => '🌊',
+            SquareContent::Ship => '🚢',
+            SquareContent::HitShip => '🎯',
+            SquareContent::SunkenShip => '💀',
+            SquareContent::Unknown => '⬜',
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn content_default() {
+        let c: SquareContent = Default::default();
+        assert_eq!(SquareContent::Unknown, c);
+    }
+
+    #[test]
+    fn from() {
+        let c: SquareContent = SquareContent::from(1);
+        assert_eq!(SquareContent::Ship, c);
+    }
+
+    #[test]
+    #[should_panic(expected = "99")]
+    fn from_fails() {
+        SquareContent::from(99);
+    }
+
+    #[test]
+    fn into_u8() {
+        let c = SquareContent::Ship;
+        let v: u8 = c.into();
+        assert_eq!(1, v);
+    }
+
+    #[test]
+    fn into_char() {
+        let c = SquareContent::Ship;
+        let v: char = c.into();
+        assert_eq!('🚢', v);
+    }
+}

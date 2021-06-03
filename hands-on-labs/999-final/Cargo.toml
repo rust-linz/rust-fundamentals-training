@@ -1,4 +1,5 @@
 [workspace]
 members = [
     "battleship_game_logic",
+    "console_game",
 ]
