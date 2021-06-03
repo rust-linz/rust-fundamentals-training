@@ -2,9 +2,14 @@
 //       with the same name as the module. Read more at
 //       https://doc.rust-lang.org/book/ch07-05-separating-modules-into-different-files.html
 mod square_content;
-mod board_content;
+mod simple_board_content;
+mod generic_board_content;
+
+const BOARD_SIDE_LENGTH: usize = 10;
+pub const BOARD_SIZE: usize = BOARD_SIDE_LENGTH * BOARD_SIDE_LENGTH;
 
 // Note: Re-exports the content of the square_content module to keep paths short.
 //       Read more at https://doc.rust-lang.org/reference/items/use-declarations.html#use-visibility
 pub use crate::square_content::*;
-pub use crate::board_content::*;
+pub use crate::simple_board_content::*;
+pub use crate::generic_board_content::*;

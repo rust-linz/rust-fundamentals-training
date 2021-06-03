@@ -63,11 +63,11 @@ impl Into<u8> for SquareContent {
 impl Into<char> for SquareContent {
     fn into(self) -> char {
         match self {
-            SquareContent::Water => '🌊',
-            SquareContent::Ship => '🚢',
-            SquareContent::HitShip => '🎯',
-            SquareContent::SunkenShip => '💀',
-            SquareContent::Unknown => '⬜',
+            SquareContent::Water => '~',
+            SquareContent::Ship => 'S',
+            SquareContent::HitShip => 'h',
+            SquareContent::SunkenShip => 'X',
+            SquareContent::Unknown => ' ',
         }
     }
 }
@@ -105,6 +105,6 @@ mod tests {
     fn into_char() {
         let c = SquareContent::Ship;
         let v: char = c.into();
-        assert_eq!('🚢', v);
+        assert_eq!('S', v);
     }
 }
