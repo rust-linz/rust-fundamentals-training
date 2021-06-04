@@ -183,6 +183,21 @@ for i in 1..=3 {
 ```
 
 
+## Functions
+
+```rust
+fn do_stuff(qty: f64, oz: f64) -> f64 {
+    return qty * oz;
+}
+```
+
+```rust
+fn do_stuff(qty: f64, oz: f64) -> f64 {
+    qty * oz
+}
+```
+
+
 ## Data types
 
 ```rust
