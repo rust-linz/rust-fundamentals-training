@@ -5,7 +5,7 @@ use std::{
     ops::{Index, IndexMut},
 };
 
-use crate::{SquareContent, BOARD_SIDE_LENGTH, BOARD_SIZE};
+use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
 
 /*
     Learnings in this module:
@@ -32,7 +32,7 @@ pub struct GenericBoardContent<T> {
 }
 
 impl<T: Default + Copy> GenericBoardContent<T> {
-    pub fn new() -> GenericBoardContent<T> {
+    pub fn new() -> Self {
         GenericBoardContent::new_initialized(Default::default())
     }
 
@@ -44,6 +44,22 @@ impl<T: Default + Copy> GenericBoardContent<T> {
 
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.board_content.iter()
+    }
+
+    pub fn row(&self, row: usize) -> Row<T> {
+        if row >= BOARD_SIDE_LENGTH {
+            panic!("Index out of bounds");
+        }
+
+        Row::new(self, row)
+    }
+
+    pub fn as_slice(&self) -> &[T] {
+        &self.board_content
+    }
+
+    pub fn rows(&self) -> impl Iterator<Item = Row<T>> {
+        RowsIterator::new(self)
     }
 }
 
@@ -110,19 +126,19 @@ impl<T> IndexMut<usize> for GenericBoardContent<T> {
     }
 }
 
-impl<T: Into<char> + Copy> Into<String> for GenericBoardContent<T> {
+impl<T: Into<char> + Default + Copy> Into<String> for GenericBoardContent<T> {
     fn into(self) -> String {
         fn build_separator(chars: &[char]) -> String {
             let mut result = String::new();
             result.reserve_exact(
                 1 * chars[0].len_utf8()
-                    + 10 * 2 * chars[1].len_utf8()
-                    + 9 * chars[2].len_utf8()
+                    + BOARD_SIDE_LENGTH * 2 * chars[1].len_utf8()
+                    + (BOARD_SIDE_LENGTH - 1) * chars[2].len_utf8()
                     + 1 * chars[3].len_utf8()
                     + 1 * '\n'.len_utf8(),
             );
             result.push(chars[0]);
-            for _ in 0..10 - 1 {
+            for _ in 0..BOARD_SIDE_LENGTH - 1 {
                 result.push(chars[1]);
                 result.push(chars[1]);
                 result.push(chars[2]);
@@ -144,21 +160,21 @@ impl<T: Into<char> + Copy> Into<String> for GenericBoardContent<T> {
         let mut result = String::new();
         result.reserve_exact(
             top.len()
-                + middle.len() * 9
+                + middle.len() * (BOARD_SIDE_LENGTH - 1)
                 + bottom.len()
                 + (2 * '┃'.len_utf8()
-                    + 9 * '|'.len_utf8()
-                    + 10 * 2 * ' '.len_utf8()
+                    + (BOARD_SIDE_LENGTH - 1) * '|'.len_utf8()
+                    + BOARD_SIDE_LENGTH * 2 * ' '.len_utf8()
                     + '\n'.len_utf8())
-                    * 10,
+                    * BOARD_SIDE_LENGTH,
         );
 
         result.push_str(&top);
 
-        for row in 0..10 {
+        for row in self.rows() {
             result.push('┃');
-            for col in 0..10 {
-                let char = self[row * BOARD_SIDE_LENGTH + col].into();
+            for col in 0..BOARD_SIDE_LENGTH {
+                let char = row[col].into();
                 result.push(char);
                 result.push(char);
                 if col < 9 {
@@ -168,7 +184,7 @@ impl<T: Into<char> + Copy> Into<String> for GenericBoardContent<T> {
 
             result.push('┃');
             result.push('\n');
-            if row < 9 {
+            if row.row_index < 9 {
                 result.push_str(&middle);
             }
         }
@@ -242,5 +258,18 @@ mod tests {
         let square_content = SquareContent::Ship;
         b[99] = square_content;
         assert_eq!(square_content, b[99]);
+    }
+
+    #[test]
+    fn slice_data() {
+        let b = BattleshipBoardContent::new();
+        let bs = b.as_slice();
+        assert_eq!(bs.len(), BOARD_SIZE);
+    }
+
+    #[test]
+    fn into_string() {
+        let b = BattleshipBoardContent::new();
+        let _: String = b.into();
     }
 }
