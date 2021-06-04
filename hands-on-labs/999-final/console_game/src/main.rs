@@ -8,5 +8,5 @@ fn main() {
     board[0] = SquareContent::Ship;
     board[1] = SquareContent::HitShip;
 
-    println!("{}", Into::<String>::into(board));
+    println!("{}", board);
 }

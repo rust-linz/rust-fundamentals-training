@@ -22,6 +22,7 @@ use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
     * `Display` trait: https://doc.rust-lang.org/std/fmt/trait.Display.html
     * `TryFrom` and `TryInto` traits: https://doc.rust-lang.org/rust-by-example/conversion/try_from_try_into.html
     * `impl` trait: https://doc.rust-lang.org/rust-by-example/trait/impl_trait.html
+    * `debug_assert` marco: https://doc.rust-lang.org/std/macro.debug_assert.html
 */
 
 pub type BattleshipBoardContent = GenericBoardContent<SquareContent>;
@@ -43,6 +44,8 @@ impl<T: Default + Copy> GenericBoardContent<T> {
     }
 
     pub fn into_iter(&self) -> impl Iterator<Item = T> {
+        // See https://github.com/rust-lang/rust/pull/65819
+        // for more about IntoIterator impl for arrays.
         core::array::IntoIter::new(self.board_content)
     }
 
@@ -126,9 +129,11 @@ impl<T> IndexMut<usize> for GenericBoardContent<T> {
     }
 }
 
-impl<T: Into<char> + Default + Copy> Into<String> for GenericBoardContent<T> {
-    fn into(self) -> String {
+impl<T: Default + Copy + Into<char>> fmt::Display for GenericBoardContent<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         fn build_separator(chars: &[char]) -> String {
+            debug_assert!(chars.len() == 4);
+
             let mut result = String::new();
             result.reserve_exact(
                 1 * chars[0].len_utf8()
@@ -191,7 +196,7 @@ impl<T: Into<char> + Default + Copy> Into<String> for GenericBoardContent<T> {
 
         result.push_str(&bottom);
 
-        result
+        write!(f, "{}", result)
     }
 }
 
@@ -270,6 +275,6 @@ mod tests {
     #[test]
     fn into_string() {
         let b = BattleshipBoardContent::new();
-        let _: String = b.into();
+        format!("{}", b);
     }
 }
