@@ -42,8 +42,8 @@ impl<T: Default + Copy> GenericBoardContent<T> {
         }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &T> {
-        self.board_content.iter()
+    pub fn into_iter(&self) -> impl Iterator<Item = T> {
+        core::array::IntoIter::new(self.board_content)
     }
 
     pub fn row(&self, row: usize) -> Row<T> {
@@ -204,16 +204,16 @@ mod tests {
     #[test]
     fn new() {
         let b = BattleshipBoardContent::new();
-        assert_eq!(b.iter().count(), 100);
-        assert!(b.iter().all(|v| *v == Default::default()));
+        assert_eq!(b.into_iter().count(), 100);
+        assert!(b.into_iter().all(|v| v == Default::default()));
     }
 
     #[test]
     fn new_initialized() {
         let square_content = SquareContent::Ship;
         let b = BattleshipBoardContent::new_initialized(square_content);
-        assert_eq!(b.iter().count(), 100);
-        assert!(b.iter().all(|v| *v == square_content));
+        assert_eq!(b.into_iter().count(), 100);
+        assert!(b.into_iter().all(|v| v == square_content));
     }
 
     #[test]
@@ -221,8 +221,8 @@ mod tests {
         let square_content = SquareContent::Ship;
         let content: &[u8] = &[square_content.into(); BOARD_SIZE];
         let board = BattleshipBoardContent::try_from(content).unwrap();
-        assert_eq!(board.iter().count(), 100);
-        assert!(board.iter().all(|v| *v == square_content));
+        assert_eq!(board.into_iter().count(), 100);
+        assert!(board.into_iter().all(|v| v == square_content));
     }
 
     #[test]
