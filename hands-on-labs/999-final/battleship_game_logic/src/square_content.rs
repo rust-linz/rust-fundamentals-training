@@ -60,9 +60,9 @@ impl Into<u8> for SquareContent {
     }
 }
 
-impl Into<char> for SquareContent {
-    fn into(self) -> char {
-        match self {
+impl From<SquareContent> for char {
+    fn from(value: SquareContent) -> Self {
+        match value {
             SquareContent::Water => '~',
             SquareContent::Ship => 'S',
             SquareContent::HitShip => 'h',
@@ -105,6 +105,9 @@ mod tests {
     fn into_char() {
         let c = SquareContent::Ship;
         let v: char = c.into();
+        assert_eq!('S', v);
+
+        let v: char = char::from(SquareContent::Ship);
         assert_eq!('S', v);
     }
 }
