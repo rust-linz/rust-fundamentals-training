@@ -5,13 +5,13 @@
 
 ```rust[2,3|5|7,8]
 fn main() { // Entry point for Rust apps
-  let a_number = 10; // inferred tye
-  let a_boolean = true;
+    let a_number = 10; // inferred tye
+    let a_boolean = true;
 
-  let another_number: u16 = 11; // annotated type
+    let another_number: u16 = 11; // annotated type
 
-  println!("The number is {}.", a_number);
-  println!("The boolean is {}.", a_boolean);
+    println!("The number is {}.", a_number);
+    println!("The boolean is {}.", a_boolean);
 }
 ```
 
@@ -55,6 +55,132 @@ let number = number * 2;
 
 
 ## Scope
+
+- Variables are block-scoped
+
+```rust
+let main() {
+    let x = 5;
+    {
+        let y = 99;
+        println!("{}, {}", x, y);
+    }
+    println!("{}, {}", x, y); // 💥 Error!
+}
+```
+
+
+- Values are dropped the moment they go out of scope
+
+```rust
+let main() {
+    let x = 5;
+    {
+        let x = 99;
+        println!("{}", x); // 99
+    }
+    println!("{}", x); // 5
+}
+```
+
+
+## If expressions
+
+- There are no statements, just expressions
+
+```rust
+if num == 5 {
+    msg = "five";
+}
+```
+
+
+```rust
+if num == 5 {
+    msg = "five";
+} else if num == 4 {
+    msg = "four";
+} else {
+    msg = "other";
+}
+```
+
+
+```rust
+let msg = if num == 5 {
+   "five"
+} else if num == 4 {
+   "four"
+} else {
+   "other"
+};
+```
+
+- Dropping the semicolon returns the value
+- No `return`, as `return` exits a function
+- Semicolon at the end of the entire expression to terminate the statement
+- Braces are not optional
+
+
+## Unconditional Loops
+
+```rust
+// Unconditional loops
+loop {
+    break;
+}
+```
+
+```rust
+'bob: loop {
+    loop {
+        loop {
+            break 'bob;
+        }
+    }
+}
+```
+
+```rust
+'bob: loop {
+    loop {
+        loop {
+            continue 'bob;
+        }
+    }
+}
+```
+
+
+## Conditional loops
+
+
+```rust
+while some_condition() {
+    // do stuff
+}
+```
+
+
+## For loops 
+
+```rust
+for i in [1,2,3].iter() {
+    println!("{}", i);
+}
+```
+
+```rust
+for i in 1..4 {
+    println!("{}", i);
+}
+```
+
+```rust
+for i in 1..=3 {
+    println!("{}", i);
+}
+```
 
 
 ## Data types
@@ -135,9 +261,6 @@ fn main() {
 ```
 
 
-## Structs and Enums
-
-
 ## Char
 
 `char` represent a single unicode scalar type!
@@ -148,6 +271,7 @@ let ferris = '🦀';
 ```
 
 They're pretty useless. Strings are UTF-8, characters are not. So they're not used internally.
+
 
 ## Strings
 
@@ -185,3 +309,29 @@ let msg = String::from("Hello World");
 - Both are valid UTF-8
 - Strings can't be indexed by character positions
 
+
+## Tuple
+
+```rust[1,2,3|5,6]
+let address = (String::from("127.0.0.1"), 8080); // : (String, i32)
+let ip = address.0;
+let port = address.1;
+
+// Destructuring
+let (ip, port) = address;
+```
+
+- Maximum arity is 12
+- Different types in a tuple
+
+
+## Array
+
+```rust
+let ip = [127, 0, 0, 1]; //[i32; 4]
+let buf = [0; 4];
+
+let first = ip[0];
+```
+
+- Arrays are of fixed size
