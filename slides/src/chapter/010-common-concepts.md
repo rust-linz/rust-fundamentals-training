@@ -197,6 +197,8 @@ fn do_stuff(qty: f64, oz: f64) -> f64 {
 }
 ```
 
+- Functions have a fixed argument list
+
 
 ## Data types
 
