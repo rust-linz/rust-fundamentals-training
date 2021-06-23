@@ -5,6 +5,7 @@ mod square_content;
 mod simple_board_content;
 mod generic_board_content;
 mod row;
+mod board_index;
 
 const BOARD_SIDE_LENGTH: usize = 10;
 pub const BOARD_SIZE: usize = BOARD_SIDE_LENGTH * BOARD_SIDE_LENGTH;
@@ -15,3 +16,4 @@ pub use crate::square_content::*;
 pub use crate::simple_board_content::*;
 pub use crate::generic_board_content::*;
 pub use crate::row::*;
+pub use crate::board_index::*;
