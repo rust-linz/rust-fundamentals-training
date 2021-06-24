@@ -29,69 +29,115 @@ impl BoardIndex {
         BoardIndex(row * 10 + col)
     }
 
-    pub fn try_parse(location: &str) -> Result<BoardIndex, &'static str> {
-        // Discuss difference between location.chars() and location.len()
-        if location.len() != 2 {
+    pub fn from_str(location: &str) -> Result<BoardIndex, &'static str> {
+        let location = location.as_bytes(); // Note shadowing
+
+        // Check if length of location is ok (A1..J10).
+        // Discuss difference between location.chars().count() and location.len()
+        if !matches!(location.len(), 2..=3) {
             return Err("Invalid length");
         }
 
-        let col = match location.chars().nth(0) {
-            // Check experimental `if let` syntax
-            Some(c) if matches!(c, 'A'..='J') => c as usize - 'A' as usize,
+        // Parse column letter (A..J, a..j)
+        let col = match location[0] {
+            r if matches!(r, b'A'..=b'J') => (r - b'A') as usize, // Check experimental `if let` syntax
+            r if matches!(r, b'a'..=b'j') => (r - b'a') as usize,
             _ => return Err("Invalid column"),
         };
 
-        let row = match location.chars().nth(1) {
-            Some(c) if matches!(c, '0'..='9') => c as usize - '0' as usize,
-            _ => return Err("Invalid column"),
-        };
+        // Parse the row letter(s) (1..10)
+        let row: usize; // Note: No mut here
+        if location.len() == 3 {
+            if location[1..] != [b'1', b'0'] { // Note slice pattern
+                return Err("Invalid row");
+            }
+
+            row = 9;
+        }
+        else {
+            row = match location[1] {
+                c if matches!(c, b'1'..=b'9') => (c - b'1') as usize,
+                _ => return Err("Invalid row"),
+            };
+        }
 
         Ok(BoardIndex::from_row_col(col, row))
     }
 }
 
+impl Into<usize> for BoardIndex {
+    fn into(self) -> usize {
+        self.0
+    }
+}
+
 #[cfg(test)]
 mod tests {
-     use super::*;
+    use super::*;
 
-     #[test]
-     fn new() {
-         BoardIndex::new();
-     }
+    #[test]
+    fn new() {
+        let ix = BoardIndex::new();
+        assert_eq!(0usize, ix.into());
+    }
 
-     #[test]
-     fn from_index() {
-        let ix = BoardIndex::from_index(0);
-        assert_eq!(ix, BoardIndex::new());
-     }
+    #[test]
+    fn from_index() {
+        let ix = BoardIndex::from_index(10);
+        assert_eq!(10usize, ix.into());
+    }
 
-     #[test]
-     fn from_row_col() {
-        let ix = BoardIndex::from_row_col(0, 0);
-        assert_eq!(ix, BoardIndex::new());
-     }
+    #[test]
+    #[should_panic]
+    fn from_index_out_of_bounds() {
+        BoardIndex::from_index(100);
+    }
 
-     #[test]
-     fn try_parse() {
-        let ix = BoardIndex::try_parse("A0").unwrap();
-        assert_eq!(ix, BoardIndex::new());
-     }
+    #[test]
+    fn from_row_col() {
+        let ix = BoardIndex::from_row_col(0, 1);
+        assert_eq!(10usize, ix.into());
+    }
 
-     #[test]
-     fn try_parse_invalid_col() {
-        let ix = BoardIndex::try_parse("K0");
-        assert!(ix.is_err());
-     }
+    #[test]
+    #[should_panic]
+    fn from_row_col_row_out_of_bounds() {
+        BoardIndex::from_row_col(0, 10);
+    }
 
-     #[test]
-     fn try_parse_invalid_row() {
-        let ix = BoardIndex::try_parse("KA");
-        assert!(ix.is_err());
-     }
+    #[test]
+    #[should_panic]
+    fn from_row_col_col_out_of_bounds() {
+        BoardIndex::from_row_col(10, 0);
+    }
 
-     #[test]
-     fn try_parse_invalid_length() {
-        let ix = BoardIndex::try_parse("A");
-        assert!(ix.is_err());
-     }
+    #[test]
+    fn try_parse_lowest() {
+        let ix = BoardIndex::from_str("A1").unwrap();
+        assert_eq!(0usize, ix.into());
+    }
+
+    #[test]
+    fn try_parse_highest() {
+        let ix = BoardIndex::from_str("J10").unwrap();
+        assert_eq!(99usize, ix.into());
+    }
+
+    #[test]
+    fn try_parse_lowercase() {
+        let ix = BoardIndex::from_str("a1").unwrap();
+        assert_eq!(0usize, ix.into());
+    }
+
+    #[test]
+    fn try_parse_errors() {
+        assert!(BoardIndex::from_str("B01").is_err()); // leading zero
+        assert!(BoardIndex::from_str("B11").is_err()); // too high column
+        assert!(BoardIndex::from_str("B0").is_err()); // too low column
+        assert!(BoardIndex::from_str("B").is_err()); // missing column
+        assert!(BoardIndex::from_str("9").is_err()); // missing row
+        assert!(BoardIndex::from_str("J1A").is_err()); // Invalid length
+        assert!(BoardIndex::from_str("AA10").is_err()); // Invalid length
+        assert!(BoardIndex::from_str("99").is_err()); // missing row
+    }
 }
