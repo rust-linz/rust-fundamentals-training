@@ -1,0 +1,49 @@
+{
+	"1-fun-variabl-fn": {
+		"prefix": "rs",
+		"body": [
+			"fn add(i: i32, j: i32) -> i32 {",
+			"    i + j",
+			"}",
+			"",
+			"fn main() {",
+			"}",
+			""
+		],
+		"description": "add function for this example"
+	},
+	"2-annotation-inference": {
+		"prefix": "rs",
+		"body": [
+			"let a = 32;",
+			"    let b: i32 = 64;",
+			"    let c = add(a, b);",
+			"",
+			"    println!(\"{}\", c);"
+		],
+		"description": ""
+	},
+	"3-shadowing-suffix": {
+		"prefix": "rs",
+		"body": [
+			"let d = 0i32;",
+			"    let c = a + d;",
+			"",
+			"    println!(\"{}\", c);",
+			""
+		],
+		"description": ""
+	},
+	"4-mutability": {
+		"prefix": "rs",
+		"body": [
+			"let mut c = b + d;",
+			"    c += a;",
+			"",
+			"    println!(\"{}\", c);"
+		],
+		"description": ""
+	}
+}
+
+  
