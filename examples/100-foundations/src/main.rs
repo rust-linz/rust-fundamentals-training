@@ -1,3 +1,5 @@
+use rand::Rng;
+
 fn add(i: i32, j: i32) -> i32 {
     i + j
 }
@@ -18,4 +20,14 @@ fn main() {
     c += a;
 
     println!("{}", c);
+
+    let num = rand::thread_rng().gen_range(0..10);
+
+    let msg = match num {
+        5 => "So close",
+        _n if _n < 6 => "Win!",
+        _ => "Lost! :-(",
+    };
+
+    println!("Draw {}, {}", num, msg);
 }

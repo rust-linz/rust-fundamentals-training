@@ -43,6 +43,48 @@
 			"    println!(\"{}\", c);"
 		],
 		"description": ""
+	},
+	"5-control-flow": {
+		"prefix": "rs",
+		"body": [
+			"    let num = rand::thread_rng().gen_range(0..10);",
+			"",
+			"    if num > 5 {",
+			"        println!(\"Win!\");",
+			"    } else if num == 5 {",
+			"        println!(\"So close!\");",
+			"    } else {",
+			"        println!(\"Lost :-(\");",
+			"    }"
+		],
+		"description": ""
+	},
+	"6-controlo-flow-2": {
+		"prefix": "rs",
+		"body": [
+			"",
+			"    let msg = if num > 5 {",
+			"        \"Win!\"",
+			"    } else if num == 5 {",
+			"        \"So close!\"",
+			"    } else {",
+			"        \"Lost :-(\"",
+			"    };"
+		],
+		"description": ""
+	},
+	"7-match-statement": {
+		"prefix": "rs",
+		"body": [
+			"    let msg = match num {",
+			"        5 => \"So close\",",
+			"        _n if _n < 6 => \"Win!\",",
+			"        _ => \"Lost! :-(\",",
+			"    };",
+			"",
+			"    println!(\"Draw {}, {}\", num, msg);"
+		],
+		"description": ""
 	}
 }
 
