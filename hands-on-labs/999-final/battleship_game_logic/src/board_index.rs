@@ -1,9 +1,6 @@
-use std::{
-    fmt::Display,
-    ops::{Add, Sub},
-};
+use std::{fmt::Display, ops::{Add, Index, IndexMut, Sub}};
 
-use crate::BOARD_SIDE_LENGTH;
+use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
 
 /*
     Learnings in this module:
@@ -57,6 +54,10 @@ impl BoardIndex {
     }
 
     pub fn try_from_str<T: AsRef<str>>(location: T) -> Result<BoardIndex, &'static str> {
+        // Note that we could implement the TryFrom trait. However, that would
+        // conflict with the implementation of the From trait. For details see
+        // https://github.com/rust-lang/rust/issues/50133
+
         let location = location.as_ref().as_bytes(); // Note shadowing
 
         // Check if length of location is ok (A1..J10).
@@ -153,8 +154,24 @@ impl Sub<usize> for BoardIndex {
     }
 }
 
+impl<T> Index<BoardIndex> for GenericBoardContent<T> {
+    type Output = T;
+
+    fn index(&self, ix: BoardIndex) -> &Self::Output {
+        &self[Into::<usize>::into(ix)]
+    }
+}
+
+impl<T> IndexMut<BoardIndex> for GenericBoardContent<T> {
+    fn index_mut(&mut self, ix: BoardIndex) -> &mut Self::Output {
+        &mut self[Into::<usize>::into(ix)]
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::{BattleshipBoardContent, SquareContent};
+
     use super::*;
     use rstest::rstest;
 
@@ -300,5 +317,13 @@ mod tests {
     #[should_panic]
     fn sub_overflow() {
         let _ = BoardIndex::from_index(0) - 1;
+    }
+
+    #[test]
+    fn index_board() {
+        let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
+        let ix = BoardIndex::new();
+        board[ix] = SquareContent::HitShip; // index mut
+        assert_eq!(SquareContent::HitShip, board[ix]); // index
     }
 }
