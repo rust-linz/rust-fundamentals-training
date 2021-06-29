@@ -5,3 +5,4 @@ authors = ["Rainer <rainer@software-architects.at>"]
 edition = "2018"
 
 [dependencies]
+rstest = "^0.10.0"
