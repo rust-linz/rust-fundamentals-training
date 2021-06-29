@@ -6,7 +6,12 @@ mod simple_board_content;
 mod generic_board_content;
 mod row;
 mod board_index;
+mod fillable_board;
 
+// Note use of consts here. This has been done for demo purposes only.
+// The algorithms in this package are NOT capable of handling
+// a board side length other than 10. Such a feature would make 
+// algorithms more compilicated -> out of scope of the workshop.
 const BOARD_SIDE_LENGTH: usize = 10;
 pub const BOARD_SIZE: usize = BOARD_SIDE_LENGTH * BOARD_SIDE_LENGTH;
 
@@ -17,3 +22,4 @@ pub use crate::simple_board_content::*;
 pub use crate::generic_board_content::*;
 pub use crate::row::*;
 pub use crate::board_index::*;
+pub use crate::fillable_board::*;
