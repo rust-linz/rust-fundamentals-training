@@ -14,9 +14,9 @@ pub trait PlacementCheck {
     fn can_place_ship(&self, ix: BoardIndex) -> bool;
 }
 
-impl PlacementCheck for dyn Index<usize, Output = SquareContent> {
+impl PlacementCheck for dyn Index<BoardIndex, Output = SquareContent> {
     fn can_place_ship(&self, ix: BoardIndex) -> bool {
-        self[ix.into()] == SquareContent::Water
+        self[ix] == SquareContent::Water
     }
 }
 
