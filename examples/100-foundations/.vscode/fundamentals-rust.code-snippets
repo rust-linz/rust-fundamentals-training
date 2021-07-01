@@ -125,5 +125,19 @@
 			""
 		],
 		"description": "8-final"
+	},
+	"21-vec": {
+		"prefix": "rs",
+		"body": [
+			"fn main() {",
+			"    let mut vecc = vec![1, 2, 3, 4];",
+			"",
+			"    let mut vecc_collected: Vec<i32> = (1..5).collect();",
+			"",
+			"    // Turbofish, push, access",
+			"}",
+			""
+		],
+		"description": "21-vec"
 	}
 }

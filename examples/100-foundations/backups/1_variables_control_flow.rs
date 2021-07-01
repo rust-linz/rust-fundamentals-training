@@ -30,4 +30,5 @@ fn main() {
     };
 
     println!("Draw {}, {}", num, msg);
+    // Maybe show freezing and block scopes
 }
