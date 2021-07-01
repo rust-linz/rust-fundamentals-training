@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 rstest = "^0.10.0"
 mockall = "^0.10.0"
+rand = "^0.8.0"

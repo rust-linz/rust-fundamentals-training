@@ -23,6 +23,7 @@ use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
     * `TryFrom` and `TryInto` traits: https://doc.rust-lang.org/rust-by-example/conversion/try_from_try_into.html
     * `impl` trait: https://doc.rust-lang.org/rust-by-example/trait/impl_trait.html
     * `debug_assert` marco: https://doc.rust-lang.org/std/macro.debug_assert.html
+    * Unit struct: https://doc.rust-lang.org/rust-by-example/custom_types/structs.html
 */
 
 pub type BattleshipBoardContent = GenericBoardContent<SquareContent>;
@@ -67,7 +68,7 @@ impl<T: Default + Copy> GenericBoardContent<T> {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct InvalidBoardSize;
+pub struct InvalidBoardSize; // Note unit struct (field-less struct)
 
 impl fmt::Display for InvalidBoardSize {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

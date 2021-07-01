@@ -7,6 +7,7 @@ mod generic_board_content;
 mod row;
 mod board_index;
 mod fillable_board;
+mod board_filler;
 
 // Note use of consts here. This has been done for demo purposes only.
 // The algorithms in this package are NOT capable of handling
@@ -23,3 +24,4 @@ pub use crate::generic_board_content::*;
 pub use crate::row::*;
 pub use crate::board_index::*;
 pub use crate::fillable_board::*;
+pub use crate::board_filler::*;
