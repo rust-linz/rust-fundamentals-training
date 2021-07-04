@@ -10,6 +10,7 @@ use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
     * Writing functions for converting types (into, from)
     * String handling fundamentals
     * Writing unit tests (including data-driven tests with rstest)
+    * Match guards
 
     Recommended readings for this module:
 
@@ -17,10 +18,17 @@ use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
     * Strings: https://doc.rust-lang.org/rust-by-example/std/str.html
     * Operator overloading: https://doc.rust-lang.org/std/ops/index.html
     * rstest crate: https://docs.rs/rstest/0.10.0/rstest/index.html
+    * Match guards: https://doc.rust-lang.org/reference/expressions/match-expr.html#match-guards
 */
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Default)]
 pub struct BoardIndex(usize);
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum Direction {
+    Horizontal,
+    Vertical,
+}
 
 impl BoardIndex {
     pub fn new() -> BoardIndex {
@@ -98,6 +106,22 @@ impl BoardIndex {
 
     pub fn row(&self) -> usize {
         self.0 / BOARD_SIDE_LENGTH
+    }
+
+    pub fn try_next(&self, direction: Direction) -> Option<BoardIndex> {
+        match direction {
+            Direction::Horizontal if self.column() < 9 => Some(BoardIndex::from_index(self.0 + 1)),
+            Direction::Vertical if self.row() < 9 => Some(BoardIndex::from_index(self.0 + 10)),
+            _ => None
+        }
+    }
+
+    pub fn try_previous(&self, direction: Direction) -> Option<BoardIndex> {
+        match direction {
+            Direction::Horizontal if self.column() > 0 => Some(BoardIndex::from_index(self.0 - 1)),
+            Direction::Vertical if self.row() > 0 => Some(BoardIndex::from_index(self.0 - 10)),
+            _ => None
+        }
     }
 }
 
@@ -325,5 +349,23 @@ mod tests {
         let ix = BoardIndex::new();
         board[ix] = SquareContent::HitShip; // index mut
         assert_eq!(SquareContent::HitShip, board[ix]); // index
+    }
+
+    #[rstest]
+    #[case(BoardIndex::from_index(0), Direction::Horizontal, Some(BoardIndex::from_index(1)))]
+    #[case(BoardIndex::from_index(0), Direction::Vertical, Some(BoardIndex::from_index(10)))]
+    #[case(BoardIndex::from_index(9), Direction::Horizontal, None)]
+    #[case(BoardIndex::from_col_row(0, 9), Direction::Vertical, None)]
+    fn try_get_next(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
+        assert_eq!(expected_ix, ix.try_next(direction));
+    }
+
+    #[rstest]
+    #[case(BoardIndex::from_index(1), Direction::Horizontal, Some(BoardIndex::from_index(0)))]
+    #[case(BoardIndex::from_col_row(0, 1), Direction::Vertical, Some(BoardIndex::from_index(0)))]
+    #[case(BoardIndex::from_index(0), Direction::Horizontal, None)]
+    #[case(BoardIndex::from_col_row(9, 0), Direction::Vertical, None)]
+    fn try_get_prev(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
+        assert_eq!(expected_ix, ix.try_previous(direction));
     }
 }

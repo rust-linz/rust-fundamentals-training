@@ -1,69 +1,94 @@
-use crate::{BoardIndex, Direction, FillableBoard};
+use crate::{BoardIndex, Direction, ShipSetter};
 
-pub fn fill_random(ship_lengths: &[usize], board: &dyn FillableBoard) {
-    for ship in ship_lengths {
-        place_ship(ship, board);
-    }
+/*
+    Learnings in this module:
+
+    * Working with random numbers
+    * Mocking of external traits
+
+    Recommended readings for this module:
+
+    * Function pointer types: https://doc.rust-lang.org/reference/types/function-pointer.html
+    * rand crate: https://crates.io/crates/rand
+    * Mockall - mocking external traits: https://docs.rs/mockall/0.10.1/mockall/#external-traits
+    * Mockall - call counting: https://docs.rs/mockall/0.10.1/mockall/#callcounts
+*/
+
+pub trait BoardFiller {
+    fn place_ship(&mut self, ship: &usize);
+    fn fill_random(&mut self, ship_lengths: &[usize]);
 }
 
-fn place_ship(ship: &usize, board: &dyn FillableBoard) {
-    for _ in 0..1000 {
-        let direction: Direction;
-        let col: usize;
-        let row: usize;
-        match rand::random::<usize>() % 2 == 0 {
-            true => {
-                direction = Direction::Horizontal;
-                col = rand::random::<usize>() % (9 - ship);
-                row = rand::random::<usize>() % 9;
-            }
-            false => {
-    
-            direction = Direction::Vertical;
-                col = rand::random::<usize>() % 9;
-                row = rand::random::<usize>() % (9 - ship);
-            }
-        };
-
-        if board.try_place_ship(BoardIndex::from_col_row(col, row), *ship, direction).unwrap() {
-            return;
+impl<T> BoardFiller for T where T: ShipSetter {
+    fn fill_random(&mut self, ship_lengths: &[usize]) {
+        for ship_length in ship_lengths {
+            self.place_ship(ship_length);
         }
     }
 
-    panic!("Cannot position ships, board is too occupied.");
-}
+    fn place_ship(&mut self, ship: &usize) {
+        for _ in 0..1000 {
+            let direction: Direction;
+            let col: usize;
+            let row: usize;
+            match rand::random::<usize>() % 2 == 0 {
+                true => {
+                    direction = Direction::Horizontal;
+                    col = rand::random::<usize>() % (10 - ship);
+                    row = rand::random::<usize>() % 10;
+                }
+                false => {
+        
+                direction = Direction::Vertical;
+                    col = rand::random::<usize>() % 10;
+                    row = rand::random::<usize>() % (10 - ship);
+                }
+            };
 
+            if self.try_place_ship(BoardIndex::from_col_row(col, row), *ship, direction).unwrap() {
+                return;
+            }
+        }
+
+        panic!("Cannot position ships, board is too occupied.");
+    }
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use mockall::mock;
-    use crate::PlacementError;
+    use crate::{PlacementError};
 
     mock! {
         MyFillableBoard {}
-        impl FillableBoard for MyFillableBoard {
-            fn try_place_ship(
+        impl ShipSetter for MyFillableBoard {
+            fn can_place_ship(
                 &self,
                 ix: BoardIndex,
                 ship_length: usize,
                 direction: Direction,
             ) -> Result<bool, PlacementError>;
-        }
+            fn try_place_ship(
+                &mut self,
+                ix: BoardIndex,
+                ship_length: usize,
+                direction: Direction,
+            ) -> Result<bool, PlacementError>;        }
     }
 
     #[test]
     fn fill() {
         let mut mock = MockMyFillableBoard::new();
         mock.expect_try_place_ship().times(3).return_const(Ok(true));
-        fill_random(&[2, 3, 4], &mock as &dyn FillableBoard);
+        mock.fill_random(&[2, 3, 4]);
     }
 
     #[test]
     #[should_panic]
     fn fill_failure() {
         let mut mock = MockMyFillableBoard::new();
-        mock.expect_try_place_ship().return_const(Ok(false));
-        fill_random(&[2], &mock as &dyn FillableBoard);
+        mock.expect_can_place_ship().return_const(Ok(false));
+        mock.fill_random(&[2]);
     }
 }

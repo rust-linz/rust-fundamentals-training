@@ -9,4 +9,9 @@ fn main() {
     board[1] = SquareContent::HitShip;
 
     println!("{}", board);
+
+    let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
+    board.fill_random(&[5, 4, 3, 3, 2]);
+
+    println!("{}", board);
 }
