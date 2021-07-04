@@ -18,5 +18,19 @@
             ""
         ],
         "description": "22-ownership"
+    },
+    "23-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "fn get_biggest<'a>(n: &'a i32, m: &'a i32) -> &'a i32 {",
+            "    if n > m {",
+            "        n",
+            "    } else {",
+            "        m",
+            "    }",
+            "}",
+            ""
+        ],
+        "description": "23-lifetimes"
     }
 }

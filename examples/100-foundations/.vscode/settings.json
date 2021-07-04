@@ -1,5 +1,10 @@
 {
   "editor.formatOnSave": true,
   "rust-analyzer.checkOnSave.command": "clippy",
-  "rust-analyzer.rustfmt.overrideCommand": ["rustfmt"]
+  "rust-analyzer.rustfmt.overrideCommand": [
+    "rustfmt"
+  ],
+  "rust-analyzer.files.excludeDirs": [
+    "./backups"
+  ]
 }
