@@ -5,6 +5,6 @@
     "rustfmt"
   ],
   "rust-analyzer.files.excludeDirs": [
-    "./backups"
+    "backups"
   ]
 }

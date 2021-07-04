@@ -68,5 +68,42 @@
             ""
         ],
         "description": "27-structs"
+    },
+    "28-structs-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "#[derive(Debug)]",
+            "pub struct HighScores {",
+            "}",
+            "",
+            "",
+            "fn main() {",
+            "    let scores = [10, 30, 90, 30, 100, 20, 10, 0, 30, 40, 40, 70, 70];",
+            "    let high_scores = HighScores::new(&scores);",
+            "}",
+            ""
+        ],
+        "description": "28-structs-lifetimes"
+    },
+    "29-structs-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "    pub fn new(scores: &'a [u32]) -> Self {",
+            "        Self { scores }",
+            "    }",
+            "",
+            "    pub fn scores(&self) -> &'a [u32] {",
+            "        self.scores",
+            "    }",
+            "",
+            "    pub fn latest(&self) -> Option<u32> {",
+            "        self.scores.last().copied()",
+            "    }",
+            "",
+            "    pub fn personal_best(&self) -> Option<u32> {",
+            "        self.scores.iter().max().copied()",
+            "    }"
+        ],
+        "description": "29-structs-lifetimes"
     }
 }
