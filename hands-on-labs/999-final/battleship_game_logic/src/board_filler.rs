@@ -3,6 +3,7 @@ use crate::{BoardIndex, Direction, ShipSetter};
 /*
     Learnings in this module:
 
+    * Function pointer types
     * Working with random numbers
     * Mocking of external traits
 
@@ -14,43 +15,44 @@ use crate::{BoardIndex, Direction, ShipSetter};
     * Mockall - call counting: https://docs.rs/mockall/0.10.1/mockall/#callcounts
 */
 
-pub trait BoardFiller {
-    fn place_ship(&mut self, ship: &usize);
-    fn fill_random(&mut self, ship_lengths: &[usize]);
-}
+pub type ShipPlacer = fn(ship: usize, &mut dyn ShipSetter);
 
-impl<T> BoardFiller for T where T: ShipSetter {
-    fn fill_random(&mut self, ship_lengths: &[usize]) {
-        for ship_length in ship_lengths {
-            self.place_ship(ship_length);
+pub fn random_placer(ship: usize, setter: &mut dyn ShipSetter) {
+    for _ in 0..1000 {
+        let direction: Direction;
+        let col: usize;
+        let row: usize;
+        match rand::random::<usize>() % 2 == 0 {
+            true => {
+                direction = Direction::Horizontal;
+                col = rand::random::<usize>() % (10 - ship);
+                row = rand::random::<usize>() % 10;
+            }
+            false => {
+    
+            direction = Direction::Vertical;
+                col = rand::random::<usize>() % 10;
+                row = rand::random::<usize>() % (10 - ship);
+            }
+        };
+
+        if setter.try_place_ship(BoardIndex::from_col_row(col, row), ship, direction).unwrap() {
+            return;
         }
     }
 
-    fn place_ship(&mut self, ship: &usize) {
-        for _ in 0..1000 {
-            let direction: Direction;
-            let col: usize;
-            let row: usize;
-            match rand::random::<usize>() % 2 == 0 {
-                true => {
-                    direction = Direction::Horizontal;
-                    col = rand::random::<usize>() % (10 - ship);
-                    row = rand::random::<usize>() % 10;
-                }
-                false => {
-        
-                direction = Direction::Vertical;
-                    col = rand::random::<usize>() % 10;
-                    row = rand::random::<usize>() % (10 - ship);
-                }
-            };
+    panic!("Cannot position ships, board is too occupied.");    
+}
 
-            if self.try_place_ship(BoardIndex::from_col_row(col, row), *ship, direction).unwrap() {
-                return;
-            }
+pub trait BoardFiller {
+    fn fill(&mut self, ship_lengths: &[usize], placer: ShipPlacer);
+}
+
+impl<T> BoardFiller for T where T: ShipSetter {
+    fn fill(&mut self, ship_lengths: &[usize], placer: ShipPlacer) {
+        for ship_length in ship_lengths {
+            placer(*ship_length, self);
         }
-
-        panic!("Cannot position ships, board is too occupied.");
     }
 }
 
@@ -58,7 +60,7 @@ impl<T> BoardFiller for T where T: ShipSetter {
 mod tests {
     use super::*;
     use mockall::mock;
-    use crate::{PlacementError};
+    use crate::PlacementError;
 
     mock! {
         MyFillableBoard {}
@@ -81,7 +83,7 @@ mod tests {
     fn fill() {
         let mut mock = MockMyFillableBoard::new();
         mock.expect_try_place_ship().times(3).return_const(Ok(true));
-        mock.fill_random(&[2, 3, 4]);
+        mock.fill(&[2, 3, 4], random_placer);
     }
 
     #[test]
@@ -89,6 +91,6 @@ mod tests {
     fn fill_failure() {
         let mut mock = MockMyFillableBoard::new();
         mock.expect_can_place_ship().return_const(Ok(false));
-        mock.fill_random(&[2]);
+        mock.fill(&[2], random_placer);
     }
 }

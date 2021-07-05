@@ -11,7 +11,7 @@ fn main() {
     println!("{}", board);
 
     let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-    board.fill_random(&[5, 4, 3, 3, 2]);
+    board.fill(&[5, 4, 3, 3, 2], random_placer);
 
     println!("{}", board);
 }
