@@ -14,7 +14,7 @@ use crate::{BoardIndex, Direction};
     * Iterators: https://doc.rust-lang.org/rust-by-example/trait/iter.html
 */
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct BoardIndexRangeInclusive(RangeInclusive<BoardIndex>);
 
 impl BoardIndexRangeInclusive {
