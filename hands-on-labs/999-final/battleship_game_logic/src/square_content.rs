@@ -29,6 +29,15 @@ pub enum SquareContent {
     Unknown,
 }
 
+impl SquareContent {
+    pub fn is_ship(&self) -> bool {
+        match *self {
+            SquareContent::Ship | SquareContent::HitShip | SquareContent::SunkenShip => true,
+            _ => false
+        }
+    }
+}
+
 impl Default for SquareContent {
     fn default() -> Self {
         SquareContent::Unknown

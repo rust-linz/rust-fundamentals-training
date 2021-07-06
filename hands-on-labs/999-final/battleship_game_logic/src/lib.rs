@@ -9,6 +9,8 @@ mod board_index;
 mod fillable_board;
 mod board_filler;
 mod single_player_game;
+mod board_index_range;
+mod ship_finder;
 
 // Note use of consts here. This has been done for demo purposes only.
 // The algorithms in this package are NOT capable of handling
@@ -27,3 +29,5 @@ pub use crate::board_index::*;
 pub use crate::fillable_board::*;
 pub use crate::board_filler::*;
 pub use crate::single_player_game::*;
+pub use crate::board_index_range::*;
+pub use crate::ship_finder::*;

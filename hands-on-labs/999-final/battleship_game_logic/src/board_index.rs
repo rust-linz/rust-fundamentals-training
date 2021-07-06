@@ -21,7 +21,7 @@ use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
     * Match guards: https://doc.rust-lang.org/reference/expressions/match-expr.html#match-guards
 */
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Default)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Default, Ord, PartialOrd)]
 pub struct BoardIndex(usize);
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -122,6 +122,26 @@ impl BoardIndex {
             Direction::Vertical if self.row() > 0 => Some(BoardIndex::from_index(self.0 - 10)),
             _ => None
         }
+    }
+
+    pub fn next_column(&self) -> BoardIndex {
+        if self.column() >= 9 { panic!("Already at last column"); }
+        BoardIndex::from_index(self.0 + 1)
+    }
+
+    pub fn next_row(&self) -> BoardIndex {
+        if self.row() >= 9 { panic!("Already at last row"); }
+        BoardIndex::from_index(self.0 + 10)
+    }
+
+    pub fn previous_column(&self) -> BoardIndex {
+        if self.column() == 0 { panic!("Already at first column"); }
+        BoardIndex::from_index(self.0 - 1)
+    }
+
+    pub fn previous_row(&self) -> BoardIndex {
+        if self.row() == 0 { panic!("Already at first row"); }
+        BoardIndex::from_index(self.0 - 10)
     }
 }
 
@@ -367,5 +387,49 @@ mod tests {
     #[case(BoardIndex::from_col_row(9, 0), Direction::Vertical, None)]
     fn try_get_prev(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
         assert_eq!(expected_ix, ix.try_previous(direction));
+    }
+
+    #[test]
+    #[should_panic]
+    fn next_row_invalid() {
+        BoardIndex::from_str("A10").next_row();
+    }
+
+    #[test]
+    #[should_panic]
+    fn previous_row_invalid() {
+        BoardIndex::from_str("A1").previous_row();
+    }
+
+    #[test]
+    #[should_panic]
+    fn next_column_invalid() {
+        BoardIndex::from_str("J1").next_column();
+    }
+
+    #[test]
+    #[should_panic]
+    fn previous_column_invalid() {
+        BoardIndex::from_str("A1").previous_column();
+    }
+
+    #[test]
+    fn next_row() {
+        assert_eq!(9, BoardIndex::from_str("A9").next_row().row());
+    }
+
+    #[test]
+    fn previous_row() {
+        assert_eq!(8, BoardIndex::from_str("A10").previous_row().row());
+    }
+
+    #[test]
+    fn next_column() {
+        assert_eq!(9, BoardIndex::from_str("I9").next_column().column());
+    }
+
+    #[test]
+    fn previous_column() {
+        assert_eq!(8, BoardIndex::from_str("J9").previous_column().column());
     }
 }
