@@ -31,10 +31,7 @@ pub enum SquareContent {
 
 impl SquareContent {
     pub fn is_ship(&self) -> bool {
-        match *self {
-            SquareContent::Ship | SquareContent::HitShip | SquareContent::SunkenShip => true,
-            _ => false
-        }
+        matches!(*self, SquareContent::Ship | SquareContent::HitShip | SquareContent::SunkenShip)
     }
 }
 
@@ -57,9 +54,9 @@ impl From<u8> for SquareContent {
     }
 }
 
-impl Into<u8> for SquareContent {
-    fn into(self) -> u8 {
-        match self {
+impl From<SquareContent> for u8 {
+    fn from(c: SquareContent) -> Self {
+        match c {
             SquareContent::Water => 0,
             SquareContent::Ship => 1,
             SquareContent::HitShip => 2,
@@ -69,6 +66,8 @@ impl Into<u8> for SquareContent {
     }
 }
 
+// Discuss: Why `From` and not `Into`?
+// See clippy warning docs at https://rust-lang.github.io/rust-clippy/master/index.html#from_over_into
 impl From<SquareContent> for char {
     fn from(value: SquareContent) -> Self {
         match value {

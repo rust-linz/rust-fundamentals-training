@@ -35,6 +35,12 @@ impl SimpleBoardContent {
     }
 }
 
+impl Default for SimpleBoardContent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Index<usize> for SimpleBoardContent {
     type Output = SquareContent;
 

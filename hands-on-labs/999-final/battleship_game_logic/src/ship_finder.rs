@@ -85,6 +85,8 @@ impl<T> ShipFinder for T where T: Index<BoardIndex, Output = SquareContent> {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use crate::{BattleshipBoardContent, ShipSetter};
 
     use super::*;
@@ -93,7 +95,7 @@ mod tests {
     #[test]
     fn find_ship_edge_horizontal_complete() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board.try_place_ship("A1".into(), 3, Direction::Horizontal).unwrap();
+        board.try_place_ship("A1".parse().unwrap(), 3, Direction::Horizontal).unwrap();
 
         let result = find_ship_edge(&board, BoardIndex::from_index(0), Direction::Horizontal, false);
         assert_eq!(BoardIndex::from_index(2), result.0);
@@ -107,7 +109,7 @@ mod tests {
     #[test]
     fn find_ship_edge_vertical_complete() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board.try_place_ship("A1".into(), 3, Direction::Vertical).unwrap();
+        board.try_place_ship("A1".parse().unwrap(), 3, Direction::Vertical).unwrap();
 
         let result = find_ship_edge(&board, BoardIndex::from_index(0), Direction::Vertical, false);
         assert_eq!(BoardIndex::from_index(20), result.0);
@@ -121,61 +123,61 @@ mod tests {
     #[test]
     fn find_ship_edge_horizontal_incomplete() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board.try_place_ship("B2".into(), 3, Direction::Horizontal).unwrap();
-        board[BoardIndex::from_str("D2")] = SquareContent::HitShip;
-        board[BoardIndex::from_str("E2")] = SquareContent::Unknown;
-        board[BoardIndex::from_str("A2")] = SquareContent::Unknown;
+        board.try_place_ship("B2".parse().unwrap(), 3, Direction::Horizontal).unwrap();
+        board[BoardIndex::from_str("D2").unwrap()] = SquareContent::HitShip;
+        board[BoardIndex::from_str("E2").unwrap()] = SquareContent::Unknown;
+        board[BoardIndex::from_str("A2").unwrap()] = SquareContent::Unknown;
 
-        let result = find_ship_edge(&board, BoardIndex::from_str("C2"), Direction::Horizontal, false);
-        assert_eq!(BoardIndex::from_str("D2"), result.0);
+        let result = find_ship_edge(&board, "C2".parse().unwrap(), Direction::Horizontal, false);
+        assert_eq!(result.0, "D2".parse().unwrap());
         assert!(!result.1);
 
-        let result = find_ship_edge(&board, BoardIndex::from_str("C2"), Direction::Horizontal, true);
-        assert_eq!(BoardIndex::from_str("B2"), result.0);
+        let result = find_ship_edge(&board, "C2".parse().unwrap(), Direction::Horizontal, true);
+        assert_eq!(result.0, "B2".parse().unwrap());
         assert!(!result.1);
     }
 
     #[test]
     fn find_ship_edge_vertical_incomplete() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board.try_place_ship("B2".into(), 3, Direction::Vertical).unwrap();
-        board[BoardIndex::from_str("B4")] = SquareContent::HitShip;
-        board[BoardIndex::from_str("B5")] = SquareContent::Unknown;
-        board[BoardIndex::from_str("B1")] = SquareContent::Unknown;
+        board.try_place_ship("B2".parse().unwrap(), 3, Direction::Vertical).unwrap();
+        board[BoardIndex::from_str("B4").unwrap()] = SquareContent::HitShip;
+        board[BoardIndex::from_str("B5").unwrap()] = SquareContent::Unknown;
+        board[BoardIndex::from_str("B1").unwrap()] = SquareContent::Unknown;
 
-        let result = find_ship_edge(&board, BoardIndex::from_str("B3"), Direction::Vertical, false);
-        assert_eq!(BoardIndex::from_str("B4"), result.0);
+        let result = find_ship_edge(&board, "B3".parse().unwrap(), Direction::Vertical, false);
+        assert_eq!(result.0, "B4".parse().unwrap());
         assert!(!result.1);
 
-        let result = find_ship_edge(&board, BoardIndex::from_str("B3"), Direction::Vertical, true);
-        assert_eq!(BoardIndex::from_str("B2"), result.0);
+        let result = find_ship_edge(&board, "B3".parse().unwrap(), Direction::Vertical, true);
+        assert_eq!(result.0, "B2".parse().unwrap());
         assert!(!result.1);
     }
 
     #[test]
     fn find_ship_simple() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board.try_place_ship("A1".into(), 3, Direction::Horizontal).unwrap();
+        board.try_place_ship("A1".parse().unwrap(), 3, Direction::Horizontal).unwrap();
 
-        assert_eq!(ShipFindingResult::CompleteShip(BoardIndexRangeInclusive::new("A1".into(), "C1".into())), board.try_find_ship("A1".into()));
+        assert_eq!(ShipFindingResult::CompleteShip(BoardIndexRangeInclusive::new("A1".parse().unwrap(), "C1".parse().unwrap())), board.try_find_ship("A1".parse().unwrap()));
     }
 
     #[test]
     fn find_ship_simple_partial() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board.try_place_ship("A1".into(), 3, Direction::Horizontal).unwrap();
-        board[BoardIndex::from("D1")] = SquareContent::Unknown;
+        board.try_place_ship("A1".parse().unwrap(), 3, Direction::Horizontal).unwrap();
+        board[BoardIndex::from_str("D1").unwrap()] = SquareContent::Unknown;
 
-        assert_eq!(ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new("A1".into(), "C1".into())), board.try_find_ship("A1".into()));
+        assert_eq!(ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new("A1".parse().unwrap(), "C1".parse().unwrap())), board.try_find_ship("A1".parse().unwrap()));
     }
 
     #[test]
     fn find_ship_single_square() {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
-        board[BoardIndex::from("G10")] = SquareContent::HitShip;
-        board[BoardIndex::from("H10")] = SquareContent::Unknown;
+        board[BoardIndex::from_str("G10").unwrap()] = SquareContent::HitShip;
+        board[BoardIndex::from_str("H10").unwrap()] = SquareContent::Unknown;
 
-        assert_eq!(ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new("G10".into(), "G10".into())), board.try_find_ship("G10".into()));
+        assert_eq!(ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new("G10".parse().unwrap(), "G10".parse().unwrap())), board.try_find_ship("G10".parse().unwrap()));
     }
 
     #[rstest]

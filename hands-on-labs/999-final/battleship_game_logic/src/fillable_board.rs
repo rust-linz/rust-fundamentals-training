@@ -244,7 +244,7 @@ mod tests {
     #[test]
     fn can_place_ship_on_board() {
         let board = GenericBoardContent::new_initialized(SquareContent::Water);
-        assert!(board.can_place_ship("A1".into(), 2, Direction::Horizontal).unwrap());
+        assert!(board.can_place_ship("A1".parse().unwrap(), 2, Direction::Horizontal).unwrap());
     }
 
     #[test]
@@ -262,7 +262,7 @@ mod tests {
         assert!(board.try_place_ship(0.into(), 2, direction).unwrap());
         assert_eq!(SquareContent::Ship, board[BoardIndex::from_index(0)]);
         assert_eq!(SquareContent::Ship, board[BoardIndex::from_index(0).try_next(direction).unwrap()]);
-        assert_eq!(2, board.into_iter().filter(|s| { *s == SquareContent::Ship }).count());
+        assert_eq!(2, board.iter().filter(|s| { *s == SquareContent::Ship }).count());
         assert_eq!(98, board.into_iter().filter(|s| { *s == SquareContent::Water }).count());
     }
 }

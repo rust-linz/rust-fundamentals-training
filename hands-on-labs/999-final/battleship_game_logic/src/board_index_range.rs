@@ -84,62 +84,62 @@ mod tests {
 
     #[test]
     fn ctor_valid_range_row() {
-        BoardIndexRangeInclusive::new("A1".into(), "A3".into());
+        BoardIndexRangeInclusive::new("A1".parse().unwrap(), "A3".parse().unwrap());
     }
 
     #[test]
     fn ctor_valid_range_col() {
-        BoardIndexRangeInclusive::new("A1".into(), "C1".into());
+        BoardIndexRangeInclusive::new("A1".parse().unwrap(), "C1".parse().unwrap());
     }
 
     #[test]
     #[should_panic]
     fn ctor_invalid_range() {
-        BoardIndexRangeInclusive::new("A1".into(), "C3".into());
+        BoardIndexRangeInclusive::new("A1".parse().unwrap(), "C3".parse().unwrap());
     }
 
     #[test]
     fn range_loop_row() {
         let mut ix = Vec::new();
-        for i in BoardIndexRangeInclusive::from("A1".into()..="C1".into()) {
+        for i in BoardIndexRangeInclusive::from("A1".parse().unwrap()..="C1".parse().unwrap()) {
             ix.push(i);
         }
 
-        assert_eq!(ix, vec!("A1".into(), "B1".into(), "C1".into()));
+        assert_eq!(ix, vec!("A1".parse().unwrap(), "B1".parse().unwrap(), "C1".parse().unwrap()));
     }
 
     #[test]
     fn range_loop_col() {
         let mut ix = Vec::new();
-        for i in BoardIndexRangeInclusive::from("A1".into()..="A3".into()) {
+        for i in BoardIndexRangeInclusive::from("A1".parse().unwrap()..="A3".parse().unwrap()) {
             ix.push(i);
         }
 
-        assert_eq!(ix, vec!("A1".into(), "A2".into(), "A3".into()));
+        assert_eq!(ix, vec!("A1".parse().unwrap(), "A2".parse().unwrap(), "A3".parse().unwrap()));
     }
 
     #[test]
     fn range_iter_row() {
-        assert_eq!(3, BoardIndexRangeInclusive::from("A1".into()..="A3".into()).into_iter().count());
+        assert_eq!(3, BoardIndexRangeInclusive::from("A1".parse().unwrap()..="A3".parse().unwrap()).into_iter().count());
     }
 
     #[test]
     fn range_iter_col() {
-        assert_eq!(3, BoardIndexRangeInclusive::from("A1".into()..="C1".into()).into_iter().count());
+        assert_eq!(3, BoardIndexRangeInclusive::from("A1".parse().unwrap()..="C1".parse().unwrap()).into_iter().count());
     }
 
     #[test]
     fn length_horizontal() {
-        assert_eq!(3, BoardIndexRangeInclusive::from("A1".into()..="C1".into()).length());
+        assert_eq!(3, BoardIndexRangeInclusive::from("A1".parse().unwrap()..="C1".parse().unwrap()).length());
     }
 
     #[test]
     fn length_vertical() {
-        assert_eq!(3, BoardIndexRangeInclusive::from("A1".into()..="A3".into()).length());
+        assert_eq!(3, BoardIndexRangeInclusive::from("A1".parse().unwrap()..="A3".parse().unwrap()).length());
     }
 
     #[test]
     fn length_single() {
-        assert_eq!(1, BoardIndexRangeInclusive::from("A1".into()..="A1".into()).length());
+        assert_eq!(1, BoardIndexRangeInclusive::from("A1".parse().unwrap()..="A1".parse().unwrap()).length());
     }
 }

@@ -83,11 +83,11 @@ impl SinglePlayerGame {
     }
 
     pub fn game_state_internal(&self, ships: &[usize]) -> GameState {
-        if self.log.iter().count() > 100 {
+        if self.log.len() > 100 {
             return GameState::TooManyShots;
         }
 
-        if self.shooting_board.into_iter().filter(|s| { matches!(s, SquareContent::HitShip | SquareContent::SunkenShip)}).count() == ships.iter().sum() {
+        if self.shooting_board.iter().filter(|s| { matches!(s, SquareContent::HitShip | SquareContent::SunkenShip)}).count() == ships.iter().sum() {
             return GameState::AllShipsSunken;
         }
 
@@ -99,16 +99,23 @@ impl SinglePlayerGame {
     }
 }
 
+impl Default for SinglePlayerGame {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use super::*;
 
     #[test]
     fn shoot_into_water() {
         let mut game = SinglePlayerGame::new_internal(false);
         assert_eq!(SquareContent::Water, game.shoot("A1".into()));
-        assert_eq!(SquareContent::Water, game.shooting_board[BoardIndex::from("A1")]);
+        assert_eq!(SquareContent::Water, game.shooting_board[BoardIndex::from_str("A1").unwrap()]);
     }
 
     #[test]
@@ -117,7 +124,7 @@ mod tests {
         game.board[BoardIndex::from("A1")] = SquareContent::Ship;
 
         assert_eq!(SquareContent::HitShip, game.shoot("A1".into()));
-        assert_eq!(SquareContent::HitShip, game.shooting_board[BoardIndex::from("A1")]);
+        assert_eq!(SquareContent::HitShip, game.shooting_board[BoardIndex::from_str("A1").unwrap()]);
     }
 
     #[test]
@@ -165,6 +172,6 @@ mod tests {
         game.shoot("A2".into());
 
         assert_eq!(2, game.log().count());
-        assert_eq!(BoardIndex::from_str("A1"), game.log().nth(0).unwrap().location);
+        assert_eq!(BoardIndex::from_str("A1").unwrap(), game.log().nth(0).unwrap().location);
     }
 }

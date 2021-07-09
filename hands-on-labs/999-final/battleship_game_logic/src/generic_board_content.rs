@@ -44,9 +44,7 @@ impl<T: Default + Copy> GenericBoardContent<T> {
         }
     }
 
-    pub fn into_iter(&self) -> impl Iterator<Item = T> {
-        // See https://github.com/rust-lang/rust/pull/65819
-        // for more about IntoIterator impl for arrays.
+    pub fn iter(&self) -> impl Iterator<Item = T> {
         core::array::IntoIter::new(self.board_content)
     }
 
@@ -64,6 +62,22 @@ impl<T: Default + Copy> GenericBoardContent<T> {
 
     pub fn rows(&self) -> impl Iterator<Item = Row<T>> {
         RowsIterator::new(self)
+    }
+}
+
+impl<T> IntoIterator for GenericBoardContent<T> {
+    type Item = T;
+
+    type IntoIter = core::array::IntoIter<Self::Item, BOARD_SIZE>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        core::array::IntoIter::new(self.board_content)
+    }
+}
+
+impl<T: Default + Copy> Default for GenericBoardContent<T> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -98,10 +112,10 @@ impl<T: From<u8> + Default + Copy> TryFrom<&[u8]> for GenericBoardContent<T> {
     }
 }
 
-impl<T: Default + Into<u8> + Copy> Into<[u8; BOARD_SIZE]> for GenericBoardContent<T> {
-    fn into(self) -> [u8; BOARD_SIZE] {
+impl<T: Default + Into<u8> + Copy> From<GenericBoardContent<T>> for [u8; BOARD_SIZE] {
+    fn from(c: GenericBoardContent<T>) -> Self {
         let mut content: [u8; BOARD_SIZE] = [T::default().into(); BOARD_SIZE];
-        for (ix, square) in self.board_content.iter().copied().enumerate() {
+        for (ix, square) in c.board_content.iter().copied().enumerate() {
             content[ix] = T::into(square);
         }
 
@@ -137,11 +151,11 @@ impl<T: Default + Copy + Into<char>> fmt::Display for GenericBoardContent<T> {
 
             let mut result = String::new();
             result.reserve_exact(
-                1 * chars[0].len_utf8()
+                chars[0].len_utf8()
                     + BOARD_SIDE_LENGTH * 2 * chars[1].len_utf8()
                     + (BOARD_SIDE_LENGTH - 1) * chars[2].len_utf8()
-                    + 1 * chars[3].len_utf8()
-                    + 1 * '\n'.len_utf8(),
+                    + chars[3].len_utf8()
+                    + '\n'.len_utf8(),
             );
             result.push(chars[0]);
             for _ in 0..BOARD_SIDE_LENGTH - 1 {
@@ -210,7 +224,7 @@ mod tests {
     #[test]
     fn new() {
         let b = BattleshipBoardContent::new();
-        assert_eq!(b.into_iter().count(), 100);
+        assert_eq!(b.iter().count(), 100);
         assert!(b.into_iter().all(|v| v == Default::default()));
     }
 
@@ -218,7 +232,7 @@ mod tests {
     fn new_initialized() {
         let square_content = SquareContent::Ship;
         let b = BattleshipBoardContent::new_initialized(square_content);
-        assert_eq!(b.into_iter().count(), 100);
+        assert_eq!(b.iter().count(), 100);
         assert!(b.into_iter().all(|v| v == square_content));
     }
 
@@ -227,7 +241,7 @@ mod tests {
         let square_content = SquareContent::Ship;
         let content: &[u8] = &[square_content.into(); BOARD_SIZE];
         let board = BattleshipBoardContent::try_from(content).unwrap();
-        assert_eq!(board.into_iter().count(), 100);
+        assert_eq!(board.iter().count(), 100);
         assert!(board.into_iter().all(|v| v == square_content));
     }
 

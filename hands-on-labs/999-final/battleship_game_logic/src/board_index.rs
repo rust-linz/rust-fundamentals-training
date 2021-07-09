@@ -1,4 +1,4 @@
-use std::{fmt::Display, ops::{Add, Index, IndexMut, Sub}};
+use std::{fmt::Display, ops::{Add, Index, IndexMut, Sub}, str::FromStr};
 
 use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
 
@@ -11,6 +11,7 @@ use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
     * String handling fundamentals
     * Writing unit tests (including data-driven tests with rstest)
     * Match guards
+    * String parsing
 
     Recommended readings for this module:
 
@@ -19,6 +20,8 @@ use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
     * Operator overloading: https://doc.rust-lang.org/std/ops/index.html
     * rstest crate: https://docs.rs/rstest/0.10.0/rstest/index.html
     * Match guards: https://doc.rust-lang.org/reference/expressions/match-expr.html#match-guards
+    * `FromStr` trait: https://doc.rust-lang.org/std/str/trait.FromStr.html
+    * `parse` method: https://doc.rust-lang.org/std/primitive.str.html#method.parse
 */
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Default, Ord, PartialOrd)]
@@ -55,50 +58,50 @@ impl BoardIndex {
         BoardIndex(row * BOARD_SIDE_LENGTH + col)
     }
 
-    pub fn from_str<T: AsRef<str>>(location: T) -> BoardIndex {
-        // Note that this method signature allows us to call method
-        // with String and string slice (&str).
-        BoardIndex::try_from_str(location).unwrap()
-    }
+    // pub fn from_str<T: AsRef<str>>(location: T) -> BoardIndex {
+    //     // Note that this method signature allows us to call method
+    //     // with String and string slice (&str).
+    //     BoardIndex::try_from_str(location).unwrap()
+    // }
 
-    pub fn try_from_str<T: AsRef<str>>(location: T) -> Result<BoardIndex, &'static str> {
-        // Note that we could implement the TryFrom trait. However, that would
-        // conflict with the implementation of the From trait. For details see
-        // https://github.com/rust-lang/rust/issues/50133
+    // pub fn try_from_str<T: AsRef<str>>(location: T) -> Result<BoardIndex, &'static str> {
+    //     // Note that we could implement the TryFrom trait. However, that would
+    //     // conflict with the implementation of the From trait. For details see
+    //     // https://github.com/rust-lang/rust/issues/50133
 
-        let location = location.as_ref().as_bytes(); // Note shadowing
+    //     let location = location.as_ref().as_bytes(); // Note shadowing
 
-        // Check if length of location is ok (A1..J10).
-        // Discuss difference between location.chars().count() and location.len()
-        if !matches!(location.len(), 2..=3) {
-            return Err("Invalid length");
-        }
+    //     // Check if length of location is ok (A1..J10).
+    //     // Discuss difference between location.chars().count() and location.len()
+    //     if !matches!(location.len(), 2..=3) {
+    //         return Err("Invalid length");
+    //     }
 
-        // Parse column letter (A..J, a..j)
-        let col = match location[0] {
-            r if matches!(r, b'A'..=b'J') => (r - b'A') as usize, // Check experimental `if let` syntax
-            r if matches!(r, b'a'..=b'j') => (r - b'a') as usize,
-            _ => return Err("Invalid column"),
-        };
+    //     // Parse column letter (A..J, a..j)
+    //     let col = match location[0] {
+    //         r if matches!(r, b'A'..=b'J') => (r - b'A') as usize, // Check experimental `if let` syntax
+    //         r if matches!(r, b'a'..=b'j') => (r - b'a') as usize,
+    //         _ => return Err("Invalid column"),
+    //     };
 
-        // Parse the row letter(s) (1..10)
-        let row: usize; // Note: No mut here
-        if location.len() == 3 {
-            if location[1..] != [b'1', b'0'] {
-                // Note slice pattern
-                return Err("Invalid row");
-            }
+    //     // Parse the row letter(s) (1..10)
+    //     let row: usize; // Note: No mut here
+    //     if location.len() == 3 {
+    //         if location[1..] != [b'1', b'0'] {
+    //             // Note slice pattern
+    //             return Err("Invalid row");
+    //         }
 
-            row = 9;
-        } else {
-            row = match location[1] {
-                c if matches!(c, b'1'..=b'9') => (c - b'1') as usize,
-                _ => return Err("Invalid row"),
-            };
-        }
+    //         row = 9;
+    //     } else {
+    //         row = match location[1] {
+    //             c if matches!(c, b'1'..=b'9') => (c - b'1') as usize,
+    //             _ => return Err("Invalid row"),
+    //         };
+    //     }
 
-        Ok(BoardIndex::from_col_row(col, row))
-    }
+    //     Ok(BoardIndex::from_col_row(col, row))
+    // }
 
     pub fn column(&self) -> usize {
         self.0 % BOARD_SIDE_LENGTH
@@ -145,17 +148,15 @@ impl BoardIndex {
     }
 }
 
-impl Into<usize> for BoardIndex {
-    fn into(self) -> usize {
-        self.0
+impl From<BoardIndex> for usize {
+    fn from(ix: BoardIndex) -> Self {
+        ix.0
     }
 }
 
-impl Into<String> for BoardIndex {
-    // Discuss: Why can't you return &str here?
-    // See also https://stackoverflow.com/a/29429698/3548127
-    fn into(self) -> String {
-        format!("{}", self)
+impl From<BoardIndex> for String {
+    fn from(ix: BoardIndex) -> Self {
+        format!("{}", ix)
     }
 }
 
@@ -167,7 +168,50 @@ impl From<usize> for BoardIndex {
 
 impl From<&str> for BoardIndex {
     fn from(ix: &str) -> Self {
-        BoardIndex::from_str(ix)
+        BoardIndex::from_str(ix).unwrap()
+    }
+}
+
+impl FromStr for BoardIndex {
+    type Err = &'static str;
+
+    fn from_str(location: &str) -> Result<Self, Self::Err> {
+                // Note that we could implement the TryFrom trait. However, that would
+        // conflict with the implementation of the From trait. For details see
+        // https://github.com/rust-lang/rust/issues/50133
+
+        let location = location.as_bytes(); // Note shadowing
+
+        // Check if length of location is ok (A1..J10).
+        // Discuss difference between location.chars().count() and location.len()
+        if !matches!(location.len(), 2..=3) {
+            return Err("Invalid length");
+        }
+
+        // Parse column letter (A..J, a..j)
+        let col = match location[0] {
+            r if matches!(r, b'A'..=b'J') => (r - b'A') as usize, // Check experimental `if let` syntax
+            r if matches!(r, b'a'..=b'j') => (r - b'a') as usize,
+            _ => return Err("Invalid column"),
+        };
+
+        // Parse the row letter(s) (1..10)
+        let row: usize; // Note: No mut here
+        if location.len() == 3 {
+            if location[1..] != [b'1', b'0'] {
+                // Note slice pattern
+                return Err("Invalid row");
+            }
+
+            row = 9;
+        } else {
+            row = match location[1] {
+                c if matches!(c, b'1'..=b'9') => (c - b'1') as usize,
+                _ => return Err("Invalid row"),
+            };
+        }
+
+        Ok(BoardIndex::from_col_row(col, row))
     }
 }
 
@@ -262,30 +306,25 @@ mod tests {
 
     #[test]
     fn from_str_lowest() {
-        let ix = BoardIndex::from_str("A1");
+        let ix = BoardIndex::from_str("A1").unwrap();
         assert_eq!(0usize, ix.into());
     }
 
     #[test]
     fn from_str_highest() {
-        let ix = BoardIndex::from_str("J10");
+        let ix = BoardIndex::from_str("J10").unwrap();
         assert_eq!(BOARD_SIDE_LENGTH * BOARD_SIDE_LENGTH - 1, ix.into());
     }
 
     #[test]
     fn from_str_lowercase() {
-        let ix = BoardIndex::from_str("a1");
+        let ix = BoardIndex::from_str("a1").unwrap();
         assert_eq!(0usize, ix.into());
     }
 
     #[test]
-    fn from_str_string() {
-        BoardIndex::from_str(String::from("A1"));
-    }
-
-    #[test]
     fn from_str_slice() {
-        BoardIndex::from_str("A1");
+        BoardIndex::from_str("A1").unwrap();
     }
 
     #[test]
@@ -296,12 +335,7 @@ mod tests {
 
     #[test]
     fn into_index_from_str() {
-        assert_eq!(BoardIndex::new(), "A1".into());
-    }
-
-    #[test]
-    fn from_str() {
-        assert_eq!(BoardIndex::new(), From::<&str>::from("A1"));
+        assert_eq!(BoardIndex::new(), "A1".parse().unwrap());
     }
 
     #[rstest]
@@ -314,7 +348,7 @@ mod tests {
     #[case("AA10")] // invalid length
     #[case("99")] // missing row
     fn try_parse_errors(#[case] location: &'static str) {
-        assert!(BoardIndex::try_from_str(location).is_err());
+        assert!(BoardIndex::from_str(location).is_err());
     }
 
     #[rstest]
@@ -392,44 +426,44 @@ mod tests {
     #[test]
     #[should_panic]
     fn next_row_invalid() {
-        BoardIndex::from_str("A10").next_row();
+        BoardIndex::from_str("A10").unwrap().next_row();
     }
 
     #[test]
     #[should_panic]
     fn previous_row_invalid() {
-        BoardIndex::from_str("A1").previous_row();
+        BoardIndex::from_str("A1").unwrap().previous_row();
     }
 
     #[test]
     #[should_panic]
     fn next_column_invalid() {
-        BoardIndex::from_str("J1").next_column();
+        BoardIndex::from_str("J1").unwrap().next_column();
     }
 
     #[test]
     #[should_panic]
     fn previous_column_invalid() {
-        BoardIndex::from_str("A1").previous_column();
+        BoardIndex::from_str("A1").unwrap().previous_column();
     }
 
     #[test]
     fn next_row() {
-        assert_eq!(9, BoardIndex::from_str("A9").next_row().row());
+        assert_eq!(9, BoardIndex::from_str("A9").unwrap().next_row().row());
     }
 
     #[test]
     fn previous_row() {
-        assert_eq!(8, BoardIndex::from_str("A10").previous_row().row());
+        assert_eq!(8, BoardIndex::from_str("A10").unwrap().previous_row().row());
     }
 
     #[test]
     fn next_column() {
-        assert_eq!(9, BoardIndex::from_str("I9").next_column().column());
+        assert_eq!(9, BoardIndex::from_str("I9").unwrap().next_column().column());
     }
 
     #[test]
     fn previous_column() {
-        assert_eq!(8, BoardIndex::from_str("J9").previous_column().column());
+        assert_eq!(8, BoardIndex::from_str("J9").unwrap().previous_column().column());
     }
 }
