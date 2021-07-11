@@ -1,0 +1,59 @@
+{
+  "40-thread": {
+    "prefix": "rs",
+    "body": [
+      "",
+      "fn main() {",
+      "    let pairs = [(6, 45), (5, 50), (2, 12)];",
+      "    for (_take, _from) in pairs {",
+      "        let handle = thread::spawn(|| {",
+      "            let lotto = Lotto::new(6, 45);",
+      "            println!(\"{:?}\", lotto);",
+      "        });",
+      "",
+      "        handle.join().unwrap();",
+      "    }",
+      "}",
+      ""
+    ],
+    "description": "40-thread"
+  },
+  "41-thread": {
+    "prefix": "rs",
+    "body": [
+      "let pairs = [(6, 45), (5, 50), (2, 12)];",
+      "    for (take, from) in pairs {",
+      "        let handle = thread::spawn(move || {",
+      "            let lotto = Lotto::new(take, from);",
+      "            println!(\"{:?}\", lotto);",
+      "        });",
+      "",
+      "        handle.join().unwrap();",
+      "    }"
+    ],
+    "description": "41-thread"
+  },
+  "42-thread": {
+    "prefix": "rs",
+    "body": [
+      "    let lottos = Mutex::new(Vec::<Lotto>::new());",
+      "    let lottos = Arc::new(lottos);",
+      "    let pairs = [(6, 45), (5, 50), (2, 12)];",
+      "",
+      "    for (take, from) in pairs {",
+      "        let lottos = Arc::clone(&lottos);",
+      "        let handle = thread::spawn(move || {",
+      "            let lotto = Lotto::new(take, from);",
+      "            lottos.lock().unwrap().push(lotto);",
+      "        });",
+      "",
+      "        handle.join().unwrap();",
+      "    }",
+      "",
+      "    for lotto in lottos.lock().unwrap().iter() {",
+      "        println!(\"{:?}\", lotto);",
+      "    }"
+    ],
+    "description": "42-thread"
+  }
+}
