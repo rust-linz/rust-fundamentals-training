@@ -69,7 +69,7 @@ impl<T> Iterator for LinkedList<T> {
 }
 
 fn main() {
-    let c = vec![12, 23, 2131, 1231, 4352353, 123];
+    let c = vec![1, 3, 7, 8, 9, 11];
     let len = c.len();
     let list = LinkedList::from_iter(c);
 
@@ -80,5 +80,10 @@ fn main() {
     let mut list = list.rev();
     while let Some(x) = list.pop() {
         println!("{}", x);
+    }
+
+    let list2 = LinkedList::from_iter(vec![20, 25, 27, 28, 30]);
+    for l in list2 {
+        println!("-{}", l);
     }
 }
