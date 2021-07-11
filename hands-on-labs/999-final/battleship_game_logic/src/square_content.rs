@@ -80,6 +80,19 @@ impl From<SquareContent> for char {
     }
 }
 
+impl From<char> for SquareContent {
+    fn from(value: char) -> Self {
+        match value {
+            '~' => SquareContent::Water,
+            'S' => SquareContent::Ship,
+            'h' => SquareContent::HitShip,
+            'X' => SquareContent::SunkenShip,
+            ' ' => SquareContent::Unknown,
+            _ => panic!("Invalid character")
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -117,5 +130,10 @@ mod tests {
 
         let v: char = char::from(SquareContent::Ship);
         assert_eq!('S', v);
+    }
+
+    #[test]
+    fn from_char() {
+        assert_eq!(SquareContent::Ship, 'S'.into());
     }
 }

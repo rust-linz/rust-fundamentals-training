@@ -1,6 +1,6 @@
 use std::ops::Index;
 
-use crate::{BattleshipBoardContent, BoardFiller, BoardIndex, ShipFinder, ShipFindingResult, SquareContent, random_placer};
+use crate::{BattleshipBoardContent, BoardFiller, BoardIndex, ShipFinder, ShipFindingResult, SquareContent, ToCompactString, random_placer};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Shot {
@@ -15,6 +15,7 @@ pub enum GameState {
     TooManyShots,
 }
 
+#[derive(Debug, Clone)]
 pub struct SinglePlayerGame {
     log: Vec::<Shot>,
     board: BattleshipBoardContent,
@@ -44,6 +45,10 @@ impl SinglePlayerGame {
 
     pub fn shooting_board(&self) -> &impl Index<BoardIndex, Output = SquareContent> {
         &self.shooting_board
+    }
+
+    pub fn shooting_board_str(&self) -> String {
+        self.shooting_board.to_compact_str()
     }
 
     pub fn shoot(&mut self, ix: BoardIndex) -> SquareContent {
@@ -110,6 +115,15 @@ mod tests {
     use std::str::FromStr;
 
     use super::*;
+
+    #[test]
+    fn clone() {
+        let mut game = SinglePlayerGame::new_internal(false);
+        game.shoot("A1".into());
+
+        let clone = game.clone();
+        assert_eq!(BoardIndex::from("A1"), clone.log[0].location);
+    }
 
     #[test]
     fn shoot_into_water() {

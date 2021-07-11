@@ -1,9 +1,4 @@
-use std::{
-    cmp::Ordering,
-    convert::TryFrom,
-    fmt,
-    ops::{Index, IndexMut},
-};
+use std::{cmp::Ordering, convert::TryFrom, fmt, ops::{Index, IndexMut}};
 
 use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
 
@@ -13,6 +8,7 @@ use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
     * Create a generic type
     * Work with custom error types
     * Fundamentals of iterators
+    * Iterating over arrays
 
     Recommended readings for this module:
 
@@ -28,7 +24,7 @@ use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
 
 pub type BattleshipBoardContent = GenericBoardContent<SquareContent>;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct GenericBoardContent<T> {
     board_content: [T; BOARD_SIZE],
 }
@@ -62,6 +58,23 @@ impl<T: Default + Copy> GenericBoardContent<T> {
 
     pub fn rows(&self) -> impl Iterator<Item = Row<T>> {
         RowsIterator::new(self)
+    }
+}
+
+pub trait ToCompactString {
+    fn to_compact_str(&self) -> String;
+}
+
+impl<T: Copy + Into<char>> ToCompactString for GenericBoardContent<T> {
+    fn to_compact_str(&self) -> String {
+        let mut result = String::new();
+        result.reserve_exact(BOARD_SIZE);
+
+        // Note iterating over array, brand new in Rust 1.53
+        for c in self.board_content {
+            result.push(c.into());
+        }
+        result
     }
 }
 
@@ -237,6 +250,13 @@ mod tests {
     }
 
     #[test]
+    fn clone() {
+        let b = BattleshipBoardContent::new_initialized(SquareContent::SunkenShip);
+        let b2 = b.clone();
+        assert_eq!(SquareContent::SunkenShip, b2[0]);
+    }
+
+    #[test]
     fn from_bytes() {
         let square_content = SquareContent::Ship;
         let content: &[u8] = &[square_content.into(); BOARD_SIZE];
@@ -291,5 +311,11 @@ mod tests {
     fn into_string() {
         let b = BattleshipBoardContent::new();
         format!("{}", b);
+    }
+
+    #[test]
+    fn into_short_str() {
+        let b = BattleshipBoardContent::new();
+        assert_eq!(format!("{: >100}", ""), b.to_compact_str());
     }
 }
