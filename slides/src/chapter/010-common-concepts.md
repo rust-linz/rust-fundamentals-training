@@ -354,3 +354,47 @@ let first = ip[0];
 ```
 
 - Arrays are of fixed size
+
+
+## Structs
+
+Rust supports three struct types
+
+```rust
+// Classic struct with named fields
+struct Point { x: f32, y: f32}
+
+// Tuple struct with data types only
+struct Matrix(f32, f32, f32, f32);
+
+// Unit struct
+struct Unit;
+```
+
+
+## Instantiate a struct
+
+```rust
+let point = Point { x: 0.23, y: -0.15 };
+let matrix = Matrix(0, 0.2, -0.2, 1);
+
+let x = 3;
+let y = 3.12;
+
+let point = Point { x, y };
+```
+
+
+## Implenent functionality
+
+With `impl` blocks you can define implementations on types.
+
+```rust
+impl Point {
+    pub fn new(x: f32, y: f32) -> Self {
+        Self { x, y }
+    }
+}
+```
+
+## Enums
