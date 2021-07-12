@@ -1,0 +1,137 @@
+# Advanced topics
+
+![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
+
+---
+
+## Threading
+
+`thread.spawn` creates a new OS thread. `handle.join` starts executing
+
+```rust
+fn main() {
+    let pairs = [(6, 45), (5, 50), (2, 12)];
+    for (_take, _from) in pairs {
+        let handle = thread::spawn(|| {
+            let lotto = Lotto::new(6, 45);
+            println!("{:?}", lotto);
+        });
+
+        handle.join().unwrap();
+    }
+}
+```
+
+---
+
+## Threading
+
+`move` closures give ownership of all referenced bindings to the closure. Now the thread can work with `take` and `from`
+
+
+```rust
+fn main() {
+    let pairs = [(6, 45), (5, 50), (2, 12)];
+    for (take, from) in pairs {
+        let handle = thread::spawn(move || {
+            let lotto = Lotto::new(take, from);
+            println!("{:?}", lotto);
+        });
+
+        handle.join().unwrap();
+    }
+}
+```
+
+---
+
+## Threading
+
+`Mutex` allows mutually exclusive mutablility of values.
+`Arc` is an *atomic reference counter* and points to the same data in memory. `Arc` is threadsafe!
+
+```rust
+let lottos = Mutex::new(Vec::<Lotto>::new());
+let lottos = Arc::new(lottos);
+let pairs = [(6, 45), (5, 50), (2, 12)];
+
+for (take, from) in pairs {
+    let lottos = Arc::clone(&lottos);
+    let handle = thread::spawn(move || {
+        let lotto = Lotto::new(take, from);
+        lottos.lock().unwrap().push(lotto);
+    });
+
+    handle.join().unwrap();
+}
+```
+
+In this example, we move the `Arc`, not the original value. Thanks to a `Mutex` we are able to edit the correct data!
+
+---
+
+## Dynamic dispath with trait objects
+
+```rust
+
+trait Greeter {
+    fn greet(&self) -> String;
+}
+
+struct Person {
+    name: String,
+}
+
+impl Greeter for Person {
+    fn greet(&self) -> String {
+        format!("Hey {}!", self.name)
+    }
+}
+
+struct Dog;
+
+impl Greeter for Dog {
+    fn greet(&self) -> String {
+        "Who is a good boy?".to_string()
+    }
+}
+```
+
+---
+
+## Dynamic dispath with trait objects
+
+Problem: Rust does not know at compile time if a `Person` or a `Dog` is being returned!
+
+```rust
+fn get_a_greeter(val: u8) -> impl Greeter {
+    if val < 5 {
+        Person {
+            name: "unknown".to_string(),
+        }
+    } else {
+        Dog {}
+    }
+}
+```
+
+Dog and Person are incompatible in Rust's eyes!
+
+---
+
+## Dynamic dispatch with trait objects 
+
+The `dyn` keyword annotates a *trait object*: A pointer to a trait
+The `Box` ... again ... helps to give a statically available type!
+
+```rust
+fn get_a_greeter(val: u8) -> Box<dyn Greeter> {
+    if val < 5 {
+        Box::new(Person {
+            name: "unknown".to_string(),
+        })
+    } else {
+        Box::new(Dog {})
+    }
+}
+```
