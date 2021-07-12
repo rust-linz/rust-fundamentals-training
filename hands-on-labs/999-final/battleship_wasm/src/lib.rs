@@ -6,11 +6,18 @@ use battleship_game_logic::{BoardIndex, GameState, SinglePlayerGame, SquareConte
 use wasm_bindgen::prelude::*;
 use serde::Serialize;
 
-// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-// allocator.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+/*
+    Learnings in this module:
+
+    * Interactions between WASM modules and JavaScript
+    * `wasm_bindgen`
+    * wasm-pack tools
+
+    Recommended readings for this module:
+
+    * The `wasm-bindgen` Guide: https://rustwasm.github.io/wasm-bindgen/introduction.html
+    * wasm-pack docs: https://rustwasm.github.io/docs/wasm-pack/
+*/
 
 #[wasm_bindgen]
 pub struct BattleshipGame {

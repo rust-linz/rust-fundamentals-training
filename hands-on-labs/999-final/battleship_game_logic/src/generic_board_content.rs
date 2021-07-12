@@ -9,12 +9,14 @@ use crate::{BOARD_SIDE_LENGTH, BOARD_SIZE, Row, RowsIterator, SquareContent};
     * Work with custom error types
     * Fundamentals of iterators
     * Iterating over arrays
+    * Defining shared behavior with traits
 
     Recommended readings for this module:
 
     * Generic data types: https://doc.rust-lang.org/book/ch10-01-syntax.html
     * Custom error types: https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html
     * Formatters: https://doc.rust-lang.org/std/fmt/index.html
+    * Defining traits: https://doc.rust-lang.org/book/ch10-02-traits.html
     * `Display` trait: https://doc.rust-lang.org/std/fmt/trait.Display.html
     * `TryFrom` and `TryInto` traits: https://doc.rust-lang.org/rust-by-example/conversion/try_from_try_into.html
     * `impl` trait: https://doc.rust-lang.org/rust-by-example/trait/impl_trait.html

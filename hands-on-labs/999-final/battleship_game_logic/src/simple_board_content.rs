@@ -10,9 +10,9 @@ use crate::{BOARD_SIZE, SquareContent};
 
     Recommended readings for this module:
 
+    * Naming conventions (e.g. constructor functions): https://rust-lang.github.io/api-guidelines/naming.html
     * Structs: https://doc.rust-lang.org/book/ch05-00-structs.html
     * Arrays: https://doc.rust-lang.org/book/ch03-02-data-types.html#the-array-type
-    * Naming conventions (e.g. constructor functions): https://rust-lang.github.io/api-guidelines/naming.html
     * `Index` trait: https://doc.rust-lang.org/std/ops/trait.Index.html
     * `IndexMut` trait: https://doc.rust-lang.org/std/ops/trait.IndexMut.html
     * `std::cmp`: https://doc.rust-lang.org/std/cmp/enum.Ordering.html

@@ -1,21 +1,24 @@
 /*
     Learnings in this module:
 
-    * Create an enum
+    * Create a fieldless enumeration
     * Generate trait implementations with `derive`
-    * Learn about various important fundamental traits
+    * Learn about various fundamental traits
+    * Rust pattern matching
     * Basic unit testing
 
     Recommended readings for this module:
 
+    * Standard prelude (reason why we do not need to import e.g. `Default`): https://doc.rust-lang.org/std/prelude/index.html
+    * Enums: https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html
+    * Custom descriminant values for enums: https://doc.rust-lang.org/reference/items/enumerations.html#custom-discriminant-values-for-fieldless-enumerations
     * `derive` macro: https://doc.rust-lang.org/reference/procedural-macros.html#derive-macros
+    * `Default` trait: https://doc.rust-lang.org/std/default/trait.Default.html
+    * `From` and `Into` traits: https://doc.rust-lang.org/rust-by-example/conversion/from_into.html
     * `Copy` and `Clone` traits: https://doc.rust-lang.org/std/marker/trait.Copy.html
     * `PartialEq` and `Eq` traits: https://doc.rust-lang.org/std/cmp/trait.PartialEq.html
-    * Enums: https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html
-    * `Default` trait: https://doc.rust-lang.org/std/default/trait.Default.html
-    * Standard prelude (reason why we do not need to import e.g. `Default`): https://doc.rust-lang.org/std/prelude/index.html
-    * `match` keyword at https://doc.rust-lang.org/rust-by-example/flow_control/match.html
-    * `From` and `Into` traits: https://doc.rust-lang.org/rust-by-example/conversion/from_into.html
+    * `match` keyword: https://doc.rust-lang.org/rust-by-example/flow_control/match.html
+    * `matches` macro: https://doc.rust-lang.org/std/macro.matches.html
     * `panic` macro: https://doc.rust-lang.org/std/macro.panic.html
     * Unit testing: https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
 */

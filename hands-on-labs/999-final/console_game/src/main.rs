@@ -1,5 +1,5 @@
+use battleship_game_logic::{BattleshipBoardContent, BoardFiller, SquareContent, random_placer};
 use structopt::StructOpt;
-use battleship_game_logic::*;
 
 /*
     Learnings in this module:
@@ -14,7 +14,7 @@ use battleship_game_logic::*;
 #[derive(StructOpt)]
 #[structopt()]
 enum Command {
-    Index,
+    SquareContent,
     Board {
         #[structopt(short, long, help = "Indicates whether the board should be filled")]
         fill: bool
@@ -23,18 +23,18 @@ enum Command {
 
 fn main() {
     match Command::from_args() {
-        Command::Index => index(),
+        Command::SquareContent => square_content(),
         Command::Board { fill } => board(fill),
     }
 }
 
-fn index() {
-    let ix = BoardIndex::new();
-    println!("Debug: {:?}", ix);
-    println!("Display: {}", ix);
-
-    let ix = BoardIndex::from("B2");
-    println!("Parsed: {}", ix);
+fn square_content() {
+    let content = SquareContent::default();
+    println!("Debug: {:?}", content);
+    
+    let content: SquareContent = '~'.into();
+    println!("Parsed: {:?}", content);
+    println!("Parsed Display: {}", char::from(content));
 }
 
 fn board(fill: bool) {

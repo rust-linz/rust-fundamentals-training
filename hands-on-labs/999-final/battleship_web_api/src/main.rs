@@ -12,6 +12,17 @@ use rocket::{State, response::status::Created, serde::uuid::Uuid};
 use rocket::serde::json::Json;
 use rocket::serde::{Deserialize, Serialize};
 
+/*
+    Learnings in this module:
+
+    * Building a simple web API with Rocket v0.5-rc
+    * Testing web APIs
+
+    Recommended readings for this module:
+
+    * Rocket docs: https://rocket.rs/v0.5-rc/guide/introduction/
+*/
+
 #[macro_use] extern crate rocket;
 
 #[derive(Deserialize, Serialize)]
