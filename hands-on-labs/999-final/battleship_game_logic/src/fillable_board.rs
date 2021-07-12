@@ -1,7 +1,5 @@
 use std::ops::{IndexMut};
 
-use mockall::automock;
-
 use crate::{BOARD_SIDE_LENGTH, BoardIndex, Direction, SquareContent};
 
 /*
@@ -18,7 +16,7 @@ use crate::{BOARD_SIDE_LENGTH, BoardIndex, Direction, SquareContent};
     * Defining error types: https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html
 */
 
-#[automock]
+#[cfg_attr(test, mockall::automock)]
 pub trait SquareAccessor {
     fn is_free(&self, ix: BoardIndex) -> bool;
     fn set_ship(&mut self, ix: BoardIndex);
