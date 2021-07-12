@@ -385,7 +385,7 @@ let point = Point { x, y };
 ```
 
 
-## Implenent functionality
+## Implement functionality
 
 With `impl` blocks you can define implementations on types.
 
@@ -397,4 +397,20 @@ impl Point {
 }
 ```
 
+
 ## Enums
+
+Enums in Rust are more like algebraic union types. Each enum variant can have data to go along with it.
+
+```rust
+struct Individual {
+    name: String,
+}
+
+enum Room {
+    Occupied(Individual),
+    Vacant,
+}
+
+let room = Room::Occupied(Individual { name: String::from("alice") } );
+```
