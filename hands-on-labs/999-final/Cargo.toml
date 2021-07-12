@@ -2,6 +2,5 @@
 members = [
     "battleship_game_logic",
     "console_game",
-    "battleship_web_api",
-    "battleship_wasm",
+    "battleship_web_api"
 ]

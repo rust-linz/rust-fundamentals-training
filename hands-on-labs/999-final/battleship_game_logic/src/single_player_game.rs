@@ -9,7 +9,6 @@ pub struct Shot {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[repr(u8)]
 pub enum GameState {
     InProgress,
     AllShipsSunken,
@@ -93,7 +92,7 @@ impl SinglePlayerGame {
             return GameState::TooManyShots;
         }
 
-        if self.shooting_board.iter().filter(|s| { matches!(s, SquareContent::HitShip | SquareContent::SunkenShip)}).count() == ships.iter().sum::<usize>() {
+        if self.shooting_board.iter().filter(|s| { matches!(s, SquareContent::HitShip | SquareContent::SunkenShip)}).count() == ships.iter().sum() {
             return GameState::AllShipsSunken;
         }
 
@@ -102,10 +101,6 @@ impl SinglePlayerGame {
 
     pub fn log(&self) -> impl Iterator<Item = &Shot> {
         self.log.iter()
-    }
-
-    pub fn board_buffer(&self) -> *const SquareContent {
-        self.shooting_board.board_buffer()
     }
 }
 

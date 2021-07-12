@@ -59,10 +59,6 @@ impl<T: Default + Copy> GenericBoardContent<T> {
     pub fn rows(&self) -> impl Iterator<Item = Row<T>> {
         RowsIterator::new(self)
     }
-
-    pub fn board_buffer(&self) -> *const T {
-        self.board_content.as_ptr()
-    }
 }
 
 pub trait ToCompactString {

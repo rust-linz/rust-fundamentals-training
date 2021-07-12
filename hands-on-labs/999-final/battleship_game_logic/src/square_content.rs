@@ -21,7 +21,6 @@
 */
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-#[repr(u8)]
 pub enum SquareContent {
     Water,
     Ship,

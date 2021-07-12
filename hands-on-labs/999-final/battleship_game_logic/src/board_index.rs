@@ -58,6 +58,51 @@ impl BoardIndex {
         BoardIndex(row * BOARD_SIDE_LENGTH + col)
     }
 
+    // pub fn from_str<T: AsRef<str>>(location: T) -> BoardIndex {
+    //     // Note that this method signature allows us to call method
+    //     // with String and string slice (&str).
+    //     BoardIndex::try_from_str(location).unwrap()
+    // }
+
+    // pub fn try_from_str<T: AsRef<str>>(location: T) -> Result<BoardIndex, &'static str> {
+    //     // Note that we could implement the TryFrom trait. However, that would
+    //     // conflict with the implementation of the From trait. For details see
+    //     // https://github.com/rust-lang/rust/issues/50133
+
+    //     let location = location.as_ref().as_bytes(); // Note shadowing
+
+    //     // Check if length of location is ok (A1..J10).
+    //     // Discuss difference between location.chars().count() and location.len()
+    //     if !matches!(location.len(), 2..=3) {
+    //         return Err("Invalid length");
+    //     }
+
+    //     // Parse column letter (A..J, a..j)
+    //     let col = match location[0] {
+    //         r if matches!(r, b'A'..=b'J') => (r - b'A') as usize, // Check experimental `if let` syntax
+    //         r if matches!(r, b'a'..=b'j') => (r - b'a') as usize,
+    //         _ => return Err("Invalid column"),
+    //     };
+
+    //     // Parse the row letter(s) (1..10)
+    //     let row: usize; // Note: No mut here
+    //     if location.len() == 3 {
+    //         if location[1..] != [b'1', b'0'] {
+    //             // Note slice pattern
+    //             return Err("Invalid row");
+    //         }
+
+    //         row = 9;
+    //     } else {
+    //         row = match location[1] {
+    //             c if matches!(c, b'1'..=b'9') => (c - b'1') as usize,
+    //             _ => return Err("Invalid row"),
+    //         };
+    //     }
+
+    //     Ok(BoardIndex::from_col_row(col, row))
+    // }
+
     pub fn column(&self) -> usize {
         self.0 % BOARD_SIDE_LENGTH
     }
