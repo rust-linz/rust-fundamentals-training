@@ -18,7 +18,7 @@ for(let row = 0; row < 10; row++) {
 
 async function startGame() {
     if (playerName.value) {
-        welcomePlayer.innerText = playerName.value;
+        welcomePlayer.innerText = `Ok, ${playerName.value}, let's play 🦜🏴‍☠️!`;
 
         initSection.hidden = true;
         gameSection.hidden = false;
@@ -40,7 +40,8 @@ async function shoot(location) {
         body: JSON.stringify(location)
     });
 
-    const boardContent = (await response.json()).board;
+    const responseObj = await response.json();
+    const boardContent = responseObj.board;
     let ix = 0;
     for(const tr of board.lastElementChild.children) {
         for(const td of tr.children) {
@@ -58,5 +59,16 @@ async function shoot(location) {
                     break;
             }
         }
+    }
+
+    switch (responseObj.game_status) {
+        case 1:
+            welcomePlayer.innerText = `Congrats, ${playerName.value}, you won 🎉🥳!`;
+            break;
+        case 2:
+            welcomePlayer.innerText = `Sorry, ${playerName.value}, too many shots 😢!`;
+            break;
+        default:
+            break;
     }
 }
