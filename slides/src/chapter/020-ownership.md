@@ -116,7 +116,7 @@ fn change_name(person: &mut Person) {
 
 ---
 
-## Lifetime
+## Lifetimes
 
 ```rust
 let y = {
@@ -124,4 +124,27 @@ let y = {
     &x
 //  ^-- borrowed value does not live long enough
 }; //<-- x dropped here while still borrowed
+```
+
+---
+
+
+```rust
+let y = {                       // ------------+-- 'b
+    let x = String::from("hi"); // ----+-- 'a  |
+                                //     |       |
+    &x                          // ----+       |
+};                              //             |
+                                //             |
+println!("{}", y);              // ------------+
+```
+
+--
+
+## Explicit lifetimes
+
+```rust
+fn first<'a>(v: &'a Vec<String>) -> &'a String {
+    return &v[0]
+}
 ```

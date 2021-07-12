@@ -11,6 +11,11 @@
 
 ## Stefan Baumgartner
 
+- Microsoft MVP in Developer technologies
+- [fettblog.eu](https://fettblog.eu)
+- [typescript-book.com](https://typescript-book.com)
+- Twitter: [@ddprrt](https://twitter.com/ddprrt)
+
 ---
 
 ![Rust](../images/rustlove.png)

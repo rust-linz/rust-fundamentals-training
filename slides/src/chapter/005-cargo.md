@@ -425,12 +425,3 @@ cargo test --doc
   * Benchmarking <!-- .element: class="fragment" --> built-in
 * Room <!-- .element: class="fragment" --> for improvement
   * Make it easier to get a custom package repository
-
----
-
-# Thank You for Attending
-
-![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
-
-Rainer Stropek | @rstropek | Coding Club Linz
-{"mode":"full","isActive":false}
