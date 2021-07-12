@@ -1,4 +1,4 @@
-use std::ops::{IndexMut};
+use std::ops::IndexMut;
 
 use crate::{BOARD_SIDE_LENGTH, BoardIndex, Direction, SquareContent};
 
@@ -14,6 +14,7 @@ use crate::{BOARD_SIDE_LENGTH, BoardIndex, Direction, SquareContent};
 
     * mockall crate: https://github.com/asomers/mockall
     * Defining error types: https://doc.rust-lang.org/rust-by-example/error/multiple_error_types/define_error_type.html
+    * Functions: https://doc.rust-lang.org/book/ch03-03-how-functions-work.html
 */
 
 #[cfg_attr(test, mockall::automock)]

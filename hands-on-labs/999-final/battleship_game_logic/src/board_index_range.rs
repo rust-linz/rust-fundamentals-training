@@ -101,7 +101,9 @@ mod tests {
     #[test]
     fn range_loop_row() {
         let mut ix = Vec::new();
-        for i in BoardIndexRangeInclusive::from("A1".parse().unwrap()..="C1".parse().unwrap()) {
+        let from: BoardIndex = "A1".into();
+        let to: BoardIndex = "C1".into();
+        for i in BoardIndexRangeInclusive::from(from..=to) {
             ix.push(i);
         }
 
