@@ -1,0 +1,109 @@
+{
+    "24-structs": {
+        "prefix": "rs",
+        "body": [
+            "pub struct Clock {",
+            "    hours: i32,",
+            "    minutes: i32,",
+            "}",
+            "",
+            "fn main() {",
+            "    let c = Clock::new(24, 0);",
+            "    let d = Clock::new(0, 0);",
+            "",
+            "    if c == d {",
+            "        println!(\"It's the same!\");",
+            "    }",
+            "}",
+            ""
+        ],
+        "description": "24-structs"
+    },
+    "25-structs": {
+        "prefix": "rs",
+        "body": [
+            "impl Clock {",
+            "    pub fn new(hours: i32, minutes: i32) -> Self {",
+            "        todo!(\"TODO\")",
+            "        Self {0, 0}",
+            "    }",
+            "",
+            "    pub fn add_minutes(&self, minutes: i32) -> Self {",
+            "        Self {0, 0}",
+            "    }",
+            "",
+            "    fn normalize(&mut self) -> Self {",
+            "        Self {0, 0}",
+            "    }",
+            "}",
+        ],
+        "description": "25-structs"
+    },
+    "26-structs": {
+        "prefix": "rs",
+        "body": [
+            "    fn normalize(&mut self) -> Self {",
+            "        let mut hours = (self.hours + self.minutes / 60) % 24;",
+            "        let mut minutes = self.minutes % 60;",
+            "        if minutes < 0 {",
+            "            minutes += 60;",
+            "            hours -= 1;",
+            "        }",
+            "        if hours < 0 {",
+            "            hours = (hours + 24) % 24;",
+            "        }",
+            "        Self { hours, minutes }",
+            "    }"
+        ],
+        "description": "26-structs"
+    },
+    "27-structs": {
+        "prefix": "rs",
+        "body": [
+            "impl fmt::Display for Clock {",
+            "    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {",
+            "        write!(f, \"{:0>2}:{:0>2}\", self.hours, self.minutes)",
+            "    }",
+            "}",
+            ""
+        ],
+        "description": "27-structs"
+    },
+    "28-structs-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "#[derive(Debug)]",
+            "pub struct HighScores {",
+            "}",
+            "",
+            "",
+            "fn main() {",
+            "    let scores = [10, 30, 90, 30, 100, 20, 10, 0, 30, 40, 40, 70, 70];",
+            "    let high_scores = HighScores::new(&scores);",
+            "}",
+            ""
+        ],
+        "description": "28-structs-lifetimes"
+    },
+    "29-structs-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "    pub fn new(scores: &'a [u32]) -> Self {",
+            "        Self { scores }",
+            "    }",
+            "",
+            "    pub fn scores(&self) -> &'a [u32] {",
+            "        self.scores",
+            "    }",
+            "",
+            "    pub fn latest(&self) -> Option<u32> {",
+            "        self.scores.last().copied()",
+            "    }",
+            "",
+            "    pub fn personal_best(&self) -> Option<u32> {",
+            "        self.scores.iter().max().copied()",
+            "    }"
+        ],
+        "description": "29-structs-lifetimes"
+    }
+}
