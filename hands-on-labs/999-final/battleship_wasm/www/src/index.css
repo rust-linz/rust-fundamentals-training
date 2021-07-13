@@ -1,0 +1,21 @@
+td {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+}
+
+td.water {
+    background-color: aqua;
+}
+
+td.hit {
+    background-color: yellow;
+}
+
+td.sunken {
+    background-color: red;
+}
+
+table {
+    border-collapse: collapse;
+}
