@@ -52,3 +52,13 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 >  For developers, Rust offers the performance of older languages like C++ with a heavier focus on code safety. Today, there are hundreds of developers at Facebook writing millions of lines of Rust code. 
 
 [Facebook](https://engineering.fb.com/2021/04/29/developer-tools/rust/)
+
+---
+
+## Real-world, production-grade projects
+
+- [AWS Firecracker](https://firecracker-microvm.github.io/) - Virtualization on AWS Lambda and Fargate
+- [Deno](https://deno.land) - A Node.js-like language runtime for JavaScript
+- [Firefox](https://firefox.com) - A good deal of the new rendering engine is written in Rust
+- Cloudflare - Core Edge Logic
+- NPM - Parts of the registry architecture is written in Rust
