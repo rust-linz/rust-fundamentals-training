@@ -1,4 +1,6 @@
-# Getting Started
+# Rust Fundamentals
+
+## Getting Started
 
 ![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
 
@@ -16,11 +18,20 @@
 
 ## Stefan Baumgartner
 
-- Microsoft MVP in Developer technologies
+- Microsoft MVP in Developer Technologies
 - Co-founder [Rust Linz](https://rust-linz.at)
 - [fettblog.eu](https://fettblog.eu)
 - [typescript-book.com](https://typescript-book.com)
 - Twitter: [@ddprrt](https://twitter.com/ddprrt)
+
+---
+
+## Discussion: Why are you curious?
+
+- What do you expect from Rust?
+- What is appealing to you?
+- What do you expect to be different from other languages you use?
+- How would you convince someone who has never heard about Rust to look into it?
 
 ---
 
