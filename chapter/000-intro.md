@@ -38,7 +38,7 @@
 
 ## Most 💕 language in Stackoverflow Survey 2016-2020
 
-![Rust](../images/rustlove.png)
+![Rust](./images/rustlove.png)
 
 ---
 
