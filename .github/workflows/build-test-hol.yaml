@@ -1,0 +1,30 @@
+name: Build HoL, Run Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+      - "hands-on-labs/999-final/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout 🛎
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+    - name: 🔧 Set Rust tools
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        components: rustfmt, clippy
+    - name: 🏭 Build HoL
+      run: cargo build
+      working-directory: hands-on-labs/999-final
+    - name: 🧪 Run tests
+      run: cargo test
+      working-directory: hands-on-labs/999-final
