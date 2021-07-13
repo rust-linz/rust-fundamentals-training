@@ -37,6 +37,47 @@ Functional interfaces on basic types are zero cost abstractions and evaluated on
 
 ---
 
+## Wrapper types: Box<T>
+
+`Box<T>` is
+- an "owned pointer". It can hand out borrowed references, it is the only *owner*.
+- a low cost abstraction for *dynamic allocation*
+- at zero cost!
+
+When the size is not known at compile time, use a `Box<T>` to defer the allocation at runtime.
+
+```rust
+struct Node {
+    value: i32,
+    next: Box<Node>
+}
+```
+
+---
+
+## Wrapper types: Rc<T>
+
+Rc<T> is
+- A *reference counted pointer*. Multiple owners, the data will be freed when all owners go out of scope
+- Comes at a little runtime cost (internal reference counter)
+
+---
+
+## Wrapper types: Arc<T>
+
+Arc<T> is a 
+- An *atomic reference counted pointer*. This is thread-safe!
+- Good in compbination with a `Mutex<T>`, `RwLock<T>`
+
+---
+
+## Wrapper types: Mutex<T>, RwLock<T>
+
+- Shared data, `lock` will give access to it. 
+- `RwLock` is efficient for multiple reads
+
+---
+
 ## Threading
 
 `thread.spawn` creates a new OS thread. `handle.join` starts executing
