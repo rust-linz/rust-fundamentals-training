@@ -101,7 +101,7 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 |------------------------|------------------|--------|---------|-------|
 | Memory management      | Ownership        | GC     | GC      | you   |
 | Execution              | Native           | Native | VM      | Native|
-| Null values            | x                |  ☑️     |    ☑️    |  ☑️    |
+| Null values            | x                |  ☑️     |  x/☑️    |  ☑️    |
 
 ---
 
