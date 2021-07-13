@@ -24,6 +24,12 @@
 
 ---
 
+## What about you?
+
+Your expectations on Rust, this workshop, prior knowledge
+
+---
+
 ## Most 💕 language in Stackoverflow Survey 2016-2020
 
 ![Rust](../images/rustlove.png)
@@ -68,3 +74,34 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 - [Firefox](https://firefox.com) - A good deal of the new rendering engine is written in Rust
 - Cloudflare - Core Edge Logic
 - NPM - Parts of the registry architecture is written in Rust
+
+
+---
+
+## What's unique about Rust
+
+- Rust is compiled to machine code (via LLVM) - native speed!
+- A minimal runtime
+- No gargabe collection, but a unique and effective memory management solution: Ownership
+- Guaranteed memory safety
+- "Debug at compile time" and "Hack without fear"
+  
+---
+
+## Comparison to other languages
+
+
+| Topic                  | Rust             | Go     | C#/Java | C/C++ |
+|------------------------|------------------|--------|---------|-------|
+| Memory management      | Ownership        | GC     | GC      | you   |
+| Execution              | Native           | Native | VM      | Native|
+| Null values            | x                |  ☑️     |    ☑️    |  ☑️    |
+
+---
+
+## A feature-rich language
+
+- Rust has influences from Alef, C#, C++, Cyclone, Erlang, Haskell, Limbo, Newsqueak, OCaml, Ruby, Scheme, Standard ML, Swift
+- Zero-cost abstractions
+- Cargo and crates for dependency management
+- Same goals as Go, different approach
