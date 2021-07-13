@@ -1,0 +1,9 @@
+[package]
+name = "console_game"
+version = "0.1.0"
+authors = ["Rainer <rainer@software-architects.at>"]
+edition = "2018"
+
+[dependencies]
+battleship_game_logic = { path = "../battleship_game_logic" }
+structopt = "^0.3.0"

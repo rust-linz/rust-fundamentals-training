@@ -23,8 +23,8 @@
     "reveal.js": "^4.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.8.54",
-    "fs-extra": "^9.1.0",
+    "esbuild": "^0.12.15",
+    "fs-extra": "^10.0.0",
     "lec": "^1.0.1",
     "line-ending-corrector": "^1.0.1",
     "live-server": "^1.2.1",
