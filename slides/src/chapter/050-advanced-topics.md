@@ -152,7 +152,7 @@ Dog and Person are incompatible in Rust's eyes!
 
 ---
 
-## Dynamic dispatch with trait objects 
+## Dynamic dispatch with trait objects
 
 The `dyn` keyword annotates a *trait object*: A pointer to a trait
 The `Box` ... again ... helps to give a statically available type!
