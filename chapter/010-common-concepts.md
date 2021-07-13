@@ -1,6 +1,6 @@
 # Common Concepts
 
-![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
+## Learn the basics of Rust
 
 
 ## Variables

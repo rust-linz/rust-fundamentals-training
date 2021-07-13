@@ -1,4 +1,6 @@
-# Getting Started
+# Rust Fundamentals
+
+## Getting Started
 
 ![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
 
@@ -16,7 +18,7 @@
 
 ## Stefan Baumgartner
 
-- Microsoft MVP in Developer technologies
+- Microsoft MVP in Developer Technologies
 - Co-founder [Rust Linz](https://rust-linz.at)
 - [fettblog.eu](https://fettblog.eu)
 - [typescript-book.com](https://typescript-book.com)
@@ -24,9 +26,13 @@
 
 ---
 
-## What about you?
+## Discussion: Why are you curious?
 
-Your expectations on Rust, this workshop, prior knowledge
+- What do you expect from Rust and this workshop?
+  - Prior knowledge?
+- What is appealing to you?
+- What do you expect to be different from other languages you use?
+- How would you convince someone who has never heard about Rust to look into it?
 
 ---
 
@@ -95,7 +101,7 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 |------------------------|------------------|--------|---------|-------|
 | Memory management      | Ownership        | GC     | GC      | you   |
 | Execution              | Native           | Native | VM      | Native|
-| Null values            | x                |  ☑️     |    ☑️    |  ☑️    |
+| Null values            | x                |  ☑️     |  x/☑️    |  ☑️    |
 
 ---
 
