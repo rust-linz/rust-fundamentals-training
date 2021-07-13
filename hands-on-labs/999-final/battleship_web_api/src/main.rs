@@ -17,10 +17,12 @@ use rocket::serde::{Deserialize, Serialize};
 
     * Building a simple web API with Rocket v0.5-rc
     * Testing web APIs
+    * Mocking structs with doubles
 
     Recommended readings for this module:
 
     * Rocket docs: https://rocket.rs/v0.5-rc/guide/introduction/
+    * `mockall_double` crate: https://docs.rs/mockall_double/0.2.0/mockall_double/
 */
 
 #[macro_use] extern crate rocket;

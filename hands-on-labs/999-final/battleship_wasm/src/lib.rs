@@ -15,6 +15,7 @@ use serde::Serialize;
 
     Recommended readings for this module:
 
+    * Rust WASM book: https://rustwasm.github.io/docs/book/introduction.html
     * The `wasm-bindgen` Guide: https://rustwasm.github.io/wasm-bindgen/introduction.html
     * wasm-pack docs: https://rustwasm.github.io/docs/wasm-pack/
 */

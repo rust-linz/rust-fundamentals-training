@@ -3,6 +3,18 @@ use std::{collections::HashMap, sync::RwLock};
 use battleship_game_logic::{BoardIndex, SinglePlayerGame};
 use uuid::Uuid;
 
+/*
+    Learnings in this module:
+
+    * Mocking structs for unit tests
+    * Conditional compilation
+
+    Recommended readings for this module:
+
+    * Mockall - mocking structs: https://docs.rs/mockall/0.10.1/mockall/#mocking-structs
+    * Conditional compilation: https://doc.rust-lang.org/reference/conditional-compilation.html
+*/
+
 pub type ID = Uuid;
 
 #[derive(Debug, Clone)]
