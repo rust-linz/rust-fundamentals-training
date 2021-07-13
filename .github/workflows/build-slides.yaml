@@ -1,0 +1,35 @@
+name: Build slides
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+    paths:
+      - "slides/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout 🛎
+      uses: actions/checkout@v2
+      with:
+          persist-credentials: false
+    - name: 🔧 Use Node.js 14
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+    - name: 🔧 Install dependencies
+      run: npm install
+      working-directory: slides
+    - name: 🏭 Build slides into website
+      run: npm run build
+      working-directory: slides
+    - name: 🚀 Deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: slides/dist
+        CLEAN: true
