@@ -327,6 +327,7 @@ let msg = String::from("Hello World");
 - `String` is made of a pointer to some bytes, length, and capacity
 - Both are valid UTF-8
 - Strings can't be indexed by character positions
+- Raw string literals (literals without requiring escapes): `r#"foo = "bar""#`
 
 
 ## Tuple

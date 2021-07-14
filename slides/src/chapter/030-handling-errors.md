@@ -1,7 +1,5 @@
 # Handling Errors
 
-![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
-
 ---
 
 > Make impossible states impossible
