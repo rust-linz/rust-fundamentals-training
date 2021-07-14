@@ -1,4 +1,5 @@
 # Ownership and Borrowing
+## The heart of Rust
 
 ---
 
@@ -146,3 +147,14 @@ fn first<'a>(v: &'a Vec<String>) -> &'a String {
     return &v[0]
 }
 ```
+
+---
+
+## The Drop function
+
+```rust
+let z = vec![1, 2, 3];
+drop(z);
+```
+
+What's happening there?

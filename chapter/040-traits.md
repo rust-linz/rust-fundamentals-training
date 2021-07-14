@@ -1,4 +1,5 @@
 # Traits
+## The meat of Rust
 
 ---
 

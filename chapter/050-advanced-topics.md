@@ -2,39 +2,6 @@
 
 ---
 
-## Iterators and closures
-
-```rust
-let mut vec = Vec::<i32>::new();
-
-for _ in 0..10 {
-    let random_number = rand::thread_rng().gen_range(0..=50);
-    if random_number % 3 != 0 {
-        vec.push(random_number);
-    }
-}
-```
-
-Everything that implements an *iterator* can be used in a *for* loop
-
----
-
-## Iterators and closures
-
-Some types that implement iterators can also be used in a functional way:
-
-```rust
-let random_range: Vec<i32> = (0..10)
-    .map(|_| rand::thread_rng().gen_range(0..=50))
-    .filter(|el| el % 3 != 0)
-    .collect::<Vec<i32>>();
-```
-
-`map` and `filter` take closures -> anonymous functions that are executed for each element.
-Functional interfaces on basic types are zero cost abstractions and evaluated on compile time!
-
----
-
 ## Wrapper types: Box<T>
 
 `Box<T>` is
