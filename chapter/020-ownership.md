@@ -1,7 +1,5 @@
 # Ownership and Borrowing
 
-![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
-
 ---
 
 ## Memory unsafety in Systems Programming

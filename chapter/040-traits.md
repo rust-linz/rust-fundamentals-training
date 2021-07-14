@@ -1,7 +1,5 @@
 # Traits
 
-![Rust Linz](https://rust-linz.at/img/rust-linz-logo.svg)
-
 ---
 
 ## What are traits
