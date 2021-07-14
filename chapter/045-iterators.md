@@ -66,9 +66,6 @@ impl<'a, T> IntoIterator for &'a Vec<T>
 impl<'a, T> IntoIterator for &'a mut Vec<T>
 ```
 
-# Advanced topics
-
-
 ---
 
 ## The Iterator trait
