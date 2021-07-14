@@ -37,6 +37,81 @@ Functional interfaces on basic types are zero cost abstractions and evaluated on
 
 ---
 
+## iter vs into_iter
+
+- The iterator returned by `into_iter` may yield any of `T`, `&T `or `&mut T`, depending on the context.
+- The iterator returned by `iter` will `yield &T`, by convention.
+- The iterator returned by `iter_mut` will yield `&mut T`, by convention.
+
+---
+
+## IntoIterator trait
+
+```rust
+pub trait IntoIterator 
+where
+    <Self::IntoIter as Iterator>::Item == Self::Item, 
+{
+    type Item;
+    type IntoIter: Iterator;
+    fn into_iter(self) -> Self::IntoIter;
+}
+```
+
+---
+
+## IntoIterator for Vec
+
+```rust
+impl<T> IntoIterator for Vec<T>
+impl<'a, T> IntoIterator for &'a Vec<T>
+impl<'a, T> IntoIterator for &'a mut Vec<T>
+```
+
+---
+
+## The Iterator trait
+
+```rust
+trait Iterator {
+    type Item;
+    fn next(&mut self) -> Option<Self::Item>;
+    ...
+}
+```
+
+---
+
+## Implement an Iterator
+
+```rust
+impl<T> Iterator for LinkedList<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.pop()
+    }
+}
+```
+
+---
+
+
+## Implement an IntoIterator
+
+```rust
+impl IntoIterator for Lotto {
+    type Item = <Vec<usize> as IntoIterator>::Item;
+    type IntoIter = <Vec<usize> as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.numbers.into_iter()
+    }
+}
+```
+
+---
+
 ## Wrapper types: Box<T>
 
 `Box<T>` is
