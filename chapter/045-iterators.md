@@ -110,5 +110,3 @@ impl IntoIterator for Lotto {
     }
 }
 ```
-
----
