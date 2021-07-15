@@ -1,40 +1,84 @@
-trait Greeter {
-    fn greet(&self) -> String;
+use std::{fmt::Display, iter::FromIterator};
+
+#[derive(Debug)]
+struct LinkedList<T> {
+    head: Option<Box<Node<T>>>,
+    len: usize,
 }
 
-struct Person {
-    name: String,
+#[derive(Debug)]
+struct Node<T> {
+    value: T,
+    next: Option<Box<Node<T>>>,
 }
 
-impl Greeter for Person {
-    fn greet(&self) -> String {
-        format!("Hey {}!", self.name)
+impl<T> LinkedList<T> {
+    pub fn new() -> Self {
+        Self { head: None, len: 0 }
+    }
+
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
+    pub fn push(&mut self, element: T) {
+        let top = Box::new(Node {
+            value: element,
+            next: self.head.take(),
+        });
+        self.head = Some(top);
+        self.len += 1;
+    }
+
+    pub fn pop(&mut self) -> Option<T> {
+        match self.head.take() {
+            Some(x) => {
+                self.head = x.next;
+                self.len -= 1;
+                Some(x.value)
+            }
+            None => None,
+        }
+    }
+
+    pub fn rev(mut self) -> LinkedList<T> {
+        let mut list = LinkedList::<T>::new();
+        while let Some(x) = self.pop() {
+            list.push(x);
+        }
+        list
     }
 }
 
-struct Dog;
-
-impl Greeter for Dog {
-    fn greet(&self) -> String {
-        "Who is a good boy?".to_string()
+impl<T> FromIterator<T> for LinkedList<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        let mut list = LinkedList::new();
+        for val in iter {
+            list.push(val);
+        }
+        list
     }
 }
 
-fn get_a_greeter(val: u8) -> Box<dyn Greeter> {
-    if val < 5 {
-        Box::new(Person {
-            name: "unknown".to_string(),
-        })
-    } else {
-        Box::new(Dog {})
-    }
-}
+impl<T> Iterator for LinkedList<T> {
+    type Item = T;
 
-fn let_the_greeter_greet(greeter: &dyn Greeter) {
-    println!("{}", greeter.greet());
+    fn next(&mut self) -> Option<Self::Item> {
+        self.pop()
+    }
 }
 
 fn main() {
-    let greeter = get_a_greeter(4);
-    let_the_greeter_greet(greeter.as_ref());
+    let c = vec![12, 23, 2131, 1231, 4352353, 123];
+    let len = c.len();
+    let list = LinkedList::from_iter(c);
+
+    println!("{:#?}", list);
+
+    assert_eq!(len, list.len());
+
+    let mut list = list.rev();
+    while let Some(x) = list.pop() {
+        println!("{}", x);
+    }
 }

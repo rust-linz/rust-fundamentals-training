@@ -60,6 +60,12 @@ impl<T> FromIterator<T> for LinkedList<T> {
     }
 }
 
+impl<T> Iterator for Node<T> {
+    fn next(&mut self) -> Option<Box<Node<T>>> {
+        self.next
+    }
+}
+
 impl<T> Iterator for LinkedList<T> {
     type Item = T;
 

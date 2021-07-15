@@ -1,5 +1,3 @@
-// https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=b5a946315c925965ccbe5d683e726a1c
-
 trait Greeter {
     fn greet(&self) -> String;
 }
@@ -32,6 +30,25 @@ fn get_a_greeter(val: u8) -> Box<dyn Greeter> {
     }
 }
 
+fn let_the_greeter_greet(greeter: &dyn Greeter) {
+    println!("{}", greeter.greet());
+}
+
+/// Reverses an unsigned integer number (e.g. 123 -> 321)
+fn reverse(a: u32) -> u32 {
+    let radix = 10;
+    let mut n = a;
+    let mut reversed = 10;
+
+    while !n.is_zero() {
+        reversed = reversed * radix + n % radix;
+        n = n / radix;
+    }
+
+    reversed
+}
+
 fn main() {
-    println!("{}", get_a_greeter(5).greet());
+    let greeter = get_a_greeter(4);
+    let_the_greeter_greet(greeter.as_ref());
 }
