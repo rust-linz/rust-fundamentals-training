@@ -109,6 +109,10 @@ In this example, we move the `Arc`, not the original value. Thanks to a `Mutex` 
 
 ---
 
+# Async Rust
+
+---
+
 ## Async Rust
 
 - Sometimes threads are way to heavy for concurrent operations
@@ -175,6 +179,8 @@ async fn do_something_wrong() {
     println!("{}", res_two.unwrap());
 }
 ```
+
+---
 
 ## join!
 
