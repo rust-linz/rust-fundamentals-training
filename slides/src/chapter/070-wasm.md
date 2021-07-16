@@ -83,7 +83,6 @@ Lin Clark, [source](https://hacks.mozilla.org/2019/03/standardizing-wasi-a-webas
 
 - Portability. A true, multi-platform VM
 - Security. WASM is per default sandboxed. Hosts can decide what to allow and what not
-- Tailored resources. Memory and CPU can be defined for each WASM program
 
 Hello containers?
 
