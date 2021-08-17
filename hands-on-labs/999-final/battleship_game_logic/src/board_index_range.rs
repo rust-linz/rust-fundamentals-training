@@ -23,7 +23,7 @@ impl BoardIndexRangeInclusive {
             panic!("Invalid arguments, cannot construct inclusive board index range");
         }
 
-        BoardIndexRangeInclusive(RangeInclusive::new(start, end))
+        BoardIndexRangeInclusive(start..=end)
     }
 
     pub fn length(&self) -> usize {
