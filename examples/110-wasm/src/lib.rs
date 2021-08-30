@@ -51,7 +51,7 @@ pub fn work_with_numbers(x: f64, y: Option<f32>, r: i32) -> i64 {
 }
 
 // ===================================================================================================
-// Demonstrates how to handle booleans and variadics in parameters and return values.
+// Demonstrates how to handle booleans in parameters and return values.
 // Read more about bool handling at
 // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/bool.html.
 
