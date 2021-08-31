@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wasm Examples</title>
+</head>
+<body>
+    <h1>Wasm Examples</h1>
+    
+    <p>
+        Most demos write output to console. Please open developer tools and
+        view console output while trying examples below.
+    </p>
+
+    <h2>Calling Rust From JS And Vice Versa</h2>
+    <button id="sayHello">Say hello 👋</button>
+    <button id="sayHelloWithMyAlert">Say hello with my alert 🔔</button>
+
+    <h2>Numeric Parameters and Return Values</h2>
+    <button id="workWithNumbers">Work with numbers 🔢</button>
+
+    <h2>Boolean parameters</h2>
+    <button id="bools">Check if bools are true ✅</button>
+
+    <h2>Handling Panics</h2>
+    <button id="panic">Panic ⚡</button>
+
+    <h2>Number Slices</h2>
+    <button id="fib">Fibonacci 🔗</button><br/>
+    <span id="fibResult"></span>
+
+    <h2>String Handling</h2>
+    <button id="strings">Strings 🔠</button>
+
+    <h2>Communicating With Custom Types</h2>
+    <button id="exportedType">Exported Type 📢</button>
+    <button id="jsValue">With JsValue 📞</button>
+    <button id="serdeWasm">With Serde Wasm Bindgen 😅</button>
+
+    <h2>Pointers To Shared Buffers</h2>
+    <canvas id="canvas" width="300" height="10"></canvas>
+
+    <h2>DOM Manipulation With web_sys</h2>
+    <input id="newTodoItem" type="text"/><button id="addTodoItem">Add ➕</button>
+    <ul id="todoItems"></ul>
+</body>
+</html>

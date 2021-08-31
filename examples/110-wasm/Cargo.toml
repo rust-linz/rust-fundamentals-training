@@ -1,0 +1,35 @@
+[package]
+name = "wasm_examples"
+version = "0.1.0"
+authors = ["Rainer <rainer@software-architects.at>"]
+edition = "2018"
+
+# Crate types cdylib and rlib are important.
+# cdylib is for creating a .wasm file. rlib is important for testing with "wasm-pack test".
+# Read more at https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/template-deep-dive/cargo-toml.html#1-crate-type
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# wasm-bindgen is the most important dependency. Read more at
+# https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/template-deep-dive/cargo-toml.html#2-wasm-bindgen-dependency.
+# "serde-serialize" is important for working with JsValue.
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
+console_error_panic_hook = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+js-sys = "0.3"
+serde-wasm-bindgen = "0.3"
+web-sys = { version = "0.3", features = [
+    'Document',  
+    'Element',  
+    'HtmlElement',  
+    'Node',  
+    'Window', 
+    'HtmlButtonElement', 
+    'HtmlInputElement', 
+    'HtmlUListElement', 
+    'HtmlLiElement',
+] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
