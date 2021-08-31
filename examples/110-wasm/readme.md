@@ -30,3 +30,11 @@ Use `wasm-pack test --chrome` to verify that all tests pass.
 Discuss the anatomy of the generated project. After this, copy the sample code from this folder into your project.
 
 The sample code in [*lib.rs*](src/lib.rs) and [*index.ts*](www/src/index.ts) demonstrates various aspects of Rust Wasm. Do a code walkthrough region-by-region. In longer workshops and trainings you can also write the code region-by-region and discuss it in details.
+
+## Want More?
+
+Examples for higher-level frameworks:
+
+* [stdweb](https://github.com/koute/stdweb)
+* [Yew](https://yew.rs/)
+* [Percy](https://chinedufn.github.io/percy/)
