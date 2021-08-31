@@ -1,6 +1,21 @@
 use wasm_bindgen::{prelude::*};
 use serde::{Serialize, Deserialize};
 
+// region: Initializing
+#[wasm_bindgen]
+pub fn run() {
+    // Enable forwarding panic messages to console.error. Read more about this function at
+    // https://github.com/rustwasm/console_error_panic_hook. 
+    // If you want to really optimize your WASM size to the very last bit, avoid
+    // panicing (read more e.g. at https://rustwasm.github.io/book/reference/code-size.html#avoid-panicking).
+    console_error_panic_hook::set_once();
+
+    // Use console.log to display a status message. Note: UTF8 works 👍
+    log("🦀 Rust WASM initialized 🤘")
+}
+// endregion: Initializing
+
+// region: Importing/exporting functions from JS/Rust
 // ===================================================================================================
 // Demonstrates how to import functions from JS. Read more at 
 // https://rustwasm.github.io/docs/wasm-bindgen/examples/import-js.html.
@@ -33,7 +48,9 @@ pub fn say_hello() {
 pub fn say_hello_with_my_alert() {
     myAlert("Hello World!");
 }
+// endregion: Importing/exporting functions from JS/Rust
 
+// region: Handle parameters
 // ===================================================================================================
 // Demonstrates how to handle numbers in parameters and return values.
 // Note WASM-supported data types (https://webassembly.github.io/spec/core/appendix/index-types.html).
@@ -60,9 +77,12 @@ pub fn work_with_numbers(x: f64, y: Option<f32>, r: i32) -> i64 {
 pub fn all_true(a: bool, another: bool) -> bool {
     a && another
 }
+// endregion: Handle parameters
 
+// region: Panic
 // ===================================================================================================
-// Demonstrates the consequences of using console_error_panic_hook
+// Demonstrates the consequences of using console_error_panic_hook.
+// Try panic with and without console_error_panic_hook and see the difference in the browser's console log.
 
 /// Will panic
 #[wasm_bindgen]
@@ -72,7 +92,9 @@ pub fn panic() -> i32 {
     let y = 0;
     x / y
 }
+// endregion: Panic
 
+// region: Number slices
 // ===================================================================================================
 // Demonstrates how to work with number slices. Read more about number slices at
 // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/number-slices.html and
@@ -91,7 +113,9 @@ pub fn fill_with_fibonacci(buffer: &mut [i32]) {
         buffer[i] = buffer[i - 1] + buffer[ i - 2];
     }
 }
+// endregion: Number slices
 
+// region: Strings
 // ===================================================================================================
 // Demonstrates how to work with strings. Read more about handling strings at
 // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/str.html,
@@ -104,7 +128,9 @@ pub fn write_to_console(msg: &str) -> String {
     log(msg);
     msg.to_string()
 }
+// endregion: Strings
 
+// region: Exported types
 // ===================================================================================================
 // Demonstrates how to work with exported types. Check the generated .d.ts file for the related
 // TypeScript type definitions. For more information about Rust-exported types see
@@ -156,7 +182,9 @@ pub fn fix_age(person: Person, age_change: f64) -> Person {
     // a borrowed reference, JS is responsible to explicitly call `free`.
     Person { first_name: "Rust".to_string(), last_name: person.last_name.clone(), age: person.age + age_change }
 }
+// endregion: Exported types
 
+// region: Working with JsValue
 // ===================================================================================================
 // Demonstrates how to work with JsValue type. For more information see
 // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/jsvalue.html.
@@ -194,7 +222,9 @@ pub fn fix_age_dynamic(person: JsValue, age_change: JsValue) -> Result<JsValue, 
     let result = JsValue::from_serde(&p).map_err(into_js_error)?;
     Ok(result)
 }
+// endregion: Working with JsValue
 
+// region: Working with serde_wasm_bindgen
 // ===================================================================================================
 // Demonstrates how to work with serde_wasm_bindgen. For more information see
 // https://crates.io/crates/serde-wasm-bindgen. The big difference compared to the 
@@ -208,7 +238,9 @@ pub fn fix_age_serde_wasm(person: JsValue, age_change: JsValue) -> Result<JsValu
     p.age = p.age + ac;
     Ok(serde_wasm_bindgen::to_value(&p)?)
 }
+// endregion: Working with serde_wasm_bindgen
 
+// region: Working with shared buffers
 // ===================================================================================================
 // Demonstrates how to work with a shared buffer between Rust and JS. For more information see
 // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/pointers.html.
@@ -265,16 +297,4 @@ impl Display {
         self.pixel[next_ix] = MAX_INTENSITY;
     }
 }
-
-#[wasm_bindgen]
-pub fn run() {
-    // Enable forwarding panic messages to console.error. Read more about this function at
-    // https://github.com/rustwasm/console_error_panic_hook. Try panic with and without
-    // console_error_panic_hook and see the difference in the browser's console log.
-    // If you want to really optimize your WASM size to the very last bit, avoid
-    // panicing (read more e.g. at https://rustwasm.github.io/book/reference/code-size.html#avoid-panicking).
-    console_error_panic_hook::set_once();
-
-    // Use console.log to display a status message. Note: UTF8 works 👍
-    log("🦀 Rust WASM initialized 🤘")
-}
+// endregion: Working with shared buffers
