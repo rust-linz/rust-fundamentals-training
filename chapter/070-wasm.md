@@ -26,14 +26,14 @@
 
 ## Why Rust in the Browser?
 
-- Memory safety
-- Powerful language
+- Memory <!-- .element: class="fragment" --> safety
+- Powerful <!-- .element: class="fragment" --> language
   - Macros
   - Traits
   - Enums
-- Fast (zero-cost abstractions, no runtime)
-- Reuse code on server and client
-- Share code between platforms (e.g. desktop, mobile)
+- Fast <!-- .element: class="fragment" --> and small (zero-cost abstractions, no runtime)
+- Reuse <!-- .element: class="fragment" --> code on server and client
+- Share <!-- .element: class="fragment" --> code between platforms (e.g. desktop, mobile)
 
 ---
 
@@ -46,6 +46,15 @@
 
 ---
 
+## Step-by-Step Example: Rust Wasm 101
+
+[Code on GitHub](examples/110-wasm)
+
+- Learn features of Rust WASM step-by-step
+- Uses TypeScript for web client
+
+---
+
 ## Step-by-Step Example: 🎇 Fireworks
 
 > In separate [GitHub repository](https://github.com/rstropek/rust-samples/tree/master/fireworks)
@@ -53,7 +62,6 @@
 - Learn features of Rust WASM in a larger example
   - [Try the final example](https://cddataexchange.blob.core.windows.net/data-exchange/fireworks/index.html)
 - Use VSCode snippets to walk through the sample
-
 
 ---
 
