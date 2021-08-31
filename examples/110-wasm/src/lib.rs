@@ -1,8 +1,10 @@
 use wasm_bindgen::{prelude::*};
 use serde::{Serialize, Deserialize};
+use web_sys::{HtmlButtonElement, HtmlInputElement, HtmlLiElement, HtmlUListElement};
+use wasm_bindgen::JsCast;
 
 // region: Initializing
-#[wasm_bindgen]
+#[wasm_bindgen(start)]
 pub fn run() {
     // Enable forwarding panic messages to console.error. Read more about this function at
     // https://github.com/rustwasm/console_error_panic_hook. 
@@ -11,7 +13,7 @@ pub fn run() {
     console_error_panic_hook::set_once();
 
     // Use console.log to display a status message. Note: UTF8 works 👍
-    log("🦀 Rust WASM initialized 🤘")
+    log("🦀 Rust WASM initialized 🤘".to_string());
 }
 // endregion: Initializing
 
@@ -29,7 +31,7 @@ extern "C" {
     fn alert(s: &str);      // Import built-in alert function
     fn myAlert(s: &str);    // Import global custom function
     #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);        // Import console.log function
+    fn log(s: String);        // Import console.log function
 }
 
 // ===================================================================================================
@@ -103,7 +105,7 @@ pub fn panic() -> i32 {
 /// Fills given number slice with fibonacci numbers
 #[wasm_bindgen(js_name = fillWithFibonacci)]
 pub fn fill_with_fibonacci(buffer: &mut [i32]) {
-    if buffer.len() == 0 { return; }
+    if buffer.is_empty() { return; }
     buffer[0] = 0;
 
     if buffer.len() == 1 { return; }
@@ -125,7 +127,7 @@ pub fn fill_with_fibonacci(buffer: &mut [i32]) {
 /// Prints the given message to console and returns the message unchanged.
 #[wasm_bindgen(js_name = writeToConsole)]
 pub fn write_to_console(msg: &str) -> String {
-    log(msg);
+    log(msg.to_string());
     msg.to_string()
 }
 // endregion: Strings
@@ -170,7 +172,7 @@ impl Person {
 // if instances are dropped properly.
 impl Drop for Person {
     fn drop(&mut self) {
-        log(format!("Dropping {}", self.first_name).as_str());
+        log(format!("Dropping {}", self.first_name));
     }
 }
 
@@ -215,7 +217,7 @@ pub fn fix_age_dynamic(person: JsValue, age_change: JsValue) -> Result<JsValue, 
 
     // Check data type and process it if data type fits
     if let Some(ac) = age_change.as_f64() {
-        p.age = p.age + ac;
+        p.age += ac;
     }
 
     // Serialize result in Rust, send string to JS, and deserialize everything in JS.
@@ -235,7 +237,7 @@ pub fn fix_age_dynamic(person: JsValue, age_change: JsValue) -> Result<JsValue, 
 pub fn fix_age_serde_wasm(person: JsValue, age_change: JsValue) -> Result<JsValue, JsValue> {
     let mut p: PersonDynamic = serde_wasm_bindgen::from_value(person)?;
     let ac: f64 = serde_wasm_bindgen::from_value(age_change)?;
-    p.age = p.age + ac;
+    p.age += ac;
     Ok(serde_wasm_bindgen::to_value(&p)?)
 }
 // endregion: Working with serde_wasm_bindgen
@@ -291,10 +293,58 @@ impl Display {
         next_ix = ix + match self.direction { Direction::Left => -1, Direction::Right => 1 } as usize;
 
         // Reduce intensity of remaining lights
-        self.pixel.iter_mut().for_each(|p| if *p > 0 { *p = *p - 1; });
+        self.pixel.iter_mut().for_each(|p| if *p > 0 { *p -= 1; });
 
         // Set leading light
         self.pixel[next_ix] = MAX_INTENSITY;
     }
 }
 // endregion: Working with shared buffers
+
+// region: Manipulate DOM from Rust using web_sys
+#[wasm_bindgen]
+pub fn setup_todo() {
+    let mut todo_items = Vec::<String>::new();
+
+    // Get a reference to the window
+    let window = web_sys::window().unwrap();
+    
+    // Get element references to input and button element
+    let document = window.document().unwrap();
+    let new_todo_item_element = document.get_element_by_id("newTodoItem").unwrap();
+    let todo_items_element = document.get_element_by_id("todoItems").unwrap();
+    
+    // Define JS-callable closure for button handler
+    let btn_handler = Closure::wrap(Box::new(move || {
+        // Cast element reference to proper types
+        let new_todo_item = new_todo_item_element.dyn_ref::<HtmlInputElement>().unwrap();
+        let todo_items_list = todo_items_element.dyn_ref::<HtmlUListElement>().unwrap();
+
+        // Add new todo item to vector
+        todo_items.push(new_todo_item.value());
+
+        // Fill ulist with elements from todo_list
+        todo_items_list.set_inner_text("");
+        for item in todo_items.iter() {
+            // Create li element
+            let new_li_element = document.create_element("li").unwrap();
+            let new_li = new_li_element.dyn_ref::<HtmlLiElement>().unwrap();
+
+            // Set text content of li element
+            new_li.set_inner_text(item.as_str());
+
+            // Append li element
+            todo_items_list.append_child(new_li).unwrap();
+        }
+
+    }) as Box<dyn FnMut()>);
+
+    // Set closure as click handler for button
+    window.document().unwrap().get_element_by_id("addTodoItem").unwrap().dyn_ref::<HtmlButtonElement>().unwrap()
+        .set_onclick(Some(btn_handler.as_ref().unchecked_ref()));
+    
+    // We need to "forget" closure. Otherwise, Rust would clean it up. This leaks memory!
+    // However, it is fine in our situation because we want a global event handler.
+    btn_handler.forget();
+}
+// endregion: Manipulate DOM from Rust using web_sys

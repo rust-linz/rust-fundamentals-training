@@ -137,4 +137,7 @@ $(() => {
         display.next();
     }, 50);
     //#endregion
+
+    // Setup todo maintenance (done 100% in Rust)
+    we.setup_todo();
 });
