@@ -8,13 +8,16 @@ $(() => {
     // Initialize our WASM package
     we.run();
 
+    //#region Importing/exporting functions from JS/Rust
     // Call functions exported from Rust
     $('#sayHello').on('click', () => we.sayHello());
     
     // Define a global function that will be called by Rust
     (<any>window).myAlert = (msg: string) => alert(msg);
     $('#sayHelloWithMyAlert').on('click', () => we.sayHelloWithMyAlert());
+    //#endregion
 
+    //#region Handle parameters
     // Demonstrate working with numbers
     $('#workWithNumbers').on('click', () => {
         console.log(`The result is ${we.workWithNumbers(0x1ffffffffffffd, 1, 1).toString(16)}`);
@@ -22,7 +25,9 @@ $(() => {
     });
 
     $('#bools').on('click', () => alert((we.allTrue(true, true) ? "" : "NOT ") + "all are true"));
+    //#endregion
 
+    //#region Panic
     $('#panic').on('click', () => {
         try {
             we.panic();
@@ -30,13 +35,17 @@ $(() => {
             console.error(ex);
         }
     });
+    //#endregion
 
+    //#region Number slices
     $('#fib').on('click', () => {
         const buffer = new Int32Array(10);
         we.fillWithFibonacci(buffer);
         $('#fibResult').text(buffer.join(','));
     });
+    //#endregion
 
+    //#region Strings
     $('#strings').on('click', () => {
         // Note that the following text contains a paired surrogate char (\ud834\udd1e = 𝄞).
         // It also contains an unpaired surrogate char (\ud834). This is fine in JavaScript.
@@ -58,7 +67,9 @@ $(() => {
         // For more information about handling of unpaired surrogates read
         // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/str.html#utf-16-vs-utf-8
     });
+    //#endregion
 
+    //#region Exported Types
     $('#exportedType').on('click', () => {
         let person: we.Person, p: we.Person;
         try {
@@ -77,7 +88,9 @@ $(() => {
             if (p) p.free();
         }
     });
+    //#endregion
 
+    //#region Working with JsValue
     $('#jsValue').on('click', () => {
         try {
             // Tip: Try to mess up person object and see error handling in action
@@ -87,7 +100,9 @@ $(() => {
             console.error(ex);
         }
     });
+    //#endregion
 
+    //#region Working with serde_wasm_bindgen
     $('#serdeWasm').on('click', () => {
         try {
             // Tip: Try to mess up person object and see error handling in action
@@ -97,7 +112,9 @@ $(() => {
             console.error(ex);
         }
     });
+    //#endregion
 
+    //#region Working with shared buffers
     // Create a new display object
     const display = we.Display.new(30);
 
@@ -119,4 +136,5 @@ $(() => {
 
         display.next();
     }, 50);
+    //#endregion
 });
