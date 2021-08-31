@@ -5,7 +5,7 @@ import { memory } from 'wasm_examples/wasm_examples_bg.wasm';
 import $ from 'cash-dom';
 
 $(() => {
-    // Initialize our WASM package
+    // Initialize our Wasm package
     we.run();
 
     //#region Importing/exporting functions from JS/Rust
@@ -74,7 +74,7 @@ $(() => {
         let person: we.Person, p: we.Person;
         try {
             // Create person using constructor function.
-            // Note that person lives in "WASM land".
+            // Note that person lives in "Wasm land".
             person = we.Person.new('JS', 'Foo', 42);
 
             // Call method. Method takes ownership of person and will

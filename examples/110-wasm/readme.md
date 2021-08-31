@@ -1,4 +1,4 @@
-# Rust WASM Sample
+# Rust Wasm Sample
 
 ## Important Links
 
@@ -19,4 +19,14 @@
 
 ## Storyboard
 
-WIP
+We will follow the [*Getting Started* guide in the Rust Wasm book](https://rustwasm.github.io/docs/book/game-of-life/hello-world.html) to create our new package. Run `cargo generate --git https://github.com/rustwasm/wasm-pack-template` and use *wasm_examples* as your project name.
+
+If you want, you can delete files that are not relevant for learning Rust (e.g. readme-files, license-files, etc.).
+
+Use [*wasm-pack*](https://rustwasm.github.io/wasm-pack/book/) to build the code: `wasm-pack build`
+
+Use `wasm-pack test --chrome` to verify that all tests pass.
+
+Discuss the anatomy of the generated project. After this, copy the sample code from this folder into your project.
+
+The sample code in [*lib.rs*](src/lib.rs) and [*index.ts*](www/src/index.ts) demonstrates various aspects of Rust Wasm. Do a code walkthrough region-by-region. In longer workshops and trainings you can also write the code region-by-region and discuss it in details.

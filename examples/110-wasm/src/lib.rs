@@ -8,12 +8,12 @@ use wasm_bindgen::JsCast;
 pub fn run() {
     // Enable forwarding panic messages to console.error. Read more about this function at
     // https://github.com/rustwasm/console_error_panic_hook. 
-    // If you want to really optimize your WASM size to the very last bit, avoid
+    // If you want to really optimize your Wasm size to the very last bit, avoid
     // panicing (read more e.g. at https://rustwasm.github.io/book/reference/code-size.html#avoid-panicking).
     console_error_panic_hook::set_once();
 
     // Use console.log to display a status message. Note: UTF8 works 👍
-    log("🦀 Rust WASM initialized 🤘".to_string());
+    log("🦀 Rust Wasm initialized 🤘".to_string());
 }
 // endregion: Initializing
 
@@ -55,7 +55,7 @@ pub fn say_hello_with_my_alert() {
 // region: Handle parameters
 // ===================================================================================================
 // Demonstrates how to handle numbers in parameters and return values.
-// Note WASM-supported data types (https://webassembly.github.io/spec/core/appendix/index-types.html).
+// Note Wasm-supported data types (https://webassembly.github.io/spec/core/appendix/index-types.html).
 // Read more about number handling at
 // https://rustwasm.github.io/docs/wasm-bindgen/reference/types/numbers.html.
 
