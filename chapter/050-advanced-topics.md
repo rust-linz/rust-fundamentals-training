@@ -2,6 +2,10 @@
 
 ---
 
+![Rust containers](./images/rust-containers.jpeg)
+
+---
+
 ## Wrapper types: Box<T>
 
 `Box<T>` is
