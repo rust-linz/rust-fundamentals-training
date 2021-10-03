@@ -1,3 +1,4 @@
 pkg
 www/node_modules
 www/.bin
+www/dist
