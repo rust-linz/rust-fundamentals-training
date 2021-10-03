@@ -439,6 +439,7 @@ impl Point {
 }
 ```
 
+
 ## Methods
 
 With `impl` blocks you can define implementations on types.
