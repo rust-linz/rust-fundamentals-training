@@ -292,6 +292,72 @@ let ferris = '🦀';
 They're pretty useless. Strings are UTF-8, characters are not. So they're not used internally.
 
 
+## Tuple
+
+```rust[1,2,3|5,6]
+let address = (String::from("127.0.0.1"), 8080); // : (String, i32)
+let ip = address.0;
+let port = address.1;
+
+// Destructuring
+let (ip, port) = address;
+```
+
+- Maximum arity is 12
+- Different types in a tuple
+
+
+## Array
+
+```rust
+let ip = [127, 0, 0, 1]; //[i32; 4]
+let buf = [0; 4];
+
+let first = ip[0];
+```
+
+- Arrays are of fixed size -- it's in the type!
+
+![Mem layout Arrays](./images/memlayout-array.svg)
+
+
+## Vectors
+
+- Data on the heap
+- Can grow and shrink
+
+```rust
+let vec: Vec<u32> = vec![1, 2, 3, 4]
+```
+
+![Mem layout Arrays](./images/memlayout-vec.svg)
+
+
+
+## Slices
+
+- Slices are temporary views into arrays and vectors
+
+```rust
+fn print_slice(slic: &[i32]) {
+    println!("{:?}", slic);
+}
+
+fn main() {
+    let vec: Vec<i32> = vec![1, 2, 3, 4];
+    let arr: [i32; 4] = [1, 2, 3, 4];
+    
+    print_slice(&vec[..]);
+    print_slice(&arr[..]);
+}
+```
+
+
+
+![Mem layout Arrays](./images/memlayout-slice.svg)
+
+
+
 ## Strings
 
 - There are 6 types of String in the Rust standard library
@@ -330,31 +396,10 @@ let msg = String::from("Hello World");
 - Raw string literals (literals without requiring escapes): `r#"foo = "bar""#`
 
 
-## Tuple
 
-```rust[1,2,3|5,6]
-let address = (String::from("127.0.0.1"), 8080); // : (String, i32)
-let ip = address.0;
-let port = address.1;
+## Mem layout
 
-// Destructuring
-let (ip, port) = address;
-```
-
-- Maximum arity is 12
-- Different types in a tuple
-
-
-## Array
-
-```rust
-let ip = [127, 0, 0, 1]; //[i32; 4]
-let buf = [0; 4];
-
-let first = ip[0];
-```
-
-- Arrays are of fixed size
+![Mem layout Arrays](./images/memlayout-string-str.svg)
 
 
 ## Structs
