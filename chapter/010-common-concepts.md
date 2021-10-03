@@ -333,7 +333,6 @@ let vec: Vec<u32> = vec![1, 2, 3, 4]
 ![Mem layout Arrays](./images/memlayout-vec.svg)
 
 
-
 ## Slices
 
 - Slices are temporary views into arrays and vectors
@@ -353,9 +352,7 @@ fn main() {
 ```
 
 
-
 ![Mem layout Arrays](./images/memlayout-slice.svg)
-
 
 
 ## Strings
@@ -394,7 +391,6 @@ let msg = String::from("Hello World");
 - Both are valid UTF-8
 - Strings can't be indexed by character positions
 - Raw string literals (literals without requiring escapes): `r#"foo = "bar""#`
-
 
 
 ## Mem layout
