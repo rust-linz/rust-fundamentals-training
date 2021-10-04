@@ -80,7 +80,8 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 - [Firefox](https://firefox.com) - A good deal of the new rendering engine is written in Rust
 - Cloudflare - Core Edge Logic
 - NPM - Parts of the registry architecture is written in Rust
-
+- [Nushell](https://www.nushell.sh/) - A new type of shell
+- [1Password](https://serokell.io/blog/rust-in-production-1password) - Password manager
 
 ---
 
