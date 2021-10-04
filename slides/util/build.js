@@ -14,6 +14,7 @@ import copy from "recursive-copy";
       "**/*.png",
       "**/*.jpg",
       "**/*.jpeg",
+      "**/*.svg",
       "**/*.gif",
     ],
   };

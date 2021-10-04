@@ -1,6 +1,8 @@
 # Ownership and Borrowing
 ## The heart of Rust
 
+See [animated slides](https://rust-slides.vercel.app/)
+
 ---
 
 ## Memory unsafety in Systems Programming
