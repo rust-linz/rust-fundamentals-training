@@ -25,13 +25,13 @@
         "prefix": "rs",
         "body": [
             "// A tuple with a bunch of different types",
-            "    let long_tuple = (",
-            "        1u8, 2u16, 3u32, 4u64, -1i8, -2i16, -3i32, -4i64, 0.1f32, 0.2f64, 'a', true,",
-            "    );",
+            "let long_tuple = (",
+            "    1u8, 2u16, 3u32, 4u64, -1i8, -2i16, -3i32, -4i64, 0.1f32, 0.2f64, 'a', true,",
+            ");",
             "",
-            "    // Values can be extracted from the tuple using tuple indexing",
-            "    println!(\"long tuple first value: {}\", long_tuple.0);",
-            "    println!(\"long tuple second value: {}\", long_tuple.1);"
+            "// Values can be extracted from the tuple using tuple indexing",
+            "println!(\"long tuple first value: {}\", long_tuple.0);",
+            "println!(\"long tuple second value: {}\", long_tuple.1);"
         ],
         "description": "13-tuples"
     },
@@ -39,15 +39,15 @@
         "prefix": "rs",
         "body": [
             "// Tuples can be tuple members",
-            "    let tuple_of_tuples = ((1u8, 2u16, 2u32), (4u64, -1i8), -2i16);",
+            "let tuple_of_tuples = ((1u8, 2u16, 2u32), (4u64, -1i8), -2i16);",
             "",
-            "    // Tuples are printable",
-            "    println!(\"tuple of tuples: {:?}\", tuple_of_tuples);",
+            "// Tuples are printable",
+            "println!(\"tuple of tuples: {:?}\", tuple_of_tuples);",
             "",
-            "    // But long Tuples cannot be printed",
-            "    // let too_long_tuple = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);",
-            "    // println!(\"too long tuple: {:?}\", too_long_tuple);",
-            "    // TODO ^ Uncomment the above 2 lines to see the compiler error"
+            "// But long Tuples cannot be printed",
+            "// let too_long_tuple = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);",
+            "// println!(\"too long tuple: {:?}\", too_long_tuple);",
+            "// TODO ^ Uncomment the above 2 lines to see the compiler error"
         ],
         "description": "13-tuples"
     },
@@ -55,9 +55,9 @@
         "prefix": "rs",
         "body": [
             "let pair = (1, true);",
-            "    println!(\"pair is {:?}\", pair);",
+            "println!(\"pair is {:?}\", pair);",
             "",
-            "    println!(\"the reversed pair is {:?}\", reverse(pair));",
+            "println!(\"the reversed pair is {:?}\", reverse(pair));",
             ""
         ],
         "description": "13-tuples"
@@ -65,11 +65,11 @@
     "17-tuples": {
         "prefix": "rs",
         "body": [
-            "    //tuples can be destructured to create bindings",
-            "    let tuple = (1, \"hello\", 4.5, true);",
+            "//tuples can be destructured to create bindings",
+            "let tuple = (1, \"hello\", 4.5, true);",
             "",
-            "    let (a, b, c, d) = tuple;",
-            "    println!(\"{:?}, {:?}, {:?}, {:?}\", a, b, c, d);",
+            "let (a, b, c, d) = tuple;",
+            "println!(\"{:?}, {:?}, {:?}, {:?}\", a, b, c, d);",
             ""
         ],
         "description": "13-tuples"
@@ -96,20 +96,20 @@
         "prefix": "rs",
         "body": [
             "// Fixed-size array (type signature is superfluous)",
-            "    let xs: [i32; 5] = [1, 2, 3, 4, 5];",
+            "let xs: [i32; 5] = [1, 2, 3, 4, 5];",
             "",
-            "    // All elements can be initialized to the same value",
-            "    let ys: [i32; 500] = [0; 500];",
+            "// All elements can be initialized to the same value",
+            "let ys: [i32; 500] = [0; 500];",
             "",
-            "    // Indexing starts at 0",
-            "    println!(\"first element of the array: {}\", xs[0]);",
-            "    println!(\"second element of the array: {}\", xs[1]);",
+            "// Indexing starts at 0",
+            "println!(\"first element of the array: {}\", xs[0]);",
+            "println!(\"second element of the array: {}\", xs[1]);",
             "",
-            "    // `len` returns the count of elements in the array",
-            "    println!(\"number of elements in array: {}\", xs.len());",
+            "// `len` returns the count of elements in the array",
+            "println!(\"number of elements in array: {}\", xs.len());",
             "",
-            "    // Arrays are stack allocated",
-            "    println!(\"array occupies {} bytes\", mem::size_of_val(&xs));"
+            "// Arrays are stack allocated",
+            "println!(\"array occupies {} bytes\", mem::size_of_val(&xs));"
         ],
         "description": "18-arrays"
     },
@@ -117,16 +117,16 @@
         "prefix": "rs",
         "body": [
             "",
-            "    // Arrays can be automatically borrowed as slices",
-            "    println!(\"borrow the whole array as a slice\");",
-            "    analyze_slice(&xs);",
+            "// Arrays can be automatically borrowed as slices",
+            "println!(\"borrow the whole array as a slice\");",
+            "analyze_slice(&xs);",
             "",
-            "    // Slices can point to a section of an array",
-            "    // They are of the form [starting_index..ending_index]",
-            "    // starting_index is the first position in the slice",
-            "    // ending_index is one more than the last position in the slice",
-            "    println!(\"borrow a section of the array as a slice\");",
-            "    analyze_slice(&ys[1..4]);"
+            "// Slices can point to a section of an array",
+            "// They are of the form [starting_index..ending_index]",
+            "// starting_index is the first position in the slice",
+            "// ending_index is one more than the last position in the slice",
+            "println!(\"borrow a section of the array as a slice\");",
+            "analyze_slice(&ys[1..4]);"
         ],
         "description": "18-arrays"
     }

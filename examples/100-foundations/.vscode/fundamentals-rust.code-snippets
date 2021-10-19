@@ -166,5 +166,39 @@
 			""
 		],
 		"description": "21-vec"
+	},
+	"21b-vec-push": {
+		"prefix": "rs",
+		"body": [
+			"vecc_collected.push(5);",
+			"println!(\"{:?}\", vecc_collected);",
+			""
+		]
+	},
+	"21c-vec-turbofish": {
+		"prefix": "rs",
+		"body": [
+			"// Turbofish",
+			"let mut vecc_collected = (1..5).collect::<Vec<i32>>();",
+			"",
+			"vecc.push(5);",
+			"",
+			"vecc_collected.push(6);",
+			""
+		]
+	},
+	"21c-vec-loop": {
+		"prefix": "rs",
+		"body": [
+			"for i in vecc_collected {",
+			"    println!(\"> {}\", i);",
+			"}",
+			"",
+			"let mut i = 0;",
+			"while i < vecc.len() {",
+			"    println!(\": {}\", vecc[i]);",
+			"    i += 1;",
+			"}"
+		]
 	}
 }

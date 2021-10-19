@@ -1,5 +1,5 @@
 {
-    "9-loops": {
+    "09-loops": {
         "prefix": "rs",
         "body": [
             "use std::fs::File;",
@@ -7,7 +7,7 @@
             "use std::io::BufReader;",
             "",
             "fn main() {",
-            "    let f = File::open(\"stairway.md\").unwrap();",
+            "let f = File::open(\"stairway.md\").unwrap();",
             "    let mut reader = BufReader::new(f);",
             "",
             "    let mut line = String::new();",
@@ -29,36 +29,37 @@
     "10-loops": {
         "prefix": "rs",
         "body": [
-            "    loop {",
-            "        if let Some(line) = lines.next() {",
-            "            let line = line.unwrap();",
-            "            println!(\"{} ({} bytes long)\", line, line.len());",
-            "        } else {",
-            "            break;",
-            "        }",
-            "    }"
+            "let mut lines = BufReader::new(f).lines();",
+            "loop {",
+            "    if let Some(line) = lines.next() {",
+            "        let line = line.unwrap();",
+            "        println!(\"{} ({} bytes long)\", line, line.len());",
+            "    } else {",
+            "        break;",
+            "    }",
+            "}"
         ],
         "description": "10-loops"
     },
     "11-loops": {
         "prefix": "rs",
         "body": [
-            "    let mut lines = BufReader::new(f).lines();",
-            "    while let Some(line) = lines.next() {",
-            "        let line = line.unwrap();",
-            "        println!(\"{} ({} bytes long)\", line, line.len());",
-            "    }"
+            "let mut lines = BufReader::new(f).lines();",
+            "while let Some(line) = lines.next() {",
+            "    let line = line.unwrap();",
+            "    println!(\"{} ({} bytes long)\", line, line.len());",
+            "}"
         ],
         "description": "10-loops"
     },
     "12-loops": {
         "prefix": "rs",
         "body": [
-            "    let lines = BufReader::new(f).lines();",
-            "    for line in lines {",
-            "        let line = line.unwrap();",
-            "        println!(\"{} ({} bytes long)\", line, line.len());",
-            "    }"
+            "let lines = BufReader::new(f).lines();",
+            "for line in lines {",
+            "    let line = line.unwrap();",
+            "    println!(\"{} ({} bytes long)\", line, line.len());",
+            "}"
         ],
         "description": "10-loops"
     }
