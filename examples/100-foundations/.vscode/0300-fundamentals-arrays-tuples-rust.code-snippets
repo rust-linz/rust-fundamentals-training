@@ -15,13 +15,13 @@
             "struct Matrix(f32, f32, f32, f32);",
             "",
             "fn main() {",
-            "    ",
+            "    $0",
             "}",
             ""
         ],
         "description": "13-tuples"
     },
-    "0305-tuples": {
+    "0305-long-tuples": {
         "prefix": "rs",
         "body": [
             "// A tuple with a bunch of different types",
@@ -35,7 +35,7 @@
         ],
         "description": "13-tuples"
     },
-    "0310-tuples": {
+    "0310-nested-tuples": {
         "prefix": "rs",
         "body": [
             "// Tuples can be tuple members",
@@ -51,7 +51,7 @@
         ],
         "description": "13-tuples"
     },
-    "0315-tuples": {
+    "0315-reverse-tuples": {
         "prefix": "rs",
         "body": [
             "let pair = (1, true);",
@@ -62,7 +62,7 @@
         ],
         "description": "13-tuples"
     },
-    "0320-tuples": {
+    "0320-tuples-destructuring": {
         "prefix": "rs",
         "body": [
             "//tuples can be destructured to create bindings",
@@ -74,7 +74,7 @@
         ],
         "description": "13-tuples"
     },
-    "0325-arrays": {
+    "0325-arrays-starter": {
         "prefix": "rs",
         "body": [
             "use std::mem;",
@@ -86,7 +86,7 @@
             "}",
             "",
             "fn main() {",
-            "    ",
+            "    $0",
             "}",
             ""
         ],
@@ -113,7 +113,7 @@
         ],
         "description": "18-arrays"
     },
-    "0335-arrays": {
+    "0335-arrays-slices": {
         "prefix": "rs",
         "body": [
             "",

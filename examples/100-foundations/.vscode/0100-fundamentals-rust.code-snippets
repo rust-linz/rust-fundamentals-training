@@ -162,6 +162,7 @@
 			"    let mut vecc_collected: Vec<i32> = (1..5).collect();",
 			"",
 			"    // Turbofish, push, access",
+			"    $0",
 			"}",
 			""
 		],

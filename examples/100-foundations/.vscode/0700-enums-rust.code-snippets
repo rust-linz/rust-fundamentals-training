@@ -1,0 +1,78 @@
+{
+    "0700-enum-starter": {
+        "prefix": "rs",
+        "body": [
+            "#[derive(Debug)]",
+            "struct Individual {",
+            "    name: String,",
+            "}",
+            "",
+            "enum Room {",
+            "    Occupied(Individual),",
+            "    Vacant,",
+            "}",
+            "",
+            "type Hotel = Vec<Room>;",
+            "",
+            "fn main() {",
+            "    $0",
+            "}"
+        ]
+    },
+    "0705-use-enum": {
+        "prefix": "rs",
+        "body": [
+            "let mut hotel = Hotel::new();",
+            "",
+            "let alice = Individual {",
+            "    name: \"Alice\".to_string(),",
+            "};",
+            "",
+            "let barbara = Individual {",
+            "    name: \"Barbara\".to_string(),",
+            "};",
+            "",
+            "hotel.push(Room::Occupied(alice));",
+            "hotel.push(Room::Vacant);",
+            "hotel.push(Room::Occupied(barbara));",
+            "$0"
+        ]
+    },
+    "0710-enum-iterate-match": {
+        "prefix": "rs",
+        "body": [
+            "for room in hotel.iter() {",
+            "    match *room {",
+            "        Room::Vacant => println!(\"Available!\"),",
+            "        Room::Occupied(_) => println!(\"Taken, sorry.\"),",
+            "    }",
+            "}",
+            "$0",
+        ]
+    },
+    "0715-enum-enumerate": {
+        "prefix": "rs",
+        "body": [
+            "for (i, house) in hotel.iter().enumerate() {",
+            "    match *house {",
+            "        Room::Vacant => println!(\"No. {} is available!\", i),",
+            "        Room::Occupied(_) => println!(\"No {} is taken.\", i),",
+            "    }",
+            "}",
+            "$0",
+        ]
+    },
+    "0720-enum-use": {
+        "prefix": "rs",
+        "body": [
+            "use Room::{Occupied, Vacant};",
+            "",
+            "for (i, house) in hotel.iter().enumerate() {",
+            "    match *house {",
+            "        Vacant => println!(\"No. {} is available!\", i),",
+            "        Occupied(ref occupant) => println!(\"No {} is taken by {:?}.\", i, occupant.name),",
+            "    }",
+            "}"
+        ]
+    }
+}

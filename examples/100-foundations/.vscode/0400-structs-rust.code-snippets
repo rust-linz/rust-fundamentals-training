@@ -1,0 +1,100 @@
+{
+    "0400-structs-starter": {
+        "prefix": "rs",
+        "body": [
+            "pub struct Clock {",
+            "    hours: i32,",
+            "    minutes: i32,",
+            "}",
+            "",
+            "// Add implementation of Clock",
+            "$0",
+            "",
+            "fn main() {",
+            "    let c = Clock::new(24, 0);",
+            "    let d = Clock::new(0, 0);",
+            "",
+            "    if c == d {",
+            "        println!(\"It's the same!\");",
+            "    }",
+            "}",
+            ""
+        ],
+        "description": "24-structs"
+    },
+    "0405-structs-functions": {
+        "prefix": "rs",
+        "body": [
+            "impl Clock {",
+            "    pub fn new(hours: i32, minutes: i32) -> Self {",
+            "        todo!(\"Implement constructor\");",
+            "    }",
+            "",
+            "    pub fn add_minutes(&self, minutes: i32) -> Self {",
+            "        todo!(\"Implement logic for add\");",
+            "    }",
+            "",
+            "    fn normalize(&mut self) -> Self {",
+            "        todo!(\"Implement normalize\");",
+            "    }",
+            "}",
+        ],
+        "description": "25-structs"
+    },
+    "0407-struct-derive": {
+        "prefix": "rs",
+        "body": [
+            "#[derive(PartialEq, Eq, Debug, Clone)]"
+        ]
+    },
+    "0410-structs-normalize": {
+        "prefix": "rs",
+        "body": [
+            "fn normalize(&mut self) -> Self {",
+            "    let mut hours = (self.hours + self.minutes / 60) % 24;",
+            "    let mut minutes = self.minutes % 60;",
+            "    if minutes < 0 {",
+            "        minutes += 60;",
+            "        hours -= 1;",
+            "    }",
+            "    if hours < 0 {",
+            "        hours = (hours + 24) % 24;",
+            "    }",
+            "    Self { hours, minutes }",
+            "}"
+        ],
+        "description": "26-structs"
+    },
+    "0412-constructor": {
+        "prefix": "rs",
+        "body": [
+            "pub fn new(hours: i32, minutes: i32) -> Self {",
+            "    Self { hours, minutes }.normalize()",
+            "}"
+        ]
+    },
+    "0413-add-minutes": {
+        "prefix": "rs",
+        "body": [
+            "pub fn add_minutes(&self, minutes: i32) -> Self {",
+            "    Self {",
+            "        hours: self.hours,",
+            "        minutes: self.minutes + minutes,",
+            "    }",
+            "    .normalize()",
+            "}"
+        ]
+    },
+    "0415-structs-diplay": {
+        "prefix": "rs",
+        "body": [
+            "impl fmt::Display for Clock {",
+            "    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {",
+            "        write!(f, \"{:0>2}:{:0>2}\", self.hours, self.minutes)",
+            "    }",
+            "}",
+            ""
+        ],
+        "description": "27-structs"
+    }
+}

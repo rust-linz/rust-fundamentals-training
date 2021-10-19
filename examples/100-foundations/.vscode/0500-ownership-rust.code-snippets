@@ -1,0 +1,67 @@
+{
+    "0500-ownership": {
+        "prefix": "rs",
+        "body": [
+            "fn print_numbers(numbers: Vec<i32>) {",
+            "    println!(\"{:?}\", numbers);",
+            "}",
+            "$0",
+            "fn main() {",
+            "    let mut numbers = vec![1i32, 2, 3, 4, 5];",
+            "    numbers.push(6);",
+            "    numbers.push(7);",
+            "",
+            "    print_numbers(numbers);",
+            "    // What happens here?",
+            "    //print_numbers(numbers);",
+            "}",
+            ""
+        ],
+        "description": "22-ownership"
+    },
+    "0505-mutable-borrowing": {
+        "prefix": "rs",
+        "body": [
+            "fn create_numbers(numbers: &mut Vec<i32>) {",
+            "    for i in 0..10 {",
+            "        numbers.push(i);",
+            "    }",
+            "}"
+        ]
+    },
+    "0510-call-create": {
+        "prefix": "rs",
+        "body": [
+            "let mut created_numbers = Vec::new();",
+            "create_numbers(&mut created_numbers);",
+            "print_numbers(created_numbers);"
+        ]
+    },
+    "0515-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "fn get_biggest<'a>(n: &'a i32, m: &'a i32) -> &'a i32 {",
+            "    if n > m {",
+            "        n",
+            "    } else {",
+            "        m",
+            "    }",
+            "}",
+            ""
+        ],
+        "description": "23-lifetimes"
+    },
+    "0520-call-lifetimes": {
+        "prefix": "rs",
+        "body": [
+            "fn main() {",
+            "    let a = 5;",
+            "    let biggest;",
+            "    let b = 6;",
+            "    biggest = get_biggest(&a, &b);",
+            "",
+            "    println!(\"{}\", biggest);",
+            "}"
+        ]
+    }
+}
