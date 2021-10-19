@@ -1,5 +1,5 @@
 {
-	"01-fun-variabl-fn": {
+	"0100-fun-variabl-fn": {
 		"prefix": "rs",
 		"body": [
 			"// Use some crates (we will need them later)",
@@ -17,7 +17,7 @@
 		],
 		"description": "add function for this example"
 	},
-	"02-annotation-inference": {
+	"0105-annotation-inference": {
 		"prefix": "rs",
 		"body": [
 			"let a = 32;",
@@ -29,7 +29,7 @@
 		],
 		"description": "type inference"
 	},
-	"03-shadowing-suffix": {
+	"0110-shadowing-suffix": {
 		"prefix": "rs",
 		"body": [
 			"let d = 0i32;",
@@ -40,7 +40,7 @@
 		],
 		"description": ""
 	},
-	"04-mutability": {
+	"0115-mutability": {
 		"prefix": "rs",
 		"body": [
 			"let mut c = b + d;",
@@ -51,7 +51,7 @@
 		],
 		"description": ""
 	},
-	"04b-freeze-shadowing": {
+	"0120-freeze-shadowing": {
 		"prefix": "rs",
 		"body": [
 			"{",
@@ -63,7 +63,7 @@
 		],
 		"description": "freeze variable using shadowing"
 	},
-	"05-control-flow": {
+	"0125-control-flow": {
 		"prefix": "rs",
 		"body": [
 			"let num = rand::thread_rng().gen_range(0..10);",
@@ -79,7 +79,7 @@
 		],
 		"description": ""
 	},
-	"06-controlo-flow-2": {
+	"0130-controlo-flow-2": {
 		"prefix": "rs",
 		"body": [
 			"",
@@ -94,7 +94,7 @@
 		],
 		"description": ""
 	},
-	"07-match-statement": {
+	"0135-match-statement": {
 		"prefix": "rs",
 		"body": [
 			"let msg = match num {",
@@ -107,7 +107,7 @@
 		],
 		"description": ""
 	},
-	"08-final": {
+	"0140-final": {
 		"prefix": "rs",
 		"body": [
 			"use rand::Rng;",
@@ -153,7 +153,7 @@
 		],
 		"description": "final app after applying previous snippets"
 	},
-	"21-vec": {
+	"0150-vec": {
 		"prefix": "rs",
 		"body": [
 			"fn main() {",
@@ -167,7 +167,7 @@
 		],
 		"description": "21-vec"
 	},
-	"21b-vec-push": {
+	"0155-vec-push": {
 		"prefix": "rs",
 		"body": [
 			"vecc_collected.push(5);",
@@ -175,7 +175,7 @@
 			""
 		]
 	},
-	"21c-vec-turbofish": {
+	"0160-vec-turbofish": {
 		"prefix": "rs",
 		"body": [
 			"// Turbofish",
@@ -187,7 +187,7 @@
 			""
 		]
 	},
-	"21c-vec-loop": {
+	"0165-vec-loop": {
 		"prefix": "rs",
 		"body": [
 			"for i in vecc_collected {",

@@ -1,5 +1,5 @@
 {
-    "09-loops": {
+    "0200-loops-basic": {
         "prefix": "rs",
         "body": [
             "use std::fs::File;",
@@ -26,7 +26,7 @@
         ],
         "description": "9-loops"
     },
-    "10-loops": {
+    "0205-loops-iterator": {
         "prefix": "rs",
         "body": [
             "let mut lines = BufReader::new(f).lines();",
@@ -41,7 +41,7 @@
         ],
         "description": "10-loops"
     },
-    "11-loops": {
+    "0210-loops-while": {
         "prefix": "rs",
         "body": [
             "let mut lines = BufReader::new(f).lines();",
@@ -52,7 +52,7 @@
         ],
         "description": "10-loops"
     },
-    "12-loops": {
+    "0215-loops-iteration": {
         "prefix": "rs",
         "body": [
             "let lines = BufReader::new(f).lines();",

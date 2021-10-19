@@ -1,5 +1,5 @@
 {
-    "13-tuples": {
+    "0300-tuples": {
         "prefix": "rs",
         "body": [
             "// Tuples can be used as function arguments and as return values",
@@ -21,7 +21,7 @@
         ],
         "description": "13-tuples"
     },
-    "14-tuples": {
+    "0305-tuples": {
         "prefix": "rs",
         "body": [
             "// A tuple with a bunch of different types",
@@ -35,7 +35,7 @@
         ],
         "description": "13-tuples"
     },
-    "15-tuples": {
+    "0310-tuples": {
         "prefix": "rs",
         "body": [
             "// Tuples can be tuple members",
@@ -51,7 +51,7 @@
         ],
         "description": "13-tuples"
     },
-    "16-tuples": {
+    "0315-tuples": {
         "prefix": "rs",
         "body": [
             "let pair = (1, true);",
@@ -62,7 +62,7 @@
         ],
         "description": "13-tuples"
     },
-    "17-tuples": {
+    "0320-tuples": {
         "prefix": "rs",
         "body": [
             "//tuples can be destructured to create bindings",
@@ -74,7 +74,7 @@
         ],
         "description": "13-tuples"
     },
-    "18-arrays": {
+    "0325-arrays": {
         "prefix": "rs",
         "body": [
             "use std::mem;",
@@ -92,7 +92,7 @@
         ],
         "description": "18-arrays"
     },
-    "19-arrays": {
+    "0330-arrays": {
         "prefix": "rs",
         "body": [
             "// Fixed-size array (type signature is superfluous)",
@@ -113,7 +113,7 @@
         ],
         "description": "18-arrays"
     },
-    "20-arrays": {
+    "0335-arrays": {
         "prefix": "rs",
         "body": [
             "",
