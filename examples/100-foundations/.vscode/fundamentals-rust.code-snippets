@@ -1,92 +1,113 @@
 {
-	"1-fun-variabl-fn": {
+	"01-fun-variabl-fn": {
 		"prefix": "rs",
 		"body": [
+			"// Use some crates (we will need them later)",
+			"#[allow(unused_imports)]",
+			"use rand::Rng;",
+			"",
 			"fn add(i: i32, j: i32) -> i32 {",
 			"    i + j",
 			"}",
 			"",
 			"fn main() {",
+			"    $0",
 			"}",
 			""
 		],
 		"description": "add function for this example"
 	},
-	"2-annotation-inference": {
+	"02-annotation-inference": {
 		"prefix": "rs",
 		"body": [
 			"let a = 32;",
-			"    let b: i32 = 64;",
-			"    let c = add(a, b);",
+			"let b: i32 = 64;",
+			"let c = add(a, b);",
 			"",
-			"    println!(\"{}\", c);"
+			"println!(\"{}\", c);",
+			""
 		],
-		"description": ""
+		"description": "type inference"
 	},
-	"3-shadowing-suffix": {
+	"03-shadowing-suffix": {
 		"prefix": "rs",
 		"body": [
 			"let d = 0i32;",
-			"    let c = a + d;",
+			"let c = a + d;",
 			"",
-			"    println!(\"{}\", c);",
+			"println!(\"{}\", c);",
 			""
 		],
 		"description": ""
 	},
-	"4-mutability": {
+	"04-mutability": {
 		"prefix": "rs",
 		"body": [
 			"let mut c = b + d;",
-			"    c += a;",
+			"c += a;",
 			"",
-			"    println!(\"{}\", c);"
+			"println!(\"{}\", c);",
+			""
 		],
 		"description": ""
 	},
-	"5-control-flow": {
+	"04b-freeze-shadowing": {
 		"prefix": "rs",
 		"body": [
-			"    let num = rand::thread_rng().gen_range(0..10);",
+			"{",
+			"    #[allow(unused_variables)]",
+			"    let c = c; // shadowing: c is now immutable = frozen",
+			"    // c += 4; // <<< Error; c is immutable",
+			"}",
+			""
+		],
+		"description": "freeze variable using shadowing"
+	},
+	"05-control-flow": {
+		"prefix": "rs",
+		"body": [
+			"let num = rand::thread_rng().gen_range(0..10);",
 			"",
-			"    if num > 5 {",
-			"        println!(\"Win!\");",
-			"    } else if num == 5 {",
-			"        println!(\"So close!\");",
-			"    } else {",
-			"        println!(\"Lost :-(\");",
-			"    }"
+			"if num > 5 {",
+			"    println!(\"Win!\");",
+			"} else if num == 5 {",
+			"    println!(\"So close!\");",
+			"} else {",
+			"    println!(\"Lost :-(\");",
+			"}",
+			""
 		],
 		"description": ""
 	},
-	"6-controlo-flow-2": {
+	"06-controlo-flow-2": {
 		"prefix": "rs",
 		"body": [
 			"",
-			"    let msg = if num > 5 {",
-			"        \"Win!\"",
-			"    } else if num == 5 {",
-			"        \"So close!\"",
-			"    } else {",
-			"        \"Lost :-(\"",
-			"    };"
+			"let msg = if num > 5 {",
+			"    \"Win!\"",
+			"} else if num == 5 {",
+			"    \"So close!\"",
+			"} else {",
+			"    \"Lost :-(\"",
+			"};",
+			""
 		],
 		"description": ""
 	},
-	"7-match-statement": {
+	"07-match-statement": {
 		"prefix": "rs",
 		"body": [
-			"    let msg = match num {",
-			"        5 => \"So close\",",
-			"        _n if _n < 6 => \"Win!\",",
-			"        _ => \"Lost! :-(\",",
-			"    };",
+			"let msg = match num {",
+			"    5 => \"So close\",",
+			"    _n if _n < 6 => \"Win!\",",
+			"    _ => \"Lost! :-(\",",
+			"};",
 			"",
-			"    println!(\"Draw {}, {}\", num, msg);"
+			"println!(\"Draw {}, {}\", num, msg);"
 		],
 		"description": ""
 	},
-	"8-final": {
+	"08-final": {
 		"prefix": "rs",
 		"body": [
 			"use rand::Rng;",
@@ -107,6 +128,12 @@
 			"",
 			"    println!(\"{}\", c);",
 			"",
+			"{",
+			"    #[allow(unused_variables)]",
+			"    let c = c; // shadowing: c is now immutable = frozen",
+			"    // c += 4; // <<< Error; c is immutable",
+			"}",
+			"",
 			"    let mut c = b + d;",
 			"    c += a;",
 			"",
@@ -116,7 +143,7 @@
 			"",
 			"    let msg = match num {",
 			"        5 => \"So close\",",
-			"        _n if _n < 6 => \"Win!\",",
+			"        n if n < 6 => \"Win!\",",
 			"        _ => \"Lost! :-(\",",
 			"    };",
 			"",
@@ -124,7 +151,7 @@
 			"}",
 			""
 		],
-		"description": "8-final"
+		"description": "final app after applying previous snippets"
 	},
 	"21-vec": {
 		"prefix": "rs",

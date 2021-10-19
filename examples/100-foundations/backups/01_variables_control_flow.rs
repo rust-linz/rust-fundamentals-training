@@ -21,14 +21,19 @@ fn main() {
 
     println!("{}", c);
 
+    {
+        #[allow(unused_variables)]
+        let c = c; // shadowing: c is now immutable = frozen
+        // c += 4; // <<< Error; c is immutable
+    }
+
     let num = rand::thread_rng().gen_range(0..10);
 
     let msg = match num {
         5 => "So close",
-        _n if _n < 6 => "Win!",
+        n if n < 6 => "Win!",
         _ => "Lost! :-(",
     };
 
     println!("Draw {}, {}", num, msg);
-    // Maybe show freezing and block scopes
 }
