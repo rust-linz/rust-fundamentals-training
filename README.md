@@ -49,6 +49,5 @@ Install [VS Code](https://code.visualstudio.com) for your platform.
 
 We recommend to use the following extensions:
 
-1. [Rust](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust)
-2. Alternatively, you can use [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer), it requires a little bit more setup from your side. **Don't use both extensions at the same time**
-3. [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) for debugging
+1. [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer)
+2. [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) for debugging
