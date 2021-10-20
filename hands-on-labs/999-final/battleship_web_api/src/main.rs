@@ -76,7 +76,7 @@ enum ShotResult {
 }
 
 #[post("/games/<id>/shoot", format = "json", data = "<location>")]
-fn shoot(id: ID, location: Json<&'_ str>, games_state: &State<GameRepository>) -> ShotResult {
+fn shoot(id: ID, location: Json<&str>, games_state: &State<GameRepository>) -> ShotResult {
     match BoardIndex::from_str(location.as_ref()) {
         Ok(location) => {
             match games_state.shoot(&id, location) {
@@ -92,7 +92,7 @@ fn shoot(id: ID, location: Json<&'_ str>, games_state: &State<GameRepository>) -
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .manage( GameRepository::new())
+        .manage(GameRepository::new())
         .mount("/", routes![start_game,  get_game, shoot])
         .mount("/", FileServer::from(relative!("public")))
 }

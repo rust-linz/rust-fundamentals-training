@@ -24,11 +24,11 @@ pub struct SimpleBoardContent {
 }
 
 impl SimpleBoardContent {
-    pub fn new() -> SimpleBoardContent {
+    pub fn new() -> Self {
         SimpleBoardContent::new_initialized(Default::default())
     }
 
-    pub fn new_initialized(initial_content: SquareContent) -> SimpleBoardContent {
+    pub fn new_initialized(initial_content: SquareContent) -> Self {
         SimpleBoardContent {
             board_content: [initial_content; BOARD_SIZE],
         }
