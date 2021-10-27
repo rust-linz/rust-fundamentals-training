@@ -13,7 +13,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 # wasm-bindgen is the most important dependency. Read more at
 # https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/template-deep-dive/cargo-toml.html#2-wasm-bindgen-dependency.
-# "serde-serialize" is important for working with JsValue.
+# "serde-serialize" is important for working with JsValue. Read more at
+# https://rustwasm.github.io/docs/wasm-bindgen/reference/arbitrary-data-with-serde.html
 wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }
 console_error_panic_hook = "0.1"
 serde = { version = "1.0", features = ["derive"] }
