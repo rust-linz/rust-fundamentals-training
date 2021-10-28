@@ -1,0 +1,288 @@
+{
+    "0800-closure-intro": {
+        "prefix": "rs",
+        "body": [
+            "fn main() {",
+            "    let x = 21;",
+            "    let get_answer = |y: i32| x + y;",
+            "    println!(\"{:?}\", get_answer(21));",
+            "}"
+        ]
+    },
+    "0810-closure-syntax-starter": {
+        "prefix": "rs",
+        "body": [
+            "#[allow(unused_variables)]",
+            "",
+            "fn main() {",
+            "$0",
+            "}"
+        ]
+    },
+    "0815-regular-func": {
+        "prefix": "rs",
+        "body": [
+            "// Regular function",
+            "fn add(x: i32, y: i32) -> i32 { x + y }",
+            "let f = add;",
+            "",
+            "$0",
+            "",
+            "let result = f(1, 2);",
+            "println!(\"{}\", result);",
+        ]
+    },
+    "0820-func-as-closure": {
+        "prefix": "rs",
+        "body": [
+            "// Add function written as closure",
+            "let f = |x: i32, y: i32| { x + y };",
+            ""
+        ]
+    },
+    "0825-simplified": {
+        "prefix": "rs",
+        "body": [
+            "// Simplified closure because of single expression",
+            "let f = |x: i32, y: i32| x + y;",
+            ""
+        ]
+    },
+    "0830-param-inferred": {
+        "prefix": "rs",
+        "body": [
+            "// Closure with inferred parameter types",
+            "let f = |x     , y     | x + y;",
+            "",
+        ]
+    },
+    "0835-inline-call": {
+        "prefix": "rs",
+        "body": [
+            "// Inline closure incl. function call",
+            "println!(\"{}\", (|x, y| x + y)(1, 2));"
+        ]
+    },
+    "0840-fn-vs-Fn": {
+        "prefix": "rs",
+        "body": [
+            "#[allow(unused_variables)]",
+            "",
+            "fn main() {",
+            "    fn add(x: i32, y: i32) -> i32 { x + y }",
+            "",
+            "    fn calc_and_print(x: i32, y: i32, calculator: fn(i32, i32) -> i32) {",
+            "        let result = calculator(x, y);",
+            "        println!(\"{}\", result);",
+            "    }",
+            "    ",
+            "    calc_and_print(1, 2, add);",
+            "    calc_and_print(1, 2, |x, y| x + y);",
+            "",
+            "    $0",
+            "}"
+        ]
+    },
+    "0850-capture-error": {
+        "prefix": "rs",
+        "body": [
+            "let z = 3;",
+            "// The following closure does not work because it captures z.",
+            "// Therefore, it cannot act as a function pointer. The close",
+            "// consists of the function plus the captured variable.",
+            "calc_and_print(1, 2, |x, y| x + y + z);",
+        ]
+    },
+    "0855-Fn": {
+        "prefix": "rs",
+        "body": [
+            "fn main() {",
+            "    fn add(x: i32, y: i32) -> i32 { x + y }",
+            "    ",
+            "    fn calc_and_print(x: i32, y: i32, calculator: Box<dyn Fn(i32, i32) -> i32 + '_>) {",
+            "        let result = calculator(x, y);",
+            "        println!(\"{}\", result);",
+            "    }",
+            "    ",
+            "    calc_and_print(1, 2, Box::new(add));",
+            "    calc_and_print(1, 2, Box::new(|x, y| x + y));",
+            "    ",
+            "    // Now we can also pass a closure with capturing",
+            "    // to calc_and_print.",
+            "    let z = 3;",
+            "    calc_and_print(1, 2, Box::new(|x, y| x + y + z));",
+            "}"
+        ]
+    },
+    "0860-conceptual-struct": {
+        "prefix": "rs",
+        "body": [
+            "struct AdderClosure { z: i32 }",
+            "trait MyAdder { fn add(&self, x: i32, y: i32) -> i32; }",
+            "impl MyAdder for AdderClosure {",
+            "    fn add(&self, x: i32, y: i32) -> i32 { x + y + self.z }",
+            "}",
+            "",
+            "fn main() {",
+            "    fn calc_and_print(x: i32, y: i32, calculator: Box<dyn MyAdder>) {",
+            "        let result = calculator.add(x, y);",
+            "        println!(\"{}\", result);",
+            "    }",
+            "",
+            "    let closure = AdderClosure{ z: 3 };",
+            "    calc_and_print(1, 2, Box::new(closure));",
+            "}"
+        ]
+    },
+    "0870-FnMut": {
+        "prefix": "rs",
+        "body": [
+            "fn main() {",
+            "    let mut result = 0;",
+            "    ",
+            "    // Closure with mutable borrow",
+            "    let mut calc_result = |x, y| { result = x + y; };",
+            "    calc_result(1, 2);",
+            "    println!(\"{}\", result);",
+            "    ",
+            "    // Store closure in `FnMut` variable before calling it",
+            "    let mut result_calculator: Box<dyn FnMut(i32, i32)> = Box::new(|x, y| { result = x + y; });",
+            "    result_calculator(1, 2);",
+            "    drop(result_calculator);",
+            "    println!(\"{}\", result);",
+            "}"
+        ]
+    },
+    "0875-FnOnce": {
+        "prefix": "rs",
+        "body": [
+            "fn main() {",
+            "    // Closure consuming iterator",
+            "    let numbers_iter = vec![1, 2, 3, 5, 6].into_iter();",
+            "    let sum_calculator = move || numbers_iter.sum();",
+            "    let result: i32 = sum_calculator();",
+            "    println!(\"{}\", result);",
+            "",
+            "    // Store closure in `FnOnce` variable before calling it",
+            "    let numbers_iter = vec![1, 2, 3, 5, 6].into_iter();",
+            "    let sum_calculator: Box<dyn FnOnce() -> i32> = Box::new(move || numbers_iter.sum());",
+            "    let result: i32 = sum_calculator();",
+            "    println!(\"{}\", result);",
+            "}"
+        ]
+    },
+    "0880-move-mt": {
+        "prefix": "rs",
+        "body": [
+            "use std::time::Duration;",
+            "use std::thread;",
+            "",
+            "fn main() {",
+            "    let mut counter = 0;",
+            "    let mut counter_string = String::new();",
+            "    ",
+            "    // Move ownership of captured variables into child thread.",
+            "    let background = thread::spawn(move || {",
+            "        loop {",
+            "            counter += 1;",
+            "            ",
+            "            // Add counter to counter string",
+            "            if !counter_string.is_empty() {",
+            "                counter_string.push_str(\", \");",
+            "            }",
+            "            ",
+            "            counter_string.push_str(&counter.to_string());",
+            "            ",
+            "            // Print counter string on the screen",
+            "            println!(\"{}\", counter_string);",
+            "            ",
+            "            // Exit after five iterations",
+            "            if counter == 5 { break; }",
+            "            ",
+            "            // For demo purposes, wait a moment",
+            "            thread::sleep(Duration::from_millis(100));",
+            "        }",
+            "    });",
+            "",
+            "    // Wait for background thread to complete    ",
+            "    background.join().unwrap();",
+            "    ",
+            "    // The next line would not compile because ownership",
+            "    // has been moved into the child thread's closure.",
+            "    //println!(\"{}\", counter_string);",
+            "}"
+        ]
+    },
+    "0885-disjoint-capture-basics": {
+        "prefix": "rs",
+        "body": [
+            "struct Something {",
+            "    anything: String,",
+            "    anything_else: String,",
+            "}",
+            "",
+            "impl Something {",
+            "    fn new() -> Something {",
+            "        Something {",
+            "            anything: \"Foo\".to_string(),",
+            "            anything_else: \"Bar\".to_string()",
+            "            ",
+            "        }",
+            "    }",
+            "}",
+            "",
+            "fn main() {",
+            "    let st = Something::new();",
+            "    drop(st.anything);",
+            "    ",
+            "    // In Rust 2018, the following closure captures st.",
+            "    // Therefore, the code does not compile because a part of",
+            "    // st has already been dropped (see previous line of code).",
+            "    // In Rust 2021, the closure only captures st.anything_else.",
+            "    // Therefore, the code compiles.",
+            "    println!(\"{}\", (|| st.anything_else)());",
+            "}"
+        ]
+    },
+    "0890-cinderella": {
+        "prefix": "rs",
+        "body": [
+            "#[derive(Debug)]",
+            "struct Lentil {",
+            "    size: f32",
+            "}",
+            "",
+            "struct CinderellaTask {",
+            "    lentils: Vec<Lentil>,",
+            "    eat: Box<dyn Fn(&Lentil) -> bool>,",
+            "}",
+            "",
+            "impl CinderellaTask {",
+            "    fn sort_lentils(&mut self) {",
+            "        // The following line works in Rust 2021, it does not in 2018.",
+            "        // In the 2018 edition, the closure captures the entire `self`.",
+            "        // In the 2021 edition, the closure just captures `self.eat`.",
+            "        // So using `self.lentils` outside is now possible.",
+            "        self.lentils.retain(|l| !(self.eat)(l));",
+            "    }",
+            "}",
+            "",
+            "fn main() {",
+            "    let lentils = vec![",
+            "        Lentil{ size: 5.0 },",
+            "        Lentil{ size: 6.0 },",
+            "        Lentil{ size: 1.0 },",
+            "        Lentil{ size: 2.0 },",
+            "    ];",
+            "",
+            "    let mut task = CinderellaTask {",
+            "        lentils,",
+            "        eat: Box::new(|l| l.size < 5.0),",
+            "    };",
+            "    ",
+            "    task.sort_lentils();",
+            "    println!(\"{:?}\", task.lentils);",
+            "}"
+        ]
+    }
+}
