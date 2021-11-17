@@ -35,7 +35,7 @@ pub enum SquareContent {
 
 impl SquareContent {
     pub fn is_ship(&self) -> bool {
-        matches!(*self, SquareContent::Ship | SquareContent::HitShip | SquareContent::SunkenShip)
+        matches!(self, SquareContent::Ship | SquareContent::HitShip | SquareContent::SunkenShip)
     }
 }
 
