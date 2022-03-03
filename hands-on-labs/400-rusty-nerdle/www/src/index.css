@@ -1,0 +1,73 @@
+body {
+  font-family: "Courier New", Courier, monospace;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#header {
+  margin-bottom: 15px;
+}
+
+#output-area {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+  grid-gap: 3px;
+}
+
+#error-area {
+  margin-top: 30px;
+  color: #dd0000;
+  font-weight: bold;
+}
+
+.output-field {
+  background-color: #bbb;
+  border-radius: 5px;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+}
+
+#keyboard-area {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 3px;
+}
+
+.key {
+  background-color: #ddd;
+  border-radius: 5px;
+  width: auto;
+  height: 50px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.key:hover {
+  filter: #bbb;
+}
+
+.key:active {
+  filter: #999;
+}
+
+.key.enter {
+  grid-area: span 1 / span 4;
+}
+
+.key.delete {
+  grid-area: span 1 / span 2;
+}
+
+.key,
+.output-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
