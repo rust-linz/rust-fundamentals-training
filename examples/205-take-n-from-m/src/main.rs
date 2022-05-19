@@ -6,7 +6,7 @@ fn take_n_from_m(take: usize, from: u64) -> Vec<u64> {
     let mut nums: Vec<u64> = (1..=from).collect();
     nums.shuffle(&mut rng);
     let mut result = nums[0..take].to_vec();
-    result.sort();
+    result.sort_unstable();
     result
 }
 

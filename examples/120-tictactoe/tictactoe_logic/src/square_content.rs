@@ -90,6 +90,7 @@ mod tests {
 
     #[test]
     #[should_panic(expected = "99")]
+    #[allow(unused_must_use)]
     fn from_fails() {
         SquareContent::from(99);
     }
