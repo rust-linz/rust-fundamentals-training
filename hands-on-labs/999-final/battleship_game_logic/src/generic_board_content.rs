@@ -43,7 +43,7 @@ impl<T: Default + Copy> GenericBoardContent<T> {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = T> {
-        core::array::IntoIter::new(self.board_content)
+        self.board_content.into_iter()
     }
 
     pub fn row(&self, row: usize) -> Row<T> {
@@ -90,7 +90,7 @@ impl<T> IntoIterator for GenericBoardContent<T> {
     type IntoIter = core::array::IntoIter<Self::Item, BOARD_SIZE>;
 
     fn into_iter(self) -> Self::IntoIter {
-        core::array::IntoIter::new(self.board_content)
+        self.board_content.into_iter()
     }
 }
 

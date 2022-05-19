@@ -1,6 +1,10 @@
-use std::{fmt::Display, ops::{Add, Index, IndexMut, Sub}, str::FromStr};
+use std::{
+    fmt::Display,
+    ops::{Add, Index, IndexMut, Sub},
+    str::FromStr,
+};
 
-use crate::{BOARD_SIDE_LENGTH, GenericBoardContent};
+use crate::{GenericBoardContent, BOARD_SIDE_LENGTH};
 
 /*
     Learnings in this module:
@@ -70,7 +74,7 @@ impl BoardIndex {
         match direction {
             Direction::Horizontal if self.column() < 9 => Some(BoardIndex::from_index(self.0 + 1)),
             Direction::Vertical if self.row() < 9 => Some(BoardIndex::from_index(self.0 + 10)),
-            _ => None
+            _ => None,
         }
     }
 
@@ -78,27 +82,35 @@ impl BoardIndex {
         match direction {
             Direction::Horizontal if self.column() > 0 => Some(BoardIndex::from_index(self.0 - 1)),
             Direction::Vertical if self.row() > 0 => Some(BoardIndex::from_index(self.0 - 10)),
-            _ => None
+            _ => None,
         }
     }
 
     pub fn next_column(&self) -> BoardIndex {
-        if self.column() >= 9 { panic!("Already at last column"); }
+        if self.column() >= 9 {
+            panic!("Already at last column");
+        }
         BoardIndex::from_index(self.0 + 1)
     }
 
     pub fn next_row(&self) -> BoardIndex {
-        if self.row() >= 9 { panic!("Already at last row"); }
+        if self.row() >= 9 {
+            panic!("Already at last row");
+        }
         BoardIndex::from_index(self.0 + 10)
     }
 
     pub fn previous_column(&self) -> BoardIndex {
-        if self.column() == 0 { panic!("Already at first column"); }
+        if self.column() == 0 {
+            panic!("Already at first column");
+        }
         BoardIndex::from_index(self.0 - 1)
     }
 
     pub fn previous_row(&self) -> BoardIndex {
-        if self.row() == 0 { panic!("Already at first row"); }
+        if self.row() == 0 {
+            panic!("Already at first row");
+        }
         BoardIndex::from_index(self.0 - 10)
     }
 }
@@ -131,7 +143,7 @@ impl FromStr for BoardIndex {
     type Err = &'static str;
 
     fn from_str(location: &str) -> Result<Self, Self::Err> {
-                // Note that we could implement the TryFrom trait. However, that would
+        // Note that we could implement the TryFrom trait. However, that would
         // conflict with the implementation of the From trait. For details see
         // https://github.com/rust-lang/rust/issues/50133
 
@@ -151,20 +163,20 @@ impl FromStr for BoardIndex {
         };
 
         // Parse the row letter(s) (1..10)
-        let row: usize; // Note: No mut here
-        if location.len() == 3 {
+        // Note: No mut here
+        let row = if location.len() == 3 {
             if location[1..] != [b'1', b'0'] {
                 // Note slice pattern
                 return Err("Invalid row");
             }
 
-            row = 9;
+            9
         } else {
-            row = match location[1] {
+            match location[1] {
                 c if matches!(c, b'1'..=b'9') => (c - b'1') as usize,
                 _ => return Err("Invalid row"),
-            };
-        }
+            }
+        };
 
         Ok(BoardIndex::from_col_row(col, row))
     }
@@ -365,7 +377,11 @@ mod tests {
     #[case(BoardIndex::from_index(0), Direction::Vertical, Some(BoardIndex::from_index(10)))]
     #[case(BoardIndex::from_index(9), Direction::Horizontal, None)]
     #[case(BoardIndex::from_col_row(0, 9), Direction::Vertical, None)]
-    fn try_get_next(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
+    fn try_get_next(
+        #[case] ix: BoardIndex,
+        #[case] direction: Direction,
+        #[case] expected_ix: Option<BoardIndex>,
+    ) {
         assert_eq!(expected_ix, ix.try_next(direction));
     }
 
@@ -374,7 +390,11 @@ mod tests {
     #[case(BoardIndex::from_col_row(0, 1), Direction::Vertical, Some(BoardIndex::from_index(0)))]
     #[case(BoardIndex::from_index(0), Direction::Horizontal, None)]
     #[case(BoardIndex::from_col_row(9, 0), Direction::Vertical, None)]
-    fn try_get_prev(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
+    fn try_get_prev(
+        #[case] ix: BoardIndex,
+        #[case] direction: Direction,
+        #[case] expected_ix: Option<BoardIndex>,
+    ) {
         assert_eq!(expected_ix, ix.try_previous(direction));
     }
 
