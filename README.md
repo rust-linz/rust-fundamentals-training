@@ -47,7 +47,12 @@ If you see compile information and `Hello, world!` printed out on your command l
 
 Install [VS Code](https://code.visualstudio.com) for your platform.
 
-We recommend to use the following extensions:
+We recommend to use the following extensions and tools:
 
 1. [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer)
 2. [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) for debugging
+3. [crates](https://marketplace.visualstudio.com/items?itemName=serayuzgur.crates)
+4. [Just Command Runner](https://github.com/casey/just) including [Just support in VSCode](https://marketplace.visualstudio.com/items?itemName=skellock.just)
+5. [watchexec](https://watchexec.github.io/)
+6. [vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)
+7. [Better TOML](https://marketplace.visualstudio.com/items?itemName=bungcip.better-toml)
