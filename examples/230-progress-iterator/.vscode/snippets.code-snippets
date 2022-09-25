@@ -1,0 +1,126 @@
+{
+    "01-Starter-Code": {
+        "prefix": "rs",
+        "body": [
+            "fn expensive_calculation(_n: &i32) {",
+            "    std::thread::sleep(std::time::Duration::from_secs(1));",
+            "}",
+            "",
+            "fn main() {",
+            "    let vec: Vec<i32> = (0..3).collect();",
+            "",
+            "    for n in vec.iter() {",
+            "        expensive_calculation(n);",
+            "    }",
+            "}"
+        ],
+        "description": ""
+    },
+    "02-Clear": {
+        "prefix": "rs",
+        "body": [
+            "const CLEAR: &str = \"\\x1B[2J\\x1B[1;1H\";"
+        ],
+        "description": ""
+    },
+    "03-Add-Simple-Interator": {
+        "prefix": "rs",
+        "body": [
+            "let mut i = 1;",
+            "for n in vec.iter() {",
+            "    println!(\"{CLEAR}{}\", \"*\".repeat(i));",
+            "    i += 1;",
+            "    expensive_calculation(n);",
+            "}"
+        ],
+        "description": ""
+    },
+    "04-Add-Progress-Function": {
+        "prefix": "rs",
+        "body": [
+            "fn progress<T>(vec: Vec<T>, f: fn(&T) -> ()) {",
+            "    let mut i = 1;",
+            "    for n in vec.iter() {",
+            "        println!(\"{CLEAR}{}\", \"*\".repeat(i));",
+            "        i += 1;",
+            "        f(n);",
+            "    }",
+            "}",
+            "//progress(vec, expensive_calculation);"
+        ],
+        "description": ""
+    },
+    "05-Generalize-Progress": {
+        "prefix": "rs",
+        "body": [
+            "fn progress<T, Iter>(iter: Iter, f: fn(Iter::Item) -> ()) where Iter: Iterator<Item = T> {",
+            "    let mut i = 1;",
+            "    for n in iter {",
+            "        println!(\"{CLEAR}{}\", \"*\".repeat(i));",
+            "        i += 1;",
+            "        f(n);",
+            "    }",
+            "}",
+            "//progress(vec.iter(), expensive_calculation);"
+        ],
+        "description": ""
+    },
+    "06-Add-Progress-Iterator": {
+        "prefix": "rs",
+        "body": [
+            "struct Progress<Iter> {",
+            "    iter: Iter,",
+            "    i: usize,",
+            "}",
+            "",
+            "impl<Iter> Progress<Iter> {",
+            "    pub fn new(iter: Iter) -> Self {",
+            "        Progress { iter, i: 0 }",
+            "    }",
+            "}",
+            "",
+            "impl<Iter> Iterator for Progress<Iter> where Iter: Iterator {",
+            "    type Item = Iter::Item;",
+            "",
+            "    fn next(&mut self) -> Option<Self::Item> {",
+            "        println!(\"{CLEAR}{}\", \"*\".repeat(self.i));",
+            "        self.i += 1;",
+            "        self.iter.next()",
+            "    }",
+            "}",
+            "",
+            "// Remove progress fn"
+        ],
+        "description": ""
+    },
+    "07-New-Main": {
+        "prefix": "rs",
+        "body": [
+            "fn main() {",
+            "    let vec: Vec<i32> = (0..3).collect();",
+            "    for n in Progress::new(vec.iter()) {",
+            "        expensive_calculation(n);",
+            "    }",
+            "}"
+        ],
+        "description": ""
+    },
+    "08-Add-Extension-To-Iter": {
+        "prefix": "",
+        "body": [
+            "trait ProgressIteratorExt: Sized {",
+            "    fn progress(self) -> Progress<Self>;",
+            "}",
+            "",
+            "impl<Iter> ProgressIteratorExt for Iter",
+            "where Iter: Iterator",
+            "{",
+            "    fn progress(self) -> Progress<Self> {",
+            "        Progress::new(self)",
+            "    }",
+            "}",
+            "//for n in vec.iter().progress() {"
+        ],
+        "description": ""
+    }
+}
