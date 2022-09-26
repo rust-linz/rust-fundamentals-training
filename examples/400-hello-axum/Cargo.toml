@@ -1,0 +1,11 @@
+[package]
+name = "hello-axum"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+axum = { version = "^0.5", features = ["json"] }
+axum-extra = { version = "^0.3", features = ["cookie"] }
+serde = { version = "^1.0", features = ["derive"] }
+base64 = "0.13"
