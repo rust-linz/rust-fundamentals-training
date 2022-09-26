@@ -1,10 +1,16 @@
-use axum::{response::{Html, IntoResponse}, routing::get, Router, Json, extract::{Path, Query}, http::{StatusCode, self}};
+use axum::{response::{Html, IntoResponse}, routing::{get, post}, Router, Json, extract::{Extension, Path, Query}, http::{StatusCode, self}};
 use axum_extra::extract::{CookieJar, cookie::Cookie};
 use serde::Serialize;
-use std::{net::SocketAddr, collections::HashMap};
+use std::{net::SocketAddr, collections::HashMap, sync::Arc};
+
+mod api;
+use crate::api::{HeroesMap, HeroCount, add_hero, get_all, get_hero};
 
 #[tokio::main]
 async fn main() {
+    let heroes = Arc::new(HeroesMap::new());
+    let hero_count = Arc::new(HeroCount::new());
+
     // Defining routes (see https://docs.rs/axum/latest/axum/routing/struct.Router.html)
     let app = Router::new()
         .route("/", get(html_hello_world))
@@ -14,7 +20,11 @@ async fn main() {
         .route("/login", get(login))
         .route("/session", get(session))
         .route("/:name", get(greeting))
-        ;
+        .route("/heroes", post(add_hero))
+        .route("/heroes", get(get_all))
+        .route("/heroes/:id", get(get_hero))
+        .layer(Extension(heroes))
+        .layer(Extension(hero_count));
     
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("listening on http://{}", addr);
