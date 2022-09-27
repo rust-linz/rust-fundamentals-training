@@ -1,0 +1,12 @@
+[package]
+name = "turmrechnen"
+version = "0.1.0"
+authors = ["Rainer <rainer@software-architects.at>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = { version = "0.2" }
+console_error_panic_hook = { version = "^0.1.0" }
