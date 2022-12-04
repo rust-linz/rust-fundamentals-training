@@ -1,7 +1,21 @@
-pub const TOP_DECORATOR: &str = "┌─────┐";
-pub const BOTTOM_DECORATOR: &str = "└─────┘";
-pub const SEPARATOR_LENGTH: usize = 3; // Note const fn here
-pub const SEPARATOR_CHAR: u8 = b' ';
+// ================================================================================
+// LEARNINGS:
+// - Working with constants and constant functions
+// - Simple enums
+// - Using `match` expressions
+// - `char` vs. `byte` literals
+// - Working with iterators
+// - `for` loops
+// - Building strings
+// - `if let` expressions
+// - Number formatting with `format!` and `println!`
+// ================================================================================
+
+// Some constants for formatting our math pyramid
+pub const TOP_DECORATOR: &str = "┌──────┐";
+pub const BOTTOM_DECORATOR: &str = "└──────┘";
+pub const SEPARATOR_LENGTH: usize = 3;
+pub const SEPARATOR_CHAR: u8 = b' '; // Note that this is a byte, not a character
 pub const BAR: char = '│';
 
 /// Helper struct for repeating a char in const fn.
@@ -29,6 +43,8 @@ macro_rules! repeat {
 }
 
 pub const SEPARATOR: &str = repeat!(SEPARATOR_CHAR, SEPARATOR_LENGTH);
+pub const INDENTATION_LEN: usize = (TOP_DECORATOR.len() / BAR.len_utf8() + SEPARATOR_LENGTH) / 2;
+pub const INDENTATION: &str = repeat!(SEPARATOR_CHAR, INDENTATION_LEN);
 
 pub enum Decorator {
     Top,
@@ -49,19 +65,26 @@ impl Decorator {
 ///
 /// Note that `repeated_decorator` and `repeated_decorator_iter` serve the same purpose.
 /// They are just different implementations demonstrating different solution approaches.
+///
+/// # Arguments
+///
+/// * `decorator` - The decorator to repeat.
+/// * `n` - The number of times to repeat the decorator.
 pub fn repeated_decorator(decorator: Decorator, n: usize) -> String {
+    // Get the decorator string
     let decorator_str = decorator.as_str();
 
-    // Create string that will receive the repeated string.
-    let mut result = String::with_capacity(
-        n * (decorator_str.as_bytes().len() + SEPARATOR_LENGTH) - SEPARATOR_LENGTH,
-    );
+    // Create string that will receive the repeated string. Note that
+    // `decorator_str.len()` returns the number of bytes, not the number of characters.
+    // Additionally, it is a const function, so it is evaluated at compile time.
+    let mut result =
+        String::with_capacity(n * (decorator_str.len() + SEPARATOR_LENGTH) - SEPARATOR_LENGTH);
 
     // Add the copies of the string with separating spaces
-    (0..n - 1).for_each(|_| {
+    for _ in 0..n - 1 {
         result.push_str(decorator_str);
         result.push_str(SEPARATOR);
-    });
+    }
     result.push_str(decorator_str);
 
     result
@@ -71,6 +94,11 @@ pub fn repeated_decorator(decorator: Decorator, n: usize) -> String {
 ///
 /// Note that `repeated_decorator` and `repeated_decorator_iter` serve the same purpose.
 /// They are just different implementations demonstrating different solution approaches.
+///
+/// # Arguments
+///
+/// * `decorator` - The decorator to repeat.
+/// * `n` - The number of times to repeat the decorator.
 pub fn repeated_decorator_iter(
     decorator: Decorator,
     n: usize,
@@ -84,8 +112,12 @@ pub fn repeated_decorator_iter(
     })
 }
 
-/// Returns a string with the given number between bars and separating spaces between them.
-pub fn repeated_numbers_iter(numbers: impl Iterator<Item = usize>) -> String {
+/// Returns a string with the given numbers between bars and separating spaces between them.
+/// 
+/// # Arguments
+/// 
+/// * `numbers` - The numbers to format
+pub fn repeated_numbers_iter(numbers: impl Iterator<Item = u16>) -> String {
     let mut result;
     if let Some(size) = numbers.size_hint().1 {
         // Note how we use `size_hint` to pre-allocate the string.
@@ -93,9 +125,12 @@ pub fn repeated_numbers_iter(numbers: impl Iterator<Item = usize>) -> String {
             (BAR.len_utf8() * 2 + TOP_DECORATOR.len() - 2) * size + SEPARATOR_LENGTH * (size - 1),
         );
     } else {
+        // If we don't know the size, we just use the default capacity.
         result = String::new();
     }
 
+    // Add the copies of the string with separating spaces. Separating spaces
+    // are ommitted before the first number.
     let mut first = true;
     numbers.map(number_between_bars).for_each(|s| {
         if first {
@@ -110,8 +145,14 @@ pub fn repeated_numbers_iter(numbers: impl Iterator<Item = usize>) -> String {
 }
 
 /// Returns a string containing the given number enclosed in bars (see `BAR` character).
-pub fn number_between_bars(n: usize) -> String {
-    format!("│{n:>4} │")
+/// 
+/// Example: `number_between_bars(42)` returns `"│   42 │"`.
+/// 
+/// # Arguments
+/// 
+/// * `n` - The number to enclose in bars.
+pub fn number_between_bars(n: u16) -> String {
+    format!("│ {n:>4} │")
 }
 
 #[cfg(test)]
@@ -147,7 +188,7 @@ mod tests {
     #[rstest]
     #[case(vec![1, 2, 3], format!("{1}{0}{2}{0}{3}", SEPARATOR, number_between_bars(1), number_between_bars(2), number_between_bars(3)))]
     #[case(vec![1], number_between_bars(1))]
-    fn test_repeated_numbers_iter(#[case] s: Vec<usize>, #[case] expected: String) {
+    fn test_repeated_numbers_iter(#[case] s: Vec<u16>, #[case] expected: String) {
         assert_eq!(repeated_numbers_iter(s.into_iter()), expected);
     }
 }

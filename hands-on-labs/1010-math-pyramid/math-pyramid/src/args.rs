@@ -1,5 +1,16 @@
 use std::env::Args;
 
+// ================================================================================
+// LEARNINGS:
+// - How to access command line arguments in Rust
+//   (without helper traits like [clap](https://docs.rs/clap/latest/clap/))
+// - Working with recoverable errors (`Result`)
+// - Writing generic methods, using trait bounds
+// - Working with iterators
+// - `match` expressions
+// - Writing basic unit tests
+// ================================================================================
+
 /// Reads the base length of the math pyramid from the command line arguments.
 /// 
 /// Note that if the base length is not specified in the command line arguments,
@@ -33,11 +44,8 @@ where
 
     // Parse the base length from the command line arguments.
     match a.parse() {
-        Ok(n) => if !matches!(n, 2..=10) {
-            Err(format!("Base length must be between 2 and 10, but was {n}"))
-            } else {
-                Ok(n)
-            },
+        Ok(n) if !matches!(n, 2..=10) => Err(format!("Base length must be between 2 and 10, but was {n}")),
+        Ok(n) => Ok(n),
         Err(_) => Err(format!(r#"Invalid base length. "{a}" is not a valid number."#)),
     }
 }
