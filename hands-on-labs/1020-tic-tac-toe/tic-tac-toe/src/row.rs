@@ -15,10 +15,12 @@ impl<'a> Row<'a> {
         Row { board, row_index: row }
     }
 
+    #[allow(dead_code)]
     pub fn as_slice(&self) -> &[Option<SquareContent>] {
         &self.board.as_slice()[(self.row_index * 3)..((self.row_index + 1) * 3)]
     }
 
+    #[allow(dead_code)]
     pub fn has_next(&self) -> bool {
         self.row_index < 2
     }
@@ -156,7 +158,7 @@ impl fmt::Display for BoardContent {
 
         result.push_str(&bottom);
 
-        write!(f, "{}", result)
+        write!(f, "{result}")
     }
 }
 

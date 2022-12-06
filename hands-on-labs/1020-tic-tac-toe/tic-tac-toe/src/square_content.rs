@@ -14,7 +14,7 @@ impl From<u8> for SquareContent {
         match value {
             1 => SquareContent::X,
             2 => SquareContent::O,
-            v => panic!("Cannot convert {} to square content", v),
+            v => panic!("Cannot convert {v} to square content"),
         }
     }
 }
@@ -42,7 +42,7 @@ impl From<char> for SquareContent {
         match value {
             'X' => SquareContent::X,
             'O' => SquareContent::O,
-            v => panic!("Invalid character {}", v)
+            v => panic!("Invalid character {v}")
         }
     }
 }

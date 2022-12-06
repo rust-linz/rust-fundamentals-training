@@ -114,7 +114,7 @@ impl TryFrom<&[u8]> for BoardContent {
                 let mut content = BoardContent::new();
                 for (ix, square_byte) in bytes.iter().copied().enumerate() {
                     content.board_content[ix] = match square_byte {
-                        b' ' => None,
+                        0 => None,
                         _ => Some(square_byte.into()),
                     };
                 }
@@ -128,11 +128,11 @@ impl TryFrom<&[u8]> for BoardContent {
 
 impl From<BoardContent> for [u8; 3 * 3] {
     fn from(c: BoardContent) -> Self {
-        let mut content: [u8; 3 * 3] = [b' '; 3 * 3];
+        let mut content: [u8; 3 * 3] = [0; 3 * 3];
         for (ix, square) in c.board_content.iter().copied().enumerate() {
             content[ix] = match square {
                 Some(c) => c.into(),
-                None => b' ',
+                None => 0,
             };
         }
 
@@ -213,7 +213,7 @@ mod tests {
         let board = BoardContent::new();
         let bytes: [u8; 3 * 3] = board.into();
         assert_eq!(bytes.iter().count(), 9);
-        assert!(bytes.iter().all(|v| *v == b' '));
+        assert!(bytes.iter().all(|v| *v == 0));
     }
 
     #[test]

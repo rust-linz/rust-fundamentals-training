@@ -93,7 +93,7 @@ impl From<BoardIndex> for usize {
 
 impl From<BoardIndex> for String {
     fn from(ix: BoardIndex) -> Self {
-        format!("{}", ix)
+        format!("{ix}")
     }
 }
 
@@ -123,14 +123,14 @@ impl FromStr for BoardIndex {
 
         // Parse column letter (A..C, a..c)
         let col = match location[0] {
-            r if matches!(r, b'A'..=b'C') => (r - b'A') as usize, // Check experimental `if let` syntax
-            r if matches!(r, b'a'..=b'c') => (r - b'a') as usize,
+            r @ b'A'..=b'C' => (r - b'A') as usize, // Check experimental `if let` syntax
+            r @ b'a'..=b'c' => (r - b'a') as usize,
             _ => return Err("Invalid column"),
         };
 
         // Parse the row letter(s) (1..3)
         let row = match location[1] {
-            c if matches!(c, b'1'..=b'3') => (c - b'1') as usize,
+            c @ b'1'..=b'3' => (c - b'1') as usize,
             _ => return Err("Invalid row"),
         };
 

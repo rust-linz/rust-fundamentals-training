@@ -14,7 +14,6 @@ pub struct SetError {
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub enum ErrorKind {
-    CannotResetToEmpty,
     SquareAlreadyHasValue,
     WrongPlayerSetOrder,
 }
@@ -79,6 +78,7 @@ impl<T: SquareAccessor> Game<T> {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub fn who_is_next(&self) -> SquareContent {
         self.current_player
     }
