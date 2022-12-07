@@ -1,5 +1,7 @@
 use rand::{prelude::IteratorRandom, thread_rng};
 use std::{
+    fs::File,
+    io::{BufRead, BufReader},
     sync::{Arc, Mutex},
     thread,
 };
@@ -49,6 +51,10 @@ fn main() {
     for lotto in lottos.lock().unwrap().iter() {
         println!("{:?}", lotto);
     }
+}
+
+fn isTruthy() -> bool {
+    true
 }
 
 /*
