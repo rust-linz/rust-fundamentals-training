@@ -1,0 +1,32 @@
+@host = http://127.0.0.1:3000
+
+###
+GET {{host}}
+
+###
+GET {{host}}/protected
+
+###
+GET {{host}}/protected
+x-api-key: c2VjcmV0
+
+###
+GET {{host}}/protected
+x-api-key: c2VjcmV
+
+###
+# @name newHero
+POST {{host}}/heroes
+Content-Type: application/json
+
+{
+    "name": "Homelander",
+    "canFly": true
+}
+
+###
+GET {{host}}/heroes
+
+###
+@addedHeroId={{newHero.response.body.$.id}}
+GET {{host}}/heroes/{{addedHeroId}}

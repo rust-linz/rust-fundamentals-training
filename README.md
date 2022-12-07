@@ -25,29 +25,36 @@ Verify your *Rust* installation:
 2. Navigate to a folder you want to use for your Rust projects
 3. Enter
 
-```bash
-$ cargo new installation-test
-```
+    ```bash
+    $ cargo new installation-test
+    ```
 
 4. Cargo will create a "Hello World" application for you. Enter the newly created directory
 
-```bash
-$ cd installation-test
-```
+    ```bash
+    $ cd installation-test
+    ```
 
 5. Build and run
 
-```bash
-$ cargo run
-```
+    ```bash
+    $ cargo run
+    ```
 
 If you see compile information and `Hello, world!` printed out on your command line, you are ready to go!
+
+If you want to try the samples using Rust with client-side Wasm, please also install [`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/).
 
 ## Tooling with VSCode
 
 Install [VS Code](https://code.visualstudio.com) for your platform.
 
-We recommend to use the following extensions:
+We recommend to use the following extensions and tools:
 
 1. [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer)
 2. [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) for debugging
+3. [crates](https://marketplace.visualstudio.com/items?itemName=serayuzgur.crates)
+4. [Just Command Runner](https://github.com/casey/just) including [Just support in VSCode](https://marketplace.visualstudio.com/items?itemName=skellock.just)
+5. [watchexec](https://watchexec.github.io/)
+6. [vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)
+7. [Better TOML](https://marketplace.visualstudio.com/items?itemName=bungcip.better-toml)

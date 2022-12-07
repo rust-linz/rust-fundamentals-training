@@ -1,6 +1,6 @@
 # Progress Iterator example
 
-(by Will Chrichton)
+Based on [Type-Driven API Design in Rust](https://www.youtube.com/watch?v=bnnacleqg6k) by Will Chrichton
 
 This example implements:
 - Progress struct that wraps the iterator

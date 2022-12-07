@@ -29,34 +29,48 @@ pub trait ShipFinder {
 }
 
 // Note: Private method returning tuple
-fn find_ship_edge(board: &impl Index<BoardIndex, Output = SquareContent>, current: BoardIndex, direction: Direction, prev: bool) -> (BoardIndex, bool) {
+fn find_ship_edge(
+    board: &impl Index<BoardIndex, Output = SquareContent>,
+    current: BoardIndex,
+    direction: Direction,
+    prev: bool,
+) -> (BoardIndex, bool) {
     debug_assert!(board[current].is_ship());
 
     let mut current = current; // Note shadowing (immutable -> mutable)
     loop {
-        let next; // Note variable without type; type will be fixed later
-        if prev { 
-            next = current.try_previous(direction);
+        let next = if prev {
+            current.try_previous(direction)
         } else {
-            next = current.try_next(direction);
-        }
+            current.try_next(direction)
+        };
 
         // Note pattern matching with if let
-        if let Some(x) = next { current = x; }
+        if let Some(x) = next {
+            current = x;
+        }
 
-        if next == None || !board[current].is_ship() { break; }
+        if next == None || !board[current].is_ship() {
+            break;
+        }
     }
 
-    if board[current].is_ship() { return (current, true); }
-    
+    if board[current].is_ship() {
+        return (current, true);
+    }
+
     let complete = board[current] != SquareContent::Unknown;
     match prev {
         true => (current.try_next(direction).unwrap(), complete),
-        false => (current.try_previous(direction).unwrap(), complete)
+        false => (current.try_previous(direction).unwrap(), complete),
     }
 }
 
-fn try_direction(board: &impl Index<BoardIndex, Output = SquareContent>, ix: BoardIndex, direction: Direction) -> (BoardIndexRangeInclusive, bool) {
+fn try_direction(
+    board: &impl Index<BoardIndex, Output = SquareContent>,
+    ix: BoardIndex,
+    direction: Direction,
+) -> (BoardIndexRangeInclusive, bool) {
     debug_assert!(board[ix].is_ship());
 
     let (beginning_ix, beginning_complete) = find_ship_edge(board, ix, direction, true);
@@ -64,7 +78,10 @@ fn try_direction(board: &impl Index<BoardIndex, Output = SquareContent>, ix: Boa
     (BoardIndexRangeInclusive::new(beginning_ix, end_ix), beginning_complete && end_complete)
 }
 
-impl<T> ShipFinder for T where T: Index<BoardIndex, Output = SquareContent> {
+impl<T> ShipFinder for T
+where
+    T: Index<BoardIndex, Output = SquareContent>,
+{
     fn try_find_ship(&self, ix: BoardIndex) -> ShipFindingResult {
         if !self[ix].is_ship() {
             return ShipFindingResult::NoShip;
@@ -74,7 +91,11 @@ impl<T> ShipFinder for T where T: Index<BoardIndex, Output = SquareContent> {
         for direction in [Direction::Horizontal, Direction::Vertical] {
             result = try_direction(self, ix, direction);
             if result.0.length() > 1 {
-                return if result.1 { ShipFindingResult::CompleteShip(result.0) } else { ShipFindingResult::PartialShip(result.0) };
+                return if result.1 {
+                    ShipFindingResult::CompleteShip(result.0)
+                } else {
+                    ShipFindingResult::PartialShip(result.0)
+                };
             }
         }
 
@@ -97,7 +118,8 @@ mod tests {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
         board.try_place_ship("A1".parse().unwrap(), 3, Direction::Horizontal).unwrap();
 
-        let result = find_ship_edge(&board, BoardIndex::from_index(0), Direction::Horizontal, false);
+        let result =
+            find_ship_edge(&board, BoardIndex::from_index(0), Direction::Horizontal, false);
         assert_eq!(BoardIndex::from_index(2), result.0);
         assert!(result.1);
 
@@ -159,7 +181,13 @@ mod tests {
         let mut board = BattleshipBoardContent::new_initialized(SquareContent::Water);
         board.try_place_ship("A1".parse().unwrap(), 3, Direction::Horizontal).unwrap();
 
-        assert_eq!(ShipFindingResult::CompleteShip(BoardIndexRangeInclusive::new("A1".parse().unwrap(), "C1".parse().unwrap())), board.try_find_ship("A1".parse().unwrap()));
+        assert_eq!(
+            ShipFindingResult::CompleteShip(BoardIndexRangeInclusive::new(
+                "A1".parse().unwrap(),
+                "C1".parse().unwrap()
+            )),
+            board.try_find_ship("A1".parse().unwrap())
+        );
     }
 
     #[test]
@@ -168,7 +196,13 @@ mod tests {
         board.try_place_ship("A1".parse().unwrap(), 3, Direction::Horizontal).unwrap();
         board[BoardIndex::from_str("D1").unwrap()] = SquareContent::Unknown;
 
-        assert_eq!(ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new("A1".parse().unwrap(), "C1".parse().unwrap())), board.try_find_ship("A1".parse().unwrap()));
+        assert_eq!(
+            ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new(
+                "A1".parse().unwrap(),
+                "C1".parse().unwrap()
+            )),
+            board.try_find_ship("A1".parse().unwrap())
+        );
     }
 
     #[test]
@@ -177,7 +211,13 @@ mod tests {
         board[BoardIndex::from_str("G10").unwrap()] = SquareContent::HitShip;
         board[BoardIndex::from_str("H10").unwrap()] = SquareContent::Unknown;
 
-        assert_eq!(ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new("G10".parse().unwrap(), "G10".parse().unwrap())), board.try_find_ship("G10".parse().unwrap()));
+        assert_eq!(
+            ShipFindingResult::PartialShip(BoardIndexRangeInclusive::new(
+                "G10".parse().unwrap(),
+                "G10".parse().unwrap()
+            )),
+            board.try_find_ship("G10".parse().unwrap())
+        );
     }
 
     #[rstest]
@@ -192,13 +232,13 @@ mod tests {
                     BoardIndex::from_col_row(col + 1, row),
                     BoardIndex::from_col_row(col + 2, row),
                 ];
-                locations.into_iter().for_each(|l| { board[*l] = SquareContent::Ship; });
-                locations.into_iter().for_each(|l| { 
-                    match board.try_find_ship(*l) {
-                        ShipFindingResult::CompleteShip(x) if complete => assert_eq!(3, x.length()),
-                        ShipFindingResult::PartialShip(x) if !complete => assert_eq!(3, x.length()),
-                        _ => panic!("Invalid result"),
-                    }
+                locations.into_iter().for_each(|l| {
+                    board[*l] = SquareContent::Ship;
+                });
+                locations.into_iter().for_each(|l| match board.try_find_ship(*l) {
+                    ShipFindingResult::CompleteShip(x) if complete => assert_eq!(3, x.length()),
+                    ShipFindingResult::PartialShip(x) if !complete => assert_eq!(3, x.length()),
+                    _ => panic!("Invalid result"),
                 });
             }
         }
@@ -216,13 +256,13 @@ mod tests {
                     BoardIndex::from_col_row(col, row + 1),
                     BoardIndex::from_col_row(col, row + 2),
                 ];
-                locations.into_iter().for_each(|l| { board[*l] = SquareContent::Ship; });
-                locations.into_iter().for_each(|l| { 
-                    match board.try_find_ship(*l) {
-                        ShipFindingResult::CompleteShip(x) if complete => assert_eq!(3, x.length()),
-                        ShipFindingResult::PartialShip(x) if !complete => assert_eq!(3, x.length()),
-                        _ => panic!("Invalid result"),
-                    }
+                locations.into_iter().for_each(|l| {
+                    board[*l] = SquareContent::Ship;
+                });
+                locations.into_iter().for_each(|l| match board.try_find_ship(*l) {
+                    ShipFindingResult::CompleteShip(x) if complete => assert_eq!(3, x.length()),
+                    ShipFindingResult::PartialShip(x) if !complete => assert_eq!(3, x.length()),
+                    _ => panic!("Invalid result"),
                 });
             }
         }

@@ -1,7 +1,10 @@
 [package]
 name = "foundations"
 version = "0.1.0"
-authors = ["stefan.baumgartner <Stefan.Baumgartner@dynatrace.com>"]
+authors = [
+    "stefan.baumgartner <Stefan.Baumgartner@dynatrace.com>",
+    "Rainer Stropek <rainer@software-architects.at>"
+]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -36,7 +36,7 @@
 
 ---
 
-## Most 💕 language in Stackoverflow Survey 2016-2021
+## Most 💕 language in Stackoverflow Survey 2016-2022
 
 ![Rust](./images/rustlove.png)
 
