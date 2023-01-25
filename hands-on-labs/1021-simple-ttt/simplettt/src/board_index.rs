@@ -56,7 +56,7 @@ impl FromStr for BoardIndex {
 
         // Parse column letter (A..C, a..c)
         let col = match location[0] {
-            r @ b'A'..=b'C' => (r - b'A') as usize, // Check experimental `if let` syntax
+            r @ b'A'..=b'C' => (r - b'A') as usize, 
             r @ b'a'..=b'c' => (r - b'a') as usize,
             _ => return Err("Invalid column"),
         };

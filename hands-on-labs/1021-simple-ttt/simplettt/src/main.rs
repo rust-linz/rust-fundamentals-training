@@ -7,6 +7,12 @@ mod board_content;
 mod game;
 
 fn main() {
+    let mut bc = BoardContent::new();
+    let my_cell = bc[BoardIndex::from_col_row(0, 0)];
+    bc[BoardIndex::from_col_row(0, 0)] = Some(SquareContent::X);
+
+    let bi: BoardIndex = "A1".parse().unwrap();
+
     let mut game = game::Game::new(BoardContent::new());
 
     println!("{}", game.content);
