@@ -213,7 +213,7 @@ pub fn fix_age_dynamic(person: JsValue, age_change: JsValue) -> Result<JsValue, 
     // Serialize data in JS using JSON.stringify, send string to Rust, and deserialize 
     // everything in Rust with serde. Relatively expensive, but good compatibility.
     // Note that we return a meaningful error if deserilization does not work.
-    let mut p: PersonDynamic = person.into_serde().map_err(into_js_error)?;
+    let mut p: PersonDynamic = serde_wasm_bindgen::from_value(person).map_err(into_js_error)?;
 
     // Check data type and process it if data type fits
     if let Some(ac) = age_change.as_f64() {
@@ -221,7 +221,7 @@ pub fn fix_age_dynamic(person: JsValue, age_change: JsValue) -> Result<JsValue, 
     }
 
     // Serialize result in Rust, send string to JS, and deserialize everything in JS.
-    let result = JsValue::from_serde(&p).map_err(into_js_error)?;
+    let result = serde_wasm_bindgen::to_value(&p).map_err(into_js_error)?;
     Ok(result)
 }
 // endregion: Working with JsValue
