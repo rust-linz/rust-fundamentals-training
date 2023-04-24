@@ -1,0 +1,5 @@
+build:
+    wasm-pack build --target browser -d ./pkg
+
+build-node:
+    wasm-pack build --target nodejs -d ./pkg-node; cd node; npm install

@@ -6,3 +6,5 @@ www/.cache
 www/dist
 Cargo.lock
 www/package-lock.json
+node/node_modules
+node/package-lock.json
