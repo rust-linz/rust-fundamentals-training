@@ -56,5 +56,9 @@ We recommend to use the following extensions and tools:
 3. [crates](https://marketplace.visualstudio.com/items?itemName=serayuzgur.crates)
 4. [Just Command Runner](https://github.com/casey/just) including [Just support in VSCode](https://marketplace.visualstudio.com/items?itemName=skellock.just)
 5. [watchexec](https://watchexec.github.io/)
-6. [vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)
-7. [Better TOML](https://marketplace.visualstudio.com/items?itemName=bungcip.better-toml)
+6. Optional ones depending on your preferences:
+   1. [vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)
+   2. [Better TOML](https://marketplace.visualstudio.com/items?itemName=bungcip.better-toml)
+   3. [dotenv](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv)
+   4. [Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+   5. [TODO Highlight](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight)
