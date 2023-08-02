@@ -1,4 +1,4 @@
-use std::{time::Duration, thread};
+use std::{time::{Duration, Instant}, thread, arch::asm};
 
 use futures::future::join_all;
 use tokio::time::sleep;
@@ -11,8 +11,11 @@ async fn do_stuff_in_background() {
             // Note how i is moved into the closure
             println!("Starting iteration {i}");
 
-            // Simulate some long-running operation
+            // Simulate some long-running I/O operation.
+            // Try chaning from tokio's sleep to our own 
+            // spin_wait_for_a_second function that blocks the CPU.
             sleep(Duration::from_secs(1)).await;
+            //spin_wait_for_a_second();
 
             // Print notification that we're done. For closer inspection,
             // we also print the thread ID.
@@ -44,6 +47,17 @@ async fn do_stuff_in_background() {
             Ok(val) => println!("Result of task {i} is {val}"),
             Err(e) => println!("Task panicked with error: {e:?}"),
         }
+    }
+}
+
+fn spin_wait_for_a_second() {
+    let start = Instant::now();
+    let wait_time = Duration::from_secs(1);
+
+    while Instant::now() - start < wait_time {
+        // Compiler will not optimize away this loop
+        // because of the asm! call.
+        unsafe { asm!("nop"); }
     }
 }
 
