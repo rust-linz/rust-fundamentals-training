@@ -36,9 +36,9 @@ struct Location {
 
 /// Get the winner in the tic tac toe game; return blank if no winner
 fn get_winner(board: &[[char; SIZE]; SIZE]) -> char {
-    for row in 0..3 {
-        if board[row][0] != ' ' && board[row][0] == board[row][1] && board[row][1] == board[row][2] {
-            return board[row][0];
+    for item in board.iter().take(3) {
+        if item[0] != ' ' && item[0] == item[1] && item[1] == item[2] {
+            return item[0];
         }
     }
 
@@ -93,13 +93,13 @@ fn read_location() -> Location {
 
 fn print_board(board: &[[char; SIZE];SIZE]) {
     println!("┌───┬───┬───┐");
-    for row in 0..SIZE {
+    for (row_ix, row) in board.iter().enumerate().take(SIZE) {
         print!("│");
-        for col in 0..SIZE {
-            print!(" {} │", board[row][col]);
+        for item in row.iter().take(SIZE) {
+            print!(" {} │", item);
         }
         println!();
-        if row < SIZE - 1 {
+        if row_ix < SIZE - 1 {
             println!("├───┼───┼───┤");
         }
     }
