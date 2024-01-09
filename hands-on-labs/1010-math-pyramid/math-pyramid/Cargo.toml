@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8"
-rstest = "0.16"
+rstest = "0.18.1"
