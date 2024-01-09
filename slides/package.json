@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/rust-linz/rust-fundamentals-training#readme",
   "dependencies": {
-    "reveal.js": "^4.1.0"
+    "reveal.js": "^5.0.4"
   },
   "devDependencies": {
-    "esbuild": "^0.15.9",
+    "esbuild": "^0.19.11",
     "fs-extra": "^11.1.0",
     "lec": "^1.0.1",
     "line-ending-corrector": "^1.0.1",
