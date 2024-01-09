@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 
 [dev-dependencies]
-mockall = "0.11"
+mockall = "0.12.0"
