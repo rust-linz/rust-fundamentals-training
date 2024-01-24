@@ -1,0 +1,6 @@
+build:
+    cd ../area_calculation_rs && cargo build
+    gcc main.c -o main -larea_calculation_rs -L../area_calculation_rs/target/debug
+
+run: build
+    ./main

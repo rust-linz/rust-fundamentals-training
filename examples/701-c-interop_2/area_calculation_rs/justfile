@@ -1,0 +1,3 @@
+generate_h:
+    cbindgen --config cbindgen.toml --crate area_calculation_rs --output my_header.h --lang c
+
