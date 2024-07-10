@@ -58,7 +58,7 @@ We recommend to use the following extensions and tools:
 5. [watchexec](https://watchexec.github.io/)
 6. Optional ones depending on your preferences:
    1. [vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)
-   2. [Better TOML](https://marketplace.visualstudio.com/items?itemName=bungcip.better-toml)
+   2. [Even Better TOML](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)
    3. [dotenv](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv)
    4. [Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
    5. [TODO Highlight](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-todo-highlight)
