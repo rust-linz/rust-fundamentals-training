@@ -53,7 +53,7 @@ We recommend to use the following extensions and tools:
 
 1. [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer)
 2. [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) for debugging
-3. [crates](https://marketplace.visualstudio.com/items?itemName=serayuzgur.crates)
+3. [Dependi](https://marketplace.visualstudio.com/items?itemName=fill-labs.dependi)
 4. [Just Command Runner](https://github.com/casey/just) including [Just support in VSCode](https://marketplace.visualstudio.com/items?itemName=skellock.just)
 5. [watchexec](https://watchexec.github.io/)
 6. Optional ones depending on your preferences:

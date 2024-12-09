@@ -6,7 +6,8 @@
 	"recommendations": [
 		"matklad.rust-analyzer",
 		"vadimcn.vscode-lldb",
-		"usernamehw.errorlens"
+		"usernamehw.errorlens",
+		"fill-labs.dependi"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [
