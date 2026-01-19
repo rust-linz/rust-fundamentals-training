@@ -279,7 +279,7 @@ impl Display {
     /// Advance LED to next position.
     pub fn next(&mut self) {
         let ix = self.pixel.iter().position(|p| *p == MAX_INTENSITY).unwrap();
-        let next_ix: usize;
+        
         if ix == 0 {
             // We reached left border -> turn around
             self.direction = Direction::Right;
@@ -290,7 +290,7 @@ impl Display {
         }
 
         // Calculate next index of leading light
-        next_ix = ix + match self.direction { Direction::Left => -1, Direction::Right => 1 } as usize;
+        let next_ix: usize = ix + match self.direction { Direction::Left => -1, Direction::Right => 1 } as usize;
 
         // Reduce intensity of remaining lights
         self.pixel.iter_mut().for_each(|p| if *p > 0 { *p -= 1; });
