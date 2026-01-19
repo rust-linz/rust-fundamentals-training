@@ -66,7 +66,7 @@
 	"0125-control-flow": {
 		"prefix": "rs",
 		"body": [
-			"let num = rand::thread_rng().gen_range(0..10);",
+			"let num = rand::rng().random_range(0..10);",
 			"",
 			"if num > 5 {",
 			"    println!(\"Win!\");",
@@ -139,7 +139,7 @@
 			"",
 			"    println!(\"{}\", c);",
 			"",
-			"    let num = rand::thread_rng().gen_range(0..10);",
+			"    let num = rand::rng().random_range(0..10);",
 			"",
 			"    let msg = match num {",
 			"        5 => \"So close\",",
