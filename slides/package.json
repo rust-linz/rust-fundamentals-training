@@ -23,7 +23,7 @@
     "reveal.js": "^5.0.4"
   },
   "devDependencies": {
-    "esbuild": "^0.19.11",
+    "esbuild": "^0.27.2",
     "fs-extra": "^11.1.0",
     "lec": "^1.0.1",
     "line-ending-corrector": "^1.0.1",

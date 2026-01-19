@@ -12,7 +12,6 @@
 - Microsoft Regional Director
 - Co-founder [Rust Linz](https://rust-linz.at)
 - [rainerstropek.me](https://rainerstropek.me)
-- Twitter: [@rstropek](https://twitter.com/rstropek)
 
 ---
 
@@ -22,7 +21,7 @@
 - Co-founder [Rust Linz](https://rust-linz.at)
 - [fettblog.eu](https://fettblog.eu)
 - [typescript-book.com](https://typescript-book.com)
-- Twitter: [@ddprrt](https://twitter.com/ddprrt)
+- X (formerly Twitter): [@ddprrt](https://twitter.com/ddprrt)
 
 ---
 
@@ -36,9 +35,9 @@
 
 ---
 
-## Most 💕 language in Stackoverflow Survey 2016-2022
+## Most 💕 language in Stackoverflow Survey 2016-2025
 
-![Rust](./images/rustlove.png)
+[Admired and Desired](https://survey.stackoverflow.co/2025/technology#admired-and-desired)
 
 ---
 
@@ -89,7 +88,7 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 
 - Rust is compiled to machine code (via LLVM) - native speed!
 - A minimal runtime
-- No gargabe collection, but a unique and effective memory management solution: Ownership
+- No garbage collection, but a unique and effective memory management solution: Ownership
 - Guaranteed memory safety
 - "Debug at compile time" and "Hack without fear"
   
@@ -111,4 +110,5 @@ Overall, Rust is a language that has successfully leveraged decades of experienc
 - Rust has influences from Alef, C#, C++, Cyclone, Erlang, Haskell, Limbo, Newsqueak, OCaml, Ruby, Scheme, Standard ML, Swift
 - Zero-cost abstractions
 - Cargo and crates for dependency management
+- Regular edition releases (2015, 2018, 2021, 2024) for backwards-compatible improvements
 - Same goals as Go, different approach
