@@ -12,7 +12,7 @@ fn main() {
 
     if args.len() == 3 {
         let number_of_guesses: u32 = args[1].parse().expect("Could not parse number of tries");
-        let number_to_guess =
+        let number_to_guess: u32 =
             rng.random_range(0..=args[2].parse().expect("Could not parse number to guess"));
 
         for i in 1..=number_of_guesses {
@@ -24,8 +24,8 @@ fn main() {
 
             let msg = match guessed_number.cmp(&number_to_guess) {
                 std::cmp::Ordering::Less => "Too low",
-                std::cmp::Ordering::Equal => "Too high",
-                std::cmp::Ordering::Greater => {
+                std::cmp::Ordering::Greater => "Too high",
+                std::cmp::Ordering::Equal => {
                     println!("Just about right after {} steps", i);
                     break;
                 }
