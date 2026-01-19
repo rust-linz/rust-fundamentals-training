@@ -43,7 +43,7 @@ Verify your *Rust* installation:
 
 If you see compile information and `Hello, world!` printed out on your command line, you are ready to go!
 
-If you want to try the samples using Rust with client-side Wasm, please also install [`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/).
+If you want to try the samples using Rust with client-side Wasm, please also install [`wasm-pack`](https://drager.github.io/wasm-pack/).
 
 ## Tooling with VSCode
 
