@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::{
     fmt::Display,
     io::{Read, Write},

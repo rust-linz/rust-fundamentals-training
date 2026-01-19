@@ -50,6 +50,7 @@ async fn do_stuff_in_background() {
     }
 }
 
+#[allow(dead_code)]
 fn spin_wait_for_a_second() {
     let start = Instant::now();
     let wait_time = Duration::from_secs(1);
