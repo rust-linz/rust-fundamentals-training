@@ -56,7 +56,7 @@ fn print_example<T: Display + Copy + 'a>(val: &T) {...}
 
 ---
 
-## where Snytax
+## where Syntax
 
 ```rust
 fn print_example<T>(val :T)

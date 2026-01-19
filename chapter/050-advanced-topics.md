@@ -36,7 +36,7 @@ Rc<T> is
 
 Arc<T> is a 
 - An *atomic reference counted pointer*. This is thread-safe!
-- Good in compbination with a `Mutex<T>`, `RwLock<T>`
+- Good in combination with a `Mutex<T>`, `RwLock<T>`
 
 ---
 
@@ -119,11 +119,11 @@ In this example, we move the `Arc`, not the original value. Thanks to a `Mutex` 
 
 ## Async Rust
 
-- Sometimes threads are way to heavy for concurrent operations
+- Sometimes threads are way too heavy for concurrent operations
 - Async execution of tasks is perfect if your application mostly waits for e.g. I/O
-- Async becomes a first class citizien in Rust
-- Right now you need some helper crates to get going
-- `futures`, `async_std`
+- Async is now a first-class citizen in Rust
+- Popular async runtimes include Tokio, async-std, and smol
+- The standard library provides core async primitives, while runtimes provide the executor
 
 ---
 
