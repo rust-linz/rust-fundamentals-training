@@ -67,15 +67,16 @@ impl<'a> Iterator for RowsIterator<'a> {
 // Note: Lifetime annotation here means that the iterator
 //       cannot outlive the struct implementing the iterator.
 trait Rows<'a> {
-    fn row(&self, row: usize) -> Row;
+    #[allow(dead_code)]
+    fn row(&self, row: usize) -> Row<'_>;
 
     // Learn: Dynamic binding instead of static binding
-    fn rows(&'a self) -> Box<dyn Iterator<Item = Row> + 'a>;
+    fn rows(&'a self) -> Box<dyn Iterator<Item = Row<'a>> + 'a>;
 }
 
 // Learning: Implement our trait for BoardContent
 impl<'a> Rows<'a> for BoardContent {
-    fn row(&self, row: usize) -> Row {
+    fn row(&self, row: usize) -> Row<'_> {
         if row >= 3 {
             panic!("Index out of bounds");
         }
@@ -83,7 +84,7 @@ impl<'a> Rows<'a> for BoardContent {
         Row::new(self, row)
     }
 
-    fn rows(&'a self) -> Box<dyn Iterator<Item = Row> + 'a> {
+    fn rows(&'a self) -> Box<dyn Iterator<Item = Row<'a>> + 'a> {
         Box::new(RowsIterator::new(self))
     }
 }

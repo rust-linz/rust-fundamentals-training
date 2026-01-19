@@ -2,7 +2,9 @@
 // Todo: Copy this file into Rust Playground and choose Tools/Expand macros 
 //       to analyze what's going on behind the scenes
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Default)]
 pub enum SquareContent {
+    #[default]
     Empty,
     X,
     O,
@@ -10,11 +12,6 @@ pub enum SquareContent {
 
 // Learning: There is a system trait to add support for default values.
 //           This is especially important when implementing generic types.
-impl Default for SquareContent {
-    fn default() -> Self {
-        SquareContent::Empty
-    }
-}
 
 // Learning: There are system traits for type conversion.
 // Note: Take a look at unit tests to see how to do conversion.

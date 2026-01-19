@@ -1,8 +1,8 @@
 [package]
 name = "tictactoe_logic"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-rstest = "^0"
-mockall = "^0"
+rstest = "^0.26"
+mockall = "^0.14"
