@@ -42,6 +42,8 @@ fn get_winner(board: &[[char; SIZE]; SIZE]) -> char {
         }
     }
 
+    // This is how you would use a for loop with an index in Rust.
+    // Iterators are preferred when possible.
     for col in 0..3 {
         if board[0][col] != ' ' && board[0][col] == board[1][col] && board[1][col] == board[2][col] {
             return board[0][col];

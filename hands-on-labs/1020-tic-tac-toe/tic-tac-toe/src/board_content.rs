@@ -1,3 +1,5 @@
+#![allow(dead_code)] // Note: To avoid warnings for unused code in this demo file
+
 use std::{convert::TryFrom, fmt, ops::{Index, IndexMut}};
 
 use crate::square_content::SquareContent;

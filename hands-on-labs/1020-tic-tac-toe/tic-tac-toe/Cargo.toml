@@ -1,10 +1,10 @@
 [package]
 name = "tic-tac-toe"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rstest = "0.18"
-mockall = "0.12"
+rstest = "0.26"
+mockall = "0.14"

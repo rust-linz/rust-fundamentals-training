@@ -182,7 +182,7 @@ mod tests {
 
     #[test]
     fn test_number_between_bars() {
-        assert_eq!(number_between_bars(42), "│  42 │");
+        assert_eq!(number_between_bars(42), "│   42 │");
     }
 
     #[rstest]

@@ -1,3 +1,5 @@
+#![allow(dead_code)] // Note: To avoid warnings for unused code in this demo file
+
 use std::{fmt, ops::Index};
 
 use crate::{board_content::BoardContent, square_content::SquareContent};
@@ -69,15 +71,15 @@ impl<'a> Iterator for RowsIterator<'a> {
 // Note: Lifetime annotation here means that the iterator
 //       cannot outlive the struct implementing the iterator.
 pub trait Rows {
-    fn row(&self, row: usize) -> Row;
+    fn row(&self, row: usize) -> Row<'_>;
 
     // Learn: Dynamic binding instead of static binding
-    fn rows(&self) -> Box<dyn Iterator<Item = Row> + '_>;
+    fn rows(&self) -> Box<dyn Iterator<Item = Row<'_>> + '_>;
 }
 
 // Learning: Implement our trait for BoardContent
 impl Rows for BoardContent {
-    fn row(&self, row: usize) -> Row {
+    fn row(&self, row: usize) -> Row<'_> {
         if row >= 3 {
             panic!("Index out of bounds");
         }
@@ -85,7 +87,7 @@ impl Rows for BoardContent {
         Row::new(self, row)
     }
 
-    fn rows(&self) -> Box<dyn Iterator<Item = Row> + '_> {
+    fn rows(&self) -> Box<dyn Iterator<Item = Row<'_>> + '_> {
         Box::new(RowsIterator::new(self))
     }
 }
