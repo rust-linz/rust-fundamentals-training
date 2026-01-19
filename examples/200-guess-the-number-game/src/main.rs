@@ -1,4 +1,4 @@
-use rand::{thread_rng, Rng};
+use rand::prelude::*;
 use std::env;
 use std::io;
 
@@ -7,13 +7,13 @@ use std::io;
 // 3. Parse CLI arguments
 
 fn main() {
-    let mut rng = thread_rng();
+    let mut rng = rand::rng();
     let args: Vec<String> = env::args().collect();
 
     if args.len() == 3 {
         let number_of_guesses: u32 = args[1].parse().expect("Could not parse number of tries");
         let number_to_guess =
-            rng.gen_range(0..=args[2].parse().expect("Could not parse number to guess"));
+            rng.random_range(0..=args[2].parse().expect("Could not parse number to guess"));
 
         for i in 1..=number_of_guesses {
             let mut buffer = String::new();
