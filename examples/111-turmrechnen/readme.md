@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Your task is to write a command-line application in Rust for [*tower calculations*](http://www.floriangeier.at/schule/kopf/kopf.php) (use Google Translate to translate the description into your native language).
+Your task is to write a command-line application in Rust for [*tower calculations*](https://spheno.at/).
 
 A user passes two parameters to your application via the command line:
 

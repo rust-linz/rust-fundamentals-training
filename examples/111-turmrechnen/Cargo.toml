@@ -2,7 +2,7 @@
 name = "turmrechnen"
 version = "0.1.0"
 authors = ["Rainer <rainer@software-architects.at>"]
-edition = "2021"
+edition = "2024"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
