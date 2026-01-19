@@ -5,11 +5,11 @@ authors = [
     "stefan.baumgartner <Stefan.Baumgartner@dynatrace.com>",
     "Rainer Stropek <rainer@software-architects.at>"
 ]
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8"
+rand = "0.9"
 futures = "0.3"
-async-std = "1.10"
+async-std = "1.13"
