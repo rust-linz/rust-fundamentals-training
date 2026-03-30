@@ -5,7 +5,7 @@
 Before the workshop, make sure you have the correct tools installed and verified. You need:
 
 1. [Rustup Toolchain](https://rustup.rs/)
-2. An editor of your choice (we highly recommmend [VSCode](https://code.visualstudio.com/) + Extensions)
+2. An editor of your choice (we recommmend [VSCode](https://code.visualstudio.com/) + Extensions or [Zed](https://zed.dev/))
 
 ## Install and verify Rust
 
