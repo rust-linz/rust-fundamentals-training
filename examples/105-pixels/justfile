@@ -1,0 +1,19 @@
+check:
+    cargo check
+
+clippy:
+    cargo clippy
+    
+fmt-check:
+    cargo fmt --check
+
+fmt:
+    cargo fmt
+    
+build:
+    cargo build
+
+check-all: check clippy fmt-check build
+
+run: check-all
+    cargo run
