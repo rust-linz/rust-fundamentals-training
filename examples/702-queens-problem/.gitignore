@@ -1,0 +1,9 @@
+# Rust build artifacts
+target/
+Cargo.lock
+
+# C build artifacts
+queens_c/*.o
+queens_c/*.a
+queens_c/*.dylib
+queens_c/*.so

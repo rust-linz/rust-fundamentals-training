@@ -1,0 +1,93 @@
+# justfile for 702-queens-problem
+#
+# Three approaches to calling a C library from Rust:
+#
+#   01-build-rs  — build.rs compiles queens.c directly using the `cc` crate.
+#                  No pre-built library needed; Cargo handles everything.
+#
+#   02-static-lib — links a pre-built static archive (libqueens.a).
+#                   The archive is built with `make` before the Rust build.
+#                   Library code is embedded in the binary at link time.
+#
+#   03-dynamic-lib — links a pre-built dynamic library (libqueens.dylib).
+#                    Only a reference is stored in the binary; the OS loads
+#                    the dylib at runtime via DYLD_LIBRARY_PATH (macOS).
+#
+# Usage: just <recipe>
+# Run `just --list` to see all available recipes.
+
+queens_c   := justfile_directory() / "queens_c"
+proj_01    := justfile_directory() / "01-build-rs"
+proj_02    := justfile_directory() / "02-static-lib"
+proj_03    := justfile_directory() / "03-dynamic-lib"
+
+# ── C library targets ─────────────────────────────────────────────────────────
+
+# Compile queens_c/queens.c into a static archive (libqueens.a).
+# Required before building 02-static-lib.
+build-static:
+    make -C {{queens_c}} libqueens.a
+
+# Compile queens_c/queens.c into a dynamic library (libqueens.dylib).
+# Required before building 03-dynamic-lib.
+build-dynamic:
+    make -C {{queens_c}} libqueens.dylib
+
+# ── Run ───────────────────────────────────────────────────────────────────────
+
+# Approach 1: build.rs uses the `cc` crate — no pre-build step needed.
+run-01:
+    cargo run --manifest-path {{proj_01}}/Cargo.toml
+
+# Approach 2: static library — built and embedded at link time.
+run-02: build-static
+    cargo run --manifest-path {{proj_02}}/Cargo.toml
+
+# Approach 3: dynamic library — loaded by the OS at runtime.
+# DYLD_LIBRARY_PATH tells the macOS dynamic linker where to find libqueens.dylib.
+# Without it the binary will fail immediately with "dyld: Library not loaded".
+run-03: build-dynamic
+    DYLD_LIBRARY_PATH={{queens_c}} cargo run --manifest-path {{proj_03}}/Cargo.toml
+
+# Run all three examples in sequence.
+all: run-01 run-02 run-03
+
+# ── Test ──────────────────────────────────────────────────────────────────────
+
+test-01:
+    cargo test --manifest-path {{proj_01}}/Cargo.toml
+
+test-02: build-static
+    cargo test --manifest-path {{proj_02}}/Cargo.toml
+
+# DYLD_LIBRARY_PATH is required for the test binary as well — it dynamically
+# links libqueens.dylib just like the regular binary.
+test-03: build-dynamic
+    DYLD_LIBRARY_PATH={{queens_c}} cargo test --manifest-path {{proj_03}}/Cargo.toml
+
+# Run all tests across all three projects.
+test: test-01 test-02 test-03
+
+# ── Lint ──────────────────────────────────────────────────────────────────────
+
+lint-01:
+    cargo clippy --manifest-path {{proj_01}}/Cargo.toml -- -D warnings
+
+lint-02: build-static
+    cargo clippy --manifest-path {{proj_02}}/Cargo.toml -- -D warnings
+
+lint-03: build-dynamic
+    DYLD_LIBRARY_PATH={{queens_c}} \
+        cargo clippy --manifest-path {{proj_03}}/Cargo.toml -- -D warnings
+
+# Run clippy on all three projects.
+lint: lint-01 lint-02 lint-03
+
+# ── Clean ─────────────────────────────────────────────────────────────────────
+
+# Remove all build artifacts: compiled C objects/libraries and Cargo targets.
+clean:
+    make -C {{queens_c}} clean
+    cargo clean --manifest-path {{proj_01}}/Cargo.toml
+    cargo clean --manifest-path {{proj_02}}/Cargo.toml
+    cargo clean --manifest-path {{proj_03}}/Cargo.toml

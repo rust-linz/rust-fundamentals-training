@@ -1,0 +1,14 @@
+[package]
+name = "queens-static-lib"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "queens_static_lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "queens"
+path = "src/main.rs"
+
+# No build-dependencies: build.rs only uses std::process::Command.
