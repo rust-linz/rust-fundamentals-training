@@ -1,0 +1,35 @@
+check:
+    cargo check
+
+test:
+    cargo test
+
+run:
+    cargo run
+
+check-use-after-free:
+    cargo check --features ub-use-after-free
+
+check-uninitialized-read:
+    cargo check --features ub-uninitialized-read
+
+check-overlapping-copy:
+    cargo check --features ub-overlapping-copy
+
+install-miri:
+    rustup toolchain install nightly --component miri
+
+miri-setup:
+    cargo +nightly miri setup
+
+miri-test:
+    cargo +nightly miri test
+
+miri-use-after-free:
+    cargo +nightly miri test use_after_free_demo_returns_expected_value_in_safe_mode --features ub-use-after-free
+
+miri-uninitialized-read:
+    cargo +nightly miri test initialization_demo_returns_expected_value_in_safe_mode --features ub-uninitialized-read
+
+miri-overlapping-copy:
+    cargo +nightly miri test overlapping_copy_demo_moves_bytes_without_ub_in_safe_mode --features ub-overlapping-copy

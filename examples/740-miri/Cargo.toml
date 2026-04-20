@@ -1,0 +1,12 @@
+[package]
+name = "miri-highlights"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+ub-use-after-free = []
+ub-uninitialized-read = []
+ub-overlapping-copy = []
+
+[dependencies]
