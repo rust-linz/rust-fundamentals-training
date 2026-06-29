@@ -2,6 +2,7 @@
 name = "queens-build-rs"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.96"
 
 # A Cargo package can have both a library crate (lib.rs) and a binary crate
 # (main.rs). The binary links against the library using the package name

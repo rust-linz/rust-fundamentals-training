@@ -3,6 +3,7 @@ name = "turmrechnen"
 version = "0.1.0"
 authors = ["Rainer <rainer@software-architects.at>"]
 edition = "2024"
+rust-version = "1.96"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

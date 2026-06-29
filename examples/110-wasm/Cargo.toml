@@ -3,6 +3,7 @@ name = "wasm_examples"
 version = "0.1.0"
 authors = ["Rainer <rainer@software-architects.at>"]
 edition = "2024"
+rust-version = "1.96"
 
 # Crate types cdylib and rlib are important.
 # cdylib is for creating a .wasm file. rlib is important for testing with "wasm-pack test".

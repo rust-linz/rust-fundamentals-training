@@ -2,6 +2,7 @@
 name = "area_calculator_rs"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.96"
 
 [dependencies]
 cty = "0"

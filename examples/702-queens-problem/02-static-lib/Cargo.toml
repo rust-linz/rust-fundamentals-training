@@ -2,6 +2,7 @@
 name = "queens-static-lib"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.96"
 
 [lib]
 name = "queens_static_lib"

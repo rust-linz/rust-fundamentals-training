@@ -62,7 +62,7 @@ fn get_a_cat() -> impl Animal {
 }
 
 fn get_an_animal() -> Box<dyn Animal> {
-    if Utc::now().naive_utc().day() % 2 == 0 { Box::new(Spider {}) } else { Box::new(Cat {}) }
+    if Utc::now().naive_utc().day().is_multiple_of(2) { Box::new(Spider {}) } else { Box::new(Cat {}) }
 }
 
 fn do_something_with_animal(animal: &impl Animal) {
