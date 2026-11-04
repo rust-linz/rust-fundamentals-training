@@ -13,7 +13,6 @@
         "prefix": "rs",
         "body": [
             "#[allow(unused_variables)]",
-            "",
             "fn main() {",
             "$0",
             "}"
@@ -67,7 +66,6 @@
         "prefix": "rs",
         "body": [
             "#[allow(unused_variables)]",
-            "",
             "fn main() {",
             "    fn add(x: i32, y: i32) -> i32 { x + y }",
             "",
@@ -88,7 +86,7 @@
         "body": [
             "let z = 3;",
             "// The following closure does not work because it captures z.",
-            "// Therefore, it cannot act as a function pointer. The close",
+            "// Therefore, it cannot act as a function pointer. The closure",
             "// consists of the function plus the captured variable.",
             "calc_and_print(1, 2, |x, y| x + y + z);",
         ]
@@ -99,18 +97,18 @@
             "fn main() {",
             "    fn add(x: i32, y: i32) -> i32 { x + y }",
             "    ",
-            "    fn calc_and_print(x: i32, y: i32, calculator: Box<dyn Fn(i32, i32) -> i32 + '_>) {",
+            "    fn calc_and_print(x: i32, y: i32, calculator: impl Fn(i32, i32) -> i32) {",
             "        let result = calculator(x, y);",
             "        println!(\"{}\", result);",
             "    }",
             "    ",
-            "    calc_and_print(1, 2, Box::new(add));",
-            "    calc_and_print(1, 2, Box::new(|x, y| x + y));",
+            "    calc_and_print(1, 2, add);",
+            "    calc_and_print(1, 2, |x, y| x + y);",
             "    ",
             "    // Now we can also pass a closure with capturing",
             "    // to calc_and_print.",
             "    let z = 3;",
-            "    calc_and_print(1, 2, Box::new(|x, y| x + y + z));",
+            "    calc_and_print(1, 2, |x, y| x + y + z);",
             "}"
         ]
     },
@@ -124,13 +122,13 @@
             "}",
             "",
             "fn main() {",
-            "    fn calc_and_print(x: i32, y: i32, calculator: Box<dyn MyAdder>) {",
+            "    fn calc_and_print(x: i32, y: i32, calculator: impl MyAdder) {",
             "        let result = calculator.add(x, y);",
             "        println!(\"{}\", result);",
             "    }",
             "",
             "    let closure = AdderClosure{ z: 3 };",
-            "    calc_and_print(1, 2, Box::new(closure));",
+            "    calc_and_print(1, 2, closure);",
             "}"
         ]
     },

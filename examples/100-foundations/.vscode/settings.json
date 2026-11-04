@@ -1,11 +1,7 @@
 {
   "editor.formatOnSave": true,
-  "rust-analyzer.checkOnSave.command": "clippy",
-  "rust-analyzer.rustfmt.overrideCommand": [
-    "rustfmt"
-  ],
-  "rust-analyzer.files.excludeDirs": [
-    "backups"
-  ],
-  "workbench.colorTheme": "Default Light+"
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.files.exclude": [
+    "backups-OUTDATED"
+  ]
 }

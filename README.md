@@ -51,7 +51,7 @@ Install [VS Code](https://code.visualstudio.com) for your platform.
 
 We recommend to use the following extensions and tools:
 
-1. [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer)
+1. [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 2. [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) for debugging
 3. [Dependi](https://marketplace.visualstudio.com/items?itemName=fill-labs.dependi)
 4. [Just Command Runner](https://github.com/casey/just) including [Just support in VSCode](https://marketplace.visualstudio.com/items?itemName=skellock.just)

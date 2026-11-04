@@ -13,9 +13,10 @@ This exercise contains [snippets](.vscode) that can be used during demonstration
 
     ```toml
     [dependencies]
-    rand = "0.8"
-    futures = "0.3"
-    async-std = "1.10"
+    rand = "0.10"
     ```
 
 * Copy [*.vscode*](.vscode) folder into created app directory
+
+> [!NOTE]
+> The files in [*backups-OUTDATED*](backups-OUTDATED) are old reference solutions. They are no longer maintained and may not compile with current crate versions. Use the snippets instead.

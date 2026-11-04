@@ -41,8 +41,8 @@
     "0710-enum-iterate-match": {
         "prefix": "rs",
         "body": [
-            "for room in hotel.iter() {",
-            "    match *room {",
+            "for room in &hotel {",
+            "    match room {",
             "        Room::Vacant => println!(\"Available!\"),",
             "        Room::Occupied(_) => println!(\"Taken, sorry.\"),",
             "    }",
@@ -53,10 +53,10 @@
     "0715-enum-enumerate": {
         "prefix": "rs",
         "body": [
-            "for (i, house) in hotel.iter().enumerate() {",
-            "    match *house {",
+            "for (i, room) in hotel.iter().enumerate() {",
+            "    match room {",
             "        Room::Vacant => println!(\"No. {} is available!\", i),",
-            "        Room::Occupied(_) => println!(\"No {} is taken.\", i),",
+            "        Room::Occupied(_) => println!(\"No. {} is taken.\", i),",
             "    }",
             "}",
             "$0",
@@ -67,10 +67,10 @@
         "body": [
             "use Room::{Occupied, Vacant};",
             "",
-            "for (i, house) in hotel.iter().enumerate() {",
-            "    match *house {",
+            "for (i, room) in hotel.iter().enumerate() {",
+            "    match room {",
             "        Vacant => println!(\"No. {} is available!\", i),",
-            "        Occupied(ref occupant) => println!(\"No {} is taken by {:?}.\", i, occupant.name),",
+            "        Occupied(occupant) => println!(\"No. {} is taken by {}.\", i, occupant.name),",
             "    }",
             "}"
         ]

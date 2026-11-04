@@ -1,59 +1,96 @@
 {
-  "40-thread": {
+  "0900-thread-starter": {
     "prefix": "rs",
     "body": [
+      "use rand::seq::IteratorRandom;",
+      "use std::thread;",
+      "",
+      "#[derive(Debug)]",
+      "struct Lotto {",
+      "    numbers: Vec<usize>,",
+      "}",
+      "",
+      "impl Lotto {",
+      "    fn new(amount: usize, max: usize) -> Self {",
+      "        let mut rng = rand::rng();",
+      "        Self {",
+      "            numbers: (1..=max).sample(&mut rng, amount),",
+      "        }",
+      "    }",
+      "}",
       "",
       "fn main() {",
-      "    let pairs = [(6, 45), (5, 50), (2, 12)];",
-      "    for (_take, _from) in pairs {",
-      "        let handle = thread::spawn(|| {",
-      "            let lotto = Lotto::new(6, 45);",
-      "            println!(\"{:?}\", lotto);",
-      "        });",
-      "",
-      "        handle.join().unwrap();",
-      "    }",
+      "    $0",
       "}",
       ""
     ],
-    "description": "40-thread"
+    "description": "Lotto type used in the threading examples"
   },
-  "41-thread": {
+  "0905-thread-spawn": {
     "prefix": "rs",
     "body": [
       "let pairs = [(6, 45), (5, 50), (2, 12)];",
-      "    for (take, from) in pairs {",
-      "        let handle = thread::spawn(move || {",
-      "            let lotto = Lotto::new(take, from);",
-      "            println!(\"{:?}\", lotto);",
-      "        });",
+      "let mut handles = Vec::new();",
+      "for (_take, _from) in pairs {",
+      "    // Try using _take and _from inside the closure -> does NOT COMPILE",
+      "    // because the thread may outlive the loop variables.",
+      "    handles.push(thread::spawn(|| {",
+      "        let lotto = Lotto::new(6, 45);",
+      "        println!(\"{:?}\", lotto.numbers);",
+      "    }));",
+      "}",
       "",
-      "        handle.join().unwrap();",
-      "    }"
+      "// Join AFTER spawning all threads, otherwise they would run one after the other",
+      "for handle in handles {",
+      "    handle.join().unwrap();",
+      "}"
     ],
-    "description": "41-thread"
+    "description": "Spawn threads and wait for them"
   },
-  "42-thread": {
+  "0910-thread-move": {
     "prefix": "rs",
     "body": [
-      "    let lottos = Mutex::new(Vec::<Lotto>::new());",
-      "    let lottos = Arc::new(lottos);",
-      "    let pairs = [(6, 45), (5, 50), (2, 12)];",
+      "let pairs = [(6, 45), (5, 50), (2, 12)];",
+      "let mut handles = Vec::new();",
+      "for (take, from) in pairs {",
+      "    // `move` copies take and from into the closure",
+      "    handles.push(thread::spawn(move || {",
+      "        let lotto = Lotto::new(take, from);",
+      "        println!(\"{:?}\", lotto.numbers);",
+      "    }));",
+      "}",
       "",
-      "    for (take, from) in pairs {",
-      "        let lottos = Arc::clone(&lottos);",
-      "        let handle = thread::spawn(move || {",
-      "            let lotto = Lotto::new(take, from);",
-      "            lottos.lock().unwrap().push(lotto);",
-      "        });",
-      "",
-      "        handle.join().unwrap();",
-      "    }",
-      "",
-      "    for lotto in lottos.lock().unwrap().iter() {",
-      "        println!(\"{:?}\", lotto);",
-      "    }"
+      "for handle in handles {",
+      "    handle.join().unwrap();",
+      "}"
     ],
-    "description": "42-thread"
+    "description": "Move captured variables into threads"
+  },
+  "0915-thread-shared-state": {
+    "prefix": "rs",
+    "body": [
+      "use std::sync::{Arc, Mutex};",
+      "",
+      "let lottos = Arc::new(Mutex::new(Vec::<Lotto>::new()));",
+      "let pairs = [(6, 45), (5, 50), (2, 12)];",
+      "",
+      "let mut handles = Vec::new();",
+      "for (take, from) in pairs {",
+      "    let lottos = Arc::clone(&lottos);",
+      "    handles.push(thread::spawn(move || {",
+      "        let lotto = Lotto::new(take, from);",
+      "        lottos.lock().unwrap().push(lotto);",
+      "    }));",
+      "}",
+      "",
+      "for handle in handles {",
+      "    handle.join().unwrap();",
+      "}",
+      "",
+      "for lotto in lottos.lock().unwrap().iter() {",
+      "    println!(\"{:?}\", lotto.numbers);",
+      "}"
+    ],
+    "description": "Share state between threads with Arc and Mutex"
   }
 }

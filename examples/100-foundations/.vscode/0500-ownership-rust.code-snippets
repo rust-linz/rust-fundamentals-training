@@ -19,7 +19,7 @@
         ],
         "description": "22-ownership"
     },
-    "0505-mutable-borrowing": {
+    "0502-mutable-borrowing": {
         "prefix": "rs",
         "body": [
             "fn create_numbers(numbers: &mut Vec<i32>) {",
@@ -29,7 +29,7 @@
             "}"
         ]
     },
-    "0510-call-create": {
+    "0504-call-create": {
         "prefix": "rs",
         "body": [
             "let mut created_numbers = Vec::new();",
@@ -37,7 +37,7 @@
             "print_numbers(created_numbers);"
         ]
     },
-    "0515-lifetimes": {
+    "0506-lifetimes": {
         "prefix": "rs",
         "body": [
             "fn get_biggest<'a>(n: &'a i32, m: &'a i32) -> &'a i32 {",
@@ -51,7 +51,7 @@
         ],
         "description": "23-lifetimes"
     },
-    "0520-call-lifetimes": {
+    "0508-call-lifetimes": {
         "prefix": "rs",
         "body": [
             "fn main() {",

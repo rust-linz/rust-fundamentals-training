@@ -2,6 +2,8 @@
     "0400-structs-starter": {
         "prefix": "rs",
         "body": [
+            "use std::fmt;",
+            "",
             "pub struct Clock {",
             "    hours: i32,",
             "    minutes: i32,",
@@ -34,7 +36,7 @@
             "        todo!(\"Implement logic for add\");",
             "    }",
             "",
-            "    fn normalize(&mut self) -> Self {",
+            "    fn normalize(self) -> Self {",
             "        todo!(\"Implement normalize\");",
             "    }",
             "}",
@@ -50,7 +52,7 @@
     "0410-structs-normalize": {
         "prefix": "rs",
         "body": [
-            "fn normalize(&mut self) -> Self {",
+            "fn normalize(self) -> Self {",
             "    let mut hours = (self.hours + self.minutes / 60) % 24;",
             "    let mut minutes = self.minutes % 60;",
             "    if minutes < 0 {",
@@ -85,7 +87,7 @@
             "}"
         ]
     },
-    "0415-structs-diplay": {
+    "0415-structs-display": {
         "prefix": "rs",
         "body": [
             "impl fmt::Display for Clock {",
