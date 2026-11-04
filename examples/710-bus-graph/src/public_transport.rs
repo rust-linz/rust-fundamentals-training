@@ -159,7 +159,7 @@ mod tests {
         assert_eq!(network.stops.len(), 1);
 
         // The two stops should be the same.
-        assert_eq!(Rc::ptr_eq(&new_stop, &existing_stop), true);
+        assert!(Rc::ptr_eq(&new_stop, &existing_stop));
 
         // The stop should have three references: one in the network, and two in the test.
         assert_eq!(3, Rc::strong_count(&new_stop));

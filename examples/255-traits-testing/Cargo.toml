@@ -9,4 +9,4 @@ rust-version = "1.96"
 [dependencies]
 
 [dev-dependencies]
-mockall = "0.14.0"
+mockall = "0.15.0"

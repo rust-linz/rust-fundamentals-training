@@ -16,11 +16,12 @@ Place *n* queens on an *n×n* chessboard so that no queen can attack any other q
 ├── queens_c/          C library: algorithm implementation + header + Makefile
 ├── 01-build-rs/       Approach 1 — build.rs compiles C via the cc crate
 ├── 02-static-lib/     Approach 2 — links a pre-built static library (.a)
-├── 03-dynamic-lib/    Approach 3 — links a pre-built dynamic library (.dylib)
+├── 03-dynamic-lib-macos/  Approach 3 (macOS) — links a pre-built dynamic library (.dylib)
+├── 03-dynamic-lib-linux/  Approach 3 (Linux) — links a pre-built shared library (.so)
 └── justfile           All build / run / test / lint commands
 ```
 
-Each of the three Rust projects is a standalone Cargo package. They share
+Each of the Rust projects is a standalone Cargo package. They share
 identical `src/ffi.rs` and `src/lib.rs`; the only differences are `build.rs`,
 `Cargo.toml`, and the crate name referenced in `src/main.rs`.
 
@@ -67,11 +68,19 @@ build time, not at runtime.
 
 ---
 
-### Approach 3 — dynamic library (`03-dynamic-lib`)
+### Approach 3 — dynamic library (`03-dynamic-lib-macos` / `03-dynamic-lib-linux`)
 
-A dynamic library (`libqueens.dylib`) is built with `make`. The Rust binary
-records only a **reference** to the library; the OS dynamic linker loads it at
-runtime.
+A dynamic library is built with `make`. The Rust binary records only a
+**reference** to the library; the OS dynamic linker loads it at runtime.
+
+Dynamic libraries are platform-specific, so this approach comes in two variants.
+Their Rust code is identical; only `build.rs` differs:
+
+| | macOS (`03-dynamic-lib-macos`) | Linux (`03-dynamic-lib-linux`) |
+|---|---|---|
+| Library file | `libqueens.dylib` | `libqueens.so` |
+| Compiler flag | `gcc -dynamiclib` | `gcc -shared` |
+| Runtime search path | `DYLD_LIBRARY_PATH` | `LD_LIBRARY_PATH` |
 
 **`build.rs`** emits:
 ```
@@ -79,14 +88,19 @@ cargo:rustc-link-search=native=../queens_c
 cargo:rustc-link-lib=dylib=queens             # dynamic link
 ```
 
-Because the library is loaded at runtime, you must tell the macOS dynamic linker
+Because the library is loaded at runtime, you must tell the dynamic linker
 where to find it:
 
 ```bash
-DYLD_LIBRARY_PATH=./queens_c ./target/debug/queens
+# macOS (from 03-dynamic-lib-macos/)
+DYLD_LIBRARY_PATH=../queens_c ./target/debug/queens
+
+# Linux (from 03-dynamic-lib-linux/)
+LD_LIBRARY_PATH=../queens_c ./target/debug/queens
 ```
 
-The `justfile` sets this automatically for `just run-03` and `just test-03`.
+The `justfile` sets this automatically for `just run-03` and `just test-03`,
+picking the variant that matches your OS.
 
 ---
 
@@ -141,7 +155,7 @@ just all
 # Or run each approach individually
 just run-01    # approach 1: cc crate (no pre-build needed)
 just run-02    # approach 2: static library
-just run-03    # approach 3: dynamic library
+just run-03    # approach 3: dynamic library (macOS or Linux variant)
 
 # Run tests
 just test      # all three projects
@@ -155,19 +169,19 @@ just lint-01   # approach 1 only
 
 # Build C libraries without running Rust
 just build-static    # produces queens_c/libqueens.a
-just build-dynamic   # produces queens_c/libqueens.dylib
+just build-dynamic   # produces queens_c/libqueens.dylib (macOS) or libqueens.so (Linux)
 
 # Clean all build artifacts
 just clean
 ```
 
-### Why does `run-03` need `DYLD_LIBRARY_PATH`?
+### Why does `run-03` need `DYLD_LIBRARY_PATH` / `LD_LIBRARY_PATH`?
 
-With dynamic linking, the OS loader must find `libqueens.dylib` at runtime.
-On macOS it searches standard system paths by default. Since our library lives
-in `queens_c/` (a development directory), we set `DYLD_LIBRARY_PATH` to point
-there. The `justfile` does this automatically; you only need to worry about it
-if you run the binary directly.
+With dynamic linking, the OS loader must find the library at runtime. By default
+it only searches standard system paths. Since our library lives in `queens_c/`
+(a development directory), we point `DYLD_LIBRARY_PATH` (macOS) or
+`LD_LIBRARY_PATH` (Linux) there. The `justfile` does this automatically; you
+only need to worry about it if you run the binary directly.
 
 ---
 
@@ -182,6 +196,6 @@ if you run the binary directly.
 | `Vec` as a C output buffer | `src/lib.rs` — `find_all()` |
 | `std::ffi::c_int` | `src/ffi.rs`, `src/lib.rs` |
 | `cc` crate in `build.rs` | `01-build-rs/build.rs` |
-| `cargo:rustc-link-*` directives | `02-static-lib/build.rs`, `03-dynamic-lib/build.rs` |
-| Static vs dynamic linking | `02-static-lib/build.rs`, `03-dynamic-lib/build.rs` |
-| `DYLD_LIBRARY_PATH` at runtime | `justfile` — `run-03`, `test-03` |
+| `cargo:rustc-link-*` directives | `02-static-lib/build.rs`, `03-dynamic-lib-*/build.rs` |
+| Static vs dynamic linking | `02-static-lib/build.rs`, `03-dynamic-lib-*/build.rs` |
+| `DYLD_LIBRARY_PATH` / `LD_LIBRARY_PATH` at runtime | `justfile` — `run-03`, `test-03` |

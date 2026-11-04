@@ -5,5 +5,5 @@ edition = "2024"
 rust-version = "1.96"
 
 [dependencies]
-rstest = "^0.26"
-mockall = "^0.14"
+rstest = "^0.28"
+mockall = "^0.15"

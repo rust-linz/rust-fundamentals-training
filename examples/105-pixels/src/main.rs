@@ -118,7 +118,7 @@ fn rect(frame: &mut [u8], x: u32, y: u32, width: u32, height: u32, color: [u8; 4
 // Paints the full scene into the framebuffer on every redraw.
 fn draw(frame: &mut [u8]) {
     // Clear the entire buffer to opaque black.
-    for pixel in frame.chunks_exact_mut(4) {
+    for pixel in frame.as_chunks_mut::<4>().0 {
         pixel.copy_from_slice(&[0, 0, 0, 255]);
     }
 

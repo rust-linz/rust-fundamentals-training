@@ -5,5 +5,5 @@ edition = "2024"
 rust-version = "1.96"
 
 [dependencies]
-pixels = "0.16"
+pixels = "0.17"
 winit = "0.30"

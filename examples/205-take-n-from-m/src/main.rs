@@ -38,5 +38,5 @@ fn test_take_n_from_m() {
     result.sort_by(|a, b| b.partial_cmp(a).unwrap());
 
     assert_eq!(result.len(), 6);
-    assert!(result[0] < 45);
+    assert!(result[0] <= 45);
 }

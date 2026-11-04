@@ -176,6 +176,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::clone_on_copy)]
     fn clone() {
         let b = BoardContent::new_initialized(SquareContent::X);
         let b2 = b.clone();
@@ -209,7 +210,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn indexing_out_of_bounds() {
-        BoardContent::new()[100];
+        let _ = BoardContent::new()[100];
     }
 
     #[test]

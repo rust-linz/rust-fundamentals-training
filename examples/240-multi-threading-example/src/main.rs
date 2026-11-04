@@ -15,7 +15,7 @@ impl Lotto {
         let pot = 1..=max;
         let mut rng = rand::rng();
         Self {
-            numbers: pot.choose_multiple(&mut rng, amount),
+            numbers: pot.sample(&mut rng, amount),
         }
     }
 }

@@ -1,10 +1,14 @@
+use std::ffi::c_double;
+
 #[repr(C)]
 pub struct Ellipse {
-    pub a: cty::c_double,
-    pub b: cty::c_double,
+    pub a: c_double,
+    pub b: c_double,
 }
 
-extern "C" { pub fn area_ellipse(ellipse: *mut Ellipse, area: *mut f64); }
+unsafe extern "C" {
+    pub fn area_ellipse(ellipse: *mut Ellipse, area: *mut f64);
+}
 
 fn main() {
     let mut ellipse = Ellipse { a: 3.0, b: 4.0 };
