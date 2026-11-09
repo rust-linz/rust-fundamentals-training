@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-      "target": "esnext",
-      "module": "esnext",
-      "sourceMap": true,
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "strict": false,
-      "moduleResolution": "node"
-    }
-  }
-  
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "sourceMap": true,
+    "noEmit": true,
+    "strict": false,
+    "moduleResolution": "bundler",
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
+}

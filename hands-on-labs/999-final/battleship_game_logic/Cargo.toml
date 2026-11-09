@@ -2,12 +2,11 @@
 name = "battleship_game_logic"
 version = "0.1.0"
 authors = ["Rainer <rainer@software-architects.at>"]
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-rand = "^0.8.0"
-getrandom = { version = "^0.2.0", features = [ "js" ] }
+rand = "0.10"
 
 [dev-dependencies]
-rstest = "^0.15.0"
-mockall = "^0.11.0"
+rstest = "0.28"
+mockall = "0.15"

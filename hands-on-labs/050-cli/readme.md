@@ -18,7 +18,7 @@ Copy the dependencies into the library's *Cargo.toml* from [Cargo.toml](../999-f
 
 Change the file *main.rs* in the *console_game* package by copying the content from [main.rs](../999-final/console_game/src/main.rs). Make yourself familiar with the code and/or discuss it with your Rust trainers. Note the recommended reading links at the beginning of the files.
 
-Note that [main.rs](../999-final/console_game/src/main.rs) contains code to randomly fill the Battleship board. We have not implemented this logic yet. Therefore, comment out the corresponding line of code. You can add it later once we covered filling the board.
+Note that [main.rs](../999-final/console_game/src/main.rs) contains code to randomly fill the Battleship board. We have not implemented this logic yet. Therefore, remove `BoardFiller` and `random_placer` from the `use` statement at the top of the file and comment out the `if fill { ... }` line in the `board` function. The compiler will warn you about the unused `fill` parameter and the unnecessary `mut` until you add the code again once we covered filling the board.
 
 ## Verify
 

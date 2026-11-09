@@ -22,7 +22,7 @@ use crate::{GenericBoardContent, BOARD_SIDE_LENGTH};
     * newtype pattern: https://doc.rust-lang.org/rust-by-example/generics/new_types.html
     * Strings: https://doc.rust-lang.org/rust-by-example/std/str.html
     * Operator overloading: https://doc.rust-lang.org/std/ops/index.html
-    * rstest crate: https://docs.rs/rstest/0.10.0/rstest/index.html
+    * rstest crate: https://docs.rs/rstest/latest/rstest/index.html
     * Match guards: https://doc.rust-lang.org/reference/expressions/match-expr.html#match-guards
     * `FromStr` trait: https://doc.rust-lang.org/std/str/trait.FromStr.html
     * `parse` method: https://doc.rust-lang.org/std/primitive.str.html#method.parse
@@ -187,8 +187,8 @@ impl Display for BoardIndex {
         write!(
             f,
             "{}{}",
-            char::from_u32((b'A' as usize + self.0 / BOARD_SIDE_LENGTH) as u32).unwrap(),
-            self.0 % BOARD_SIDE_LENGTH + 1
+            char::from_u32((b'A' as usize + self.column()) as u32).unwrap(),
+            self.row() + 1
         )
     }
 }
@@ -338,6 +338,8 @@ mod tests {
     #[case(0, 0, "A1")]
     #[case(9, 9, "J10")]
     #[case(1, 1, "B2")]
+    #[case(1, 0, "B1")] // column is the letter
+    #[case(0, 1, "A2")] // row is the number
     fn try_display(#[case] col: usize, #[case] row: usize, #[case] location: &'static str) {
         assert_eq!(location, format!("{}", BoardIndex::from_col_row(col, row)));
     }

@@ -1,5 +1,5 @@
 use battleship_game_logic::{BattleshipBoardContent, BoardFiller, SquareContent, random_placer};
-use structopt::StructOpt;
+use clap::{Parser, Subcommand};
 
 /*
     Learnings in this module:
@@ -8,21 +8,26 @@ use structopt::StructOpt;
 
     Recommended readings for this module:
 
-    * structopt crate: https://docs.rs/structopt/0.3.22/structopt/index.html
+    * clap derive tutorial: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html
 */
 
-#[derive(StructOpt)]
-#[structopt()]
+#[derive(Parser)]
+struct Cli {
+    #[command(subcommand)]
+    command: Command,
+}
+
+#[derive(Subcommand)]
 enum Command {
     SquareContent,
     Board {
-        #[structopt(short, long, help = "Indicates whether the board should be filled")]
+        #[arg(short, long, help = "Indicates whether the board should be filled")]
         fill: bool
     },
 }
 
 fn main() {
-    match Command::from_args() {
+    match Cli::parse().command {
         Command::SquareContent => square_content(),
         Command::Board { fill } => board(fill),
     }

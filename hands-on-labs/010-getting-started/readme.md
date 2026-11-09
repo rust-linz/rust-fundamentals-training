@@ -20,4 +20,3 @@ Copy the dependencies into the library's *Cargo.toml* from [Cargo.toml](../999-f
 
 * Make yourself familiar with [how to specify dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html).
 * Make yourself familiar with [Cargo dependency features](https://doc.rust-lang.org/cargo/reference/features.html#dependency-features).
-* You might ask yourself why we reference *getrandom* with the feature *js*. The reason is that we need WASM support for a later sample ([read more](https://docs.rs/getrandom/0.2.3/getrandom/#webassembly-support)).

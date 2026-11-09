@@ -1,150 +1,220 @@
 mod game_repository;
 
-use std::str::FromStr;
+use std::{str::FromStr, sync::Arc};
+
+use axum::{
+    Json, Router,
+    extract::{Path, State},
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::{get, post},
+};
 use battleship_game_logic::BoardIndex;
-use game_repository::Game;
-use game_repository::ID;
+use game_repository::{Game, ID};
+use serde::{Deserialize, Serialize};
+use tower_http::services::ServeDir;
 
 #[cfg_attr(test, mockall_double::double)]
 use game_repository::GameRepository;
-use rocket::fs::{FileServer, relative};
-use rocket::{State, response::status::Created, serde::uuid::Uuid};
-use rocket::serde::json::Json;
-use rocket::serde::{Deserialize, Serialize};
 
 /*
     Learnings in this module:
 
-    * Building a simple web API with Rocket v0.5-rc
+    * Building a simple web API with Axum
+    * Extractors and shared state in async handlers
+    * Custom error responses with `IntoResponse`
     * Testing web APIs
     * Mocking structs with doubles
 
     Recommended readings for this module:
 
-    * Rocket docs: https://rocket.rs/v0.5-rc/guide/introduction/
-    * `mockall_double` crate: https://docs.rs/mockall_double/0.2.0/mockall_double/
+    * Axum docs: https://docs.rs/axum/latest/axum/
+    * Sharing state with handlers: https://docs.rs/axum/latest/axum/#sharing-state-with-handlers
+    * Error handling: https://docs.rs/axum/latest/axum/error_handling/index.html
+    * `mockall_double` crate: https://docs.rs/mockall_double/latest/mockall_double/
 */
 
-#[macro_use] extern crate rocket;
+// Note: The state has to be cloneable because Axum clones it for every request.
+//       `Arc` makes that cheap and lets all requests share the same repository.
+type Games = State<Arc<GameRepository>>;
 
-#[derive(Deserialize, Serialize)]
-#[serde(crate = "rocket::serde")]
-pub struct AddGameDto {
+#[derive(Deserialize)]
+struct AddGameDto {
     player: String,
 }
 
-#[post("/games", format = "json", data = "<game>")]
-fn start_game(game: Json<AddGameDto>, games_state: &State<GameRepository>) -> Created<Json<Uuid>> {
-    Created::new("")
-        .body(Json(games_state.add(game.0.player).id))
+// Note: The extractor consuming the request body (`Json`) has to be the last parameter.
+async fn start_game(State(games): Games, Json(game): Json<AddGameDto>) -> (StatusCode, Json<ID>) {
+    (StatusCode::CREATED, Json(games.add(game.player).id))
 }
 
 #[derive(Serialize)]
-#[serde(crate = "rocket::serde")]
 struct GameResponse {
-    id: Uuid,
+    id: ID,
     player: String,
     board: String,
-    game_status: u8
+    game_status: u8,
 }
 
 impl GameResponse {
     fn from_game(game: &Game) -> GameResponse {
         GameResponse {
             id: game.id,
-            player:
-            game.player.clone(),
+            player: game.player.clone(),
             board: game.game.shooting_board_str(),
             game_status: game.game.game_state() as u8,
         }
     }
 }
 
-#[get("/games/<id>")]
-fn get_game(id: ID, games_state: &State<GameRepository>) -> Option<Json<GameResponse>> {
-    let game = games_state.get_by_id(&id)?;
-    Some(Json(GameResponse::from_game(&game)))
+async fn get_game(Path(id): Path<ID>, State(games): Games) -> Result<Json<GameResponse>, StatusCode> {
+    let game = games.get_by_id(&id).ok_or(StatusCode::NOT_FOUND)?;
+    Ok(Json(GameResponse::from_game(&game)))
 }
 
-#[derive(Responder)]
-enum ShotResult {
-    Success(Option<Json<GameResponse>>),
-    #[response(status = 404)]
-    NotFound(&'static str),
-    #[response(status = 400)]
-    BadRequest(&'static str)
+enum ShotError {
+    GameNotFound,
+    InvalidLocation,
 }
 
-#[post("/games/<id>/shoot", format = "json", data = "<location>")]
-fn shoot(id: ID, location: Json<&str>, games_state: &State<GameRepository>) -> ShotResult {
-    match BoardIndex::from_str(location.as_ref()) {
-        Ok(location) => {
-            match games_state.shoot(&id, location) {
-                Some(game) => ShotResult::Success(Some(Json(GameResponse::from_game(&game)))),
-                None => ShotResult::NotFound("No game found with given id"),
-            }
-            
-        },
-        Err(_) => ShotResult::BadRequest("Invalid board index")
+impl IntoResponse for ShotError {
+    fn into_response(self) -> Response {
+        match self {
+            ShotError::GameNotFound => (StatusCode::NOT_FOUND, "No game found with given id"),
+            ShotError::InvalidLocation => (StatusCode::BAD_REQUEST, "Invalid board index"),
+        }
+        .into_response()
     }
 }
 
-#[launch]
-fn rocket() -> _ {
-    rocket::build()
-        .manage(GameRepository::new())
-        .mount("/", routes![start_game,  get_game, shoot])
-        .mount("/", FileServer::from(relative!("public")))
+async fn shoot(
+    Path(id): Path<ID>,
+    State(games): Games,
+    Json(location): Json<String>,
+) -> Result<Json<GameResponse>, ShotError> {
+    let location = BoardIndex::from_str(&location).map_err(|_| ShotError::InvalidLocation)?;
+    let game = games.shoot(&id, location).ok_or(ShotError::GameNotFound)?;
+    Ok(Json(GameResponse::from_game(&game)))
+}
+
+fn app(games: GameRepository) -> Router {
+    Router::new()
+        .route("/games", post(start_game))
+        .route("/games/{id}", get(get_game))
+        .route("/games/{id}/shoot", post(shoot))
+        .with_state(Arc::new(games))
+        .fallback_service(ServeDir::new(concat!(env!("CARGO_MANIFEST_DIR"), "/public")))
+}
+
+#[tokio::main]
+async fn main() {
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8000").await.unwrap();
+    println!("Listening on http://{}", listener.local_addr().unwrap());
+    axum::serve(listener, app(GameRepository::new())).await.unwrap();
 }
 
 #[cfg(test)]
 mod test {
-    use crate::{AddGameDto, game_repository::{Game, MockGameRepository}, get_game, start_game};
-    
-    use super::rocket;
+    use super::*;
+    use crate::game_repository::MockGameRepository;
+    use axum::{
+        body::{Body, Bytes},
+        http::{Request, header},
+    };
     use battleship_game_logic::SinglePlayerGame;
-    use rocket::{http::Status, local::blocking::Client};
+    use http_body_util::BodyExt;
+    use serde_json::{Value, json};
+    use tower::ServiceExt; // Provides `oneshot`
     use uuid::Uuid;
-    
-    #[test]
-    fn add() {
-        let mut repo: MockGameRepository = MockGameRepository::default();
-        repo.expect_add().return_const(Game { id: Uuid::new_v4(), player: "FooBar".to_string(), game: SinglePlayerGame::new() });
 
-        let r = rocket::build()
-            .manage( repo)
-            .mount("/", routes![start_game]);
+    const GAME_ID: &str = "822c594e-b5ee-4ca5-ae3b-86d8bb97b43a";
 
-        let client = Client::tracked(r).unwrap();
-        let response = client.post("/games").json(&AddGameDto { player: "FooBar".into() }).dispatch();
-        assert_eq!(response.status(), Status::Created);
+    fn game() -> Game {
+        Game {
+            id: Uuid::from_str(GAME_ID).unwrap(),
+            player: "FooBar".to_string(),
+            game: SinglePlayerGame::new(),
+        }
     }
-    
-    #[test]
-    fn get_success() {
-        let mut repo: MockGameRepository = MockGameRepository::default();
-        repo.expect_get_by_id().return_const(Game { id: Uuid::new_v4(), player: "FooBar".to_string(), game: SinglePlayerGame::new() });
 
-        let r = rocket::build()
-            .manage( repo)
-            .mount("/", routes![get_game]);
-
-        let client = Client::tracked(r).unwrap();
-        let response = client.get("/games/822c594e-b5ee-4ca5-ae3b-86d8bb97b43a").dispatch();
-        assert_eq!(response.status(), Status::Ok);
+    fn post_json(uri: &str, body: Value) -> Request<Body> {
+        Request::post(uri)
+            .header(header::CONTENT_TYPE, "application/json")
+            .body(Body::from(body.to_string()))
+            .unwrap()
     }
-    
-    #[test]
-    fn get_not_found() {
-        let mut repo: MockGameRepository = MockGameRepository::default();
+
+    fn get_request() -> Request<Body> {
+        Request::get(format!("/games/{GAME_ID}")).body(Body::empty()).unwrap()
+    }
+
+    // Note: `oneshot` sends a single request directly to the router, no TCP involved.
+    async fn send(repo: MockGameRepository, request: Request<Body>) -> (StatusCode, Bytes) {
+        let response = app(repo).oneshot(request).await.unwrap();
+        let status = response.status();
+        (status, response.into_body().collect().await.unwrap().to_bytes())
+    }
+
+    #[tokio::test]
+    async fn add() {
+        let mut repo = MockGameRepository::default();
+        repo.expect_add().return_const(game());
+
+        let (status, body) = send(repo, post_json("/games", json!({ "player": "FooBar" }))).await;
+
+        assert_eq!(status, StatusCode::CREATED);
+        assert_eq!(serde_json::from_slice::<Value>(&body).unwrap(), json!(GAME_ID));
+    }
+
+    #[tokio::test]
+    async fn get_success() {
+        let mut repo = MockGameRepository::default();
+        repo.expect_get_by_id().return_const(game());
+
+        let (status, body) = send(repo, get_request()).await;
+
+        assert_eq!(status, StatusCode::OK);
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        assert_eq!(body["player"], "FooBar");
+        assert_eq!(body["board"], " ".repeat(100)); // Ship positions must stay secret
+    }
+
+    #[tokio::test]
+    async fn get_not_found() {
+        let mut repo = MockGameRepository::default();
         repo.expect_get_by_id().return_const(None);
 
-        let r = rocket::build()
-            .manage( repo)
-            .mount("/", routes![get_game]);
+        let (status, _) = send(repo, get_request()).await;
 
-        let client = Client::tracked(r).unwrap();
-        let response = client.get("/games/822c594e-b5ee-4ca5-ae3b-86d8bb97b43a").dispatch();
-        assert_eq!(response.status(), Status::NotFound);
+        assert_eq!(status, StatusCode::NOT_FOUND);
+    }
+
+    #[tokio::test]
+    async fn shoot_success() {
+        let mut repo = MockGameRepository::default();
+        repo.expect_shoot().return_const(game());
+
+        let (status, _) = send(repo, post_json(&format!("/games/{GAME_ID}/shoot"), json!("B1"))).await;
+
+        assert_eq!(status, StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn shoot_game_not_found() {
+        let mut repo = MockGameRepository::default();
+        repo.expect_shoot().return_const(None);
+
+        let (status, _) = send(repo, post_json(&format!("/games/{GAME_ID}/shoot"), json!("B1"))).await;
+
+        assert_eq!(status, StatusCode::NOT_FOUND);
+    }
+
+    #[tokio::test]
+    async fn shoot_invalid_location() {
+        let repo = MockGameRepository::default();
+
+        let (status, _) = send(repo, post_json(&format!("/games/{GAME_ID}/shoot"), json!("Z99"))).await;
+
+        assert_eq!(status, StatusCode::BAD_REQUEST);
     }
 }

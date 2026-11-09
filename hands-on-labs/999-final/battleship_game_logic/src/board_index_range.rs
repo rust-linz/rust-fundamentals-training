@@ -23,7 +23,8 @@ impl BoardIndexRangeInclusive {
             panic!("Invalid arguments, cannot construct inclusive board index range");
         }
 
-        BoardIndexRangeInclusive(start..=end)
+        // Note: We normalize the order because our iterator always moves forward
+        BoardIndexRangeInclusive(start.min(end)..=start.max(end))
     }
 
     pub fn length(&self) -> usize {
@@ -138,6 +139,13 @@ mod tests {
     #[test]
     fn length_vertical() {
         assert_eq!(3, BoardIndexRangeInclusive::from("A1".parse().unwrap()..="A3".parse().unwrap()).length());
+    }
+
+    #[test]
+    fn reversed_range_is_normalized() {
+        let range = BoardIndexRangeInclusive::new("C1".parse().unwrap(), "A1".parse().unwrap());
+        assert_eq!(3, range.length());
+        assert_eq!(vec!(BoardIndex::from("A1"), "B1".into(), "C1".into()), range.into_iter().collect::<Vec<_>>());
     }
 
     #[test]

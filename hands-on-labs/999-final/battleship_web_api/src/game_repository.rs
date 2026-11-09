@@ -11,7 +11,7 @@ use uuid::Uuid;
 
     Recommended readings for this module:
 
-    * Mockall - mocking structs: https://docs.rs/mockall/0.10.1/mockall/#mocking-structs
+    * Mockall - mocking structs: https://docs.rs/mockall/latest/mockall/#mocking-structs
     * Conditional compilation: https://doc.rust-lang.org/reference/conditional-compilation.html
 */
 

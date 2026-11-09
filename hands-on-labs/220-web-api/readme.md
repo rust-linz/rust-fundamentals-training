@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Now it is time to add the web API. If you have experience with web API development in other languages, building basic APIs with Rocket will probably not be difficult for you. To make things more interesting, we have added API testing with mock objects (a mock version of our game repository).
+Now it is time to add the web API. If you have experience with web API development in other languages, building basic APIs with Axum will probably not be difficult for you. Pay particular attention to how handlers receive data through *extractors*, how the repository is shared between requests with `Arc`, and how `IntoResponse` turns our custom error type into HTTP responses. To make things more interesting, we have added API testing with mock objects (a mock version of our game repository).
 
 ## *main.rs*
 

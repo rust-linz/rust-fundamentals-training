@@ -46,7 +46,7 @@ impl<T: Default + Copy> GenericBoardContent<T> {
         self.board_content.into_iter()
     }
 
-    pub fn row(&self, row: usize) -> Row<T> {
+    pub fn row(&self, row: usize) -> Row<'_, T> {
         if row >= BOARD_SIDE_LENGTH {
             panic!("Index out of bounds");
         }
@@ -58,7 +58,7 @@ impl<T: Default + Copy> GenericBoardContent<T> {
         &self.board_content
     }
 
-    pub fn rows(&self) -> impl Iterator<Item = Row<T>> {
+    pub fn rows(&self) -> impl Iterator<Item = Row<'_, T>> {
         RowsIterator::new(self)
     }
 
@@ -316,7 +316,7 @@ mod tests {
     #[test]
     fn into_string() {
         let b = BattleshipBoardContent::new();
-        format!("{}", b);
+        assert!(!format!("{}", b).is_empty());
     }
 
     #[test]

@@ -15,9 +15,9 @@ use serde::Serialize;
 
     Recommended readings for this module:
 
-    * Rust WASM book: https://rustwasm.github.io/docs/book/introduction.html
-    * The `wasm-bindgen` Guide: https://rustwasm.github.io/wasm-bindgen/introduction.html
-    * wasm-pack docs: https://rustwasm.github.io/docs/wasm-pack/
+    * The `wasm-bindgen` Guide: https://wasm-bindgen.github.io/wasm-bindgen/
+    * wasm-pack docs: https://drager.github.io/wasm-pack/
+    * `serde-wasm-bindgen` crate: https://docs.rs/serde-wasm-bindgen/latest/serde_wasm_bindgen/
 */
 
 #[wasm_bindgen]
@@ -46,6 +46,7 @@ pub enum GameStateJS {
 #[wasm_bindgen]
 impl BattleshipGame {
     pub fn new() -> BattleshipGame {
+        utils::set_panic_hook();
         BattleshipGame { game: SinglePlayerGame::new() }
     }
 
@@ -63,7 +64,7 @@ impl BattleshipGame {
                 }
 
                 let shot_result = self.game.shoot(location);
-                Ok(JsValue::from_serde(&Result {
+                Ok(serde_wasm_bindgen::to_value(&Result {
                     shot_result: match shot_result {
                         SquareContent::Water => SquareContentJS::Water,
                         SquareContent::HitShip => SquareContentJS::HitShip,

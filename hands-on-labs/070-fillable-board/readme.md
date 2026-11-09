@@ -30,4 +30,4 @@ Pay particular attention to the unit tests in this exercise. For the first time,
 
 ## Discussion
 
-Can you remember that we commented out a line of code in our CLI project? It was related to filling the board. Now that we have that logic, you can add the line of code and test whether filling the board randomly works as expected.
+Can you remember that we commented out a line of code in our CLI project? It was related to filling the board. Now that we have that logic, you can add the line of code and the imports again and test whether filling the board randomly works as expected.

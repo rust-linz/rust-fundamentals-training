@@ -1,4 +1,4 @@
-use std::ops::IndexMut;
+use std::{iter::successors, ops::IndexMut};
 
 use crate::{BOARD_SIDE_LENGTH, BoardIndex, Direction, SquareContent};
 
@@ -100,7 +100,9 @@ impl<T> ShipSetter for T where T: SquareAccessor {
             }
         }
         fn get_elements_to_check_alongside(ix: usize, ship_length: usize) -> usize {
-            ship_length + if ix == 0 || ix + ship_length == BOARD_SIDE_LENGTH { 1 } else { 2 }
+            let before = if ix == 0 { 0 } else { 1 };
+            let after = if ix + ship_length == BOARD_SIDE_LENGTH { 0 } else { 1 };
+            before + ship_length + after
         }
 
         let number_of_rows_to_check = match direction {
@@ -134,10 +136,9 @@ impl<T> ShipSetter for T where T: SquareAccessor {
     ) -> Result<bool, PlacementError> {
         match self.can_place_ship(ix, ship_length, direction) {
             Ok(true) => {
-                let mut ix = ix;
-                for _ in 0..ship_length {
-                    self.set_ship(ix);
-                    ix = ix.try_next(direction).unwrap();
+                // Note: `successors` ends at the board's edge instead of panicking
+                for square in successors(Some(ix), |i| i.try_next(direction)).take(ship_length) {
+                    self.set_ship(square);
                 }
                 Ok(true)
             },
@@ -238,6 +239,24 @@ mod tests {
             !(ix.row() == 3 && ix.column() == 3)
         });
         assert!(!mock.can_place_ship(BoardIndex::from_col_row(3, 2), 3, Direction::Vertical).unwrap());
+    }
+
+    #[rstest]
+    #[case("I1", Direction::Horizontal)]
+    #[case("A9", Direction::Vertical)]
+    fn try_place_ship_ending_at_board_edge(#[case] start: &str, #[case] direction: Direction) {
+        let mut board = GenericBoardContent::new_initialized(SquareContent::Water);
+        assert!(board.try_place_ship(start.parse().unwrap(), 2, direction).unwrap());
+        assert_eq!(2, board.iter().filter(|s| *s == SquareContent::Ship).count());
+    }
+
+    #[rstest]
+    #[case(Direction::Horizontal)]
+    #[case(Direction::Vertical)]
+    fn ship_can_span_entire_board(#[case] direction: Direction) {
+        let mut board = GenericBoardContent::new_initialized(SquareContent::Water);
+        assert!(board.try_place_ship(BoardIndex::new(), 10, direction).unwrap());
+        assert_eq!(10, board.iter().filter(|s| *s == SquareContent::Ship).count());
     }
 
     #[test]

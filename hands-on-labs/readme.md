@@ -6,7 +6,7 @@ In this hands-on-lab, you are going to build various flavors of the classical [B
 
 Next, we will implement a CLI (*Command Line Interface*) for our game. You will learn about useful libraries for building such command-line tools.
 
-The third step is building a web API for a browser-based version of our game. We will use the *Rocket* framework for that.
+The third step is building a web API for a browser-based version of our game. We will use the *Axum* framework for that.
 
 Last but not least we will create a WebAssembly (WASM) version of Battleship that runs our previously created game logic in the browser.
 
@@ -15,6 +15,7 @@ Last but not least we will create a WebAssembly (WASM) version of Battleship tha
 * [Rust](https://www.rust-lang.org/tools/install)
 * [Visual Studio Code](https://code.visualstudio.com) with the extensions *rust-analyzer* und *CodeLLDB*
 * [Node.js](https://nodejs.org/en/) (for web UI)
+* [wasm-pack](https://drager.github.io/wasm-pack/) (for the WebAssembly exercises)
 
 ## Exercising
 

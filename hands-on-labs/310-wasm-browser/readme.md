@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Now that we have the WASM package, we need a web client. The [Rust WASM book](https://rustwasm.github.io/docs/book/game-of-life/hello-world.html#putting-it-into-a-web-page) contains a description how to setup a basic web client. In this exercise we do **not** follow this guide because it reference some older packages and uses JavaScript instead of TypeScript.
+Now that we have the WASM package, we need a web client. We build it with TypeScript and [Vite](https://vite.dev/). The [*vite-plugin-wasm*](https://github.com/Menci/vite-plugin-wasm) plugin lets us import the WASM package like any other module.
 
 ## Create Node Package
 
@@ -12,8 +12,8 @@ Create a subfolder *www* in the *battleship_wasm* package. Copy all files from [
 
 Take a look at the *package.json* file. Note how it references the WASM package.
 
-Install the required Node packages by running `npm install` in the *www* folder.
+Make sure that you have built the WASM package with `wasm-pack build` in the *battleship_wasm* folder. Then install the required Node packages by running `npm install` in the *www* folder.
 
 ## Verify
 
-Run your *www* project with `npm start` and use your favorite web browser to launch the UI. Inspect the network traffic to see how the WASM module is loaded from the server.
+Run your *www* project with `npm start` and open the URL that Vite prints in your favorite web browser. Inspect the network traffic to see how the WASM module is loaded from the server.

@@ -6,28 +6,28 @@ Rust works very well with WebAssembly. Therefore we are going to implement a ver
 
 ## Create Package
 
-We will follow the [*Getting Started* guide in the Rust WASM book](https://rustwasm.github.io/docs/book/game-of-life/hello-world.html) to create our new package. Run `cargo generate --git https://github.com/rustwasm/wasm-pack-template` and use *battleship_wasm* as your project name.
+Create a new library using Cargo: `cargo new --lib battleship_wasm`. Add the new library to the previously created workspace.
 
-If you want, you can delete files that are not relevant for learning Rust (e.g. readme-files, license-files, etc.).
-
-Use [*wasm-pack*](https://rustwasm.github.io/wasm-pack/book/) to build the code: `wasm-pack build`
+We use [*wasm-pack*](https://drager.github.io/wasm-pack/) to build the code. Install it if you have not done so already.
 
 ## Dependencies
 
-Overwrite the dependencies in the library's *Cargo.toml* with the code from [Cargo.toml](../999-final/battleship_wasm/Cargo.toml). Lookup all the referenced crates on [crates.io](https://crates.io/) and find out what they are used for. You do not need to understand all the details. Overview knowledge is sufficient. Note how we reference our game logic in *battleship_game_logic*.
+Overwrite the library's *Cargo.toml* with the content from [Cargo.toml](../999-final/battleship_wasm/Cargo.toml). Lookup all the referenced crates on [crates.io](https://crates.io/) and find out what they are used for. You do not need to understand all the details. Overview knowledge is sufficient. Note how we reference our game logic in *battleship_game_logic*.
 
-**Note:** In this example, we do not use [*wee_alloc*](https://github.com/rustwasm/wee_alloc) for WASM size optimization.
+**Tip:** You might ask yourself why we reference *getrandom* with the feature *wasm_js*. Our game logic needs random numbers, and in the browser they have to come from the Web Crypto API ([read more](https://docs.rs/getrandom/latest/getrandom/)). The game logic should stay independent of the browser, so we enable this feature only in the WASM package.
 
-## *lib.rs*
+## *lib.rs* and *utils.rs*
 
-Change the file *lib.rs* in the *battleship_wasm* package by copying the content from [lib.rs](../999-final/battleship_wasm/src/lib.rs). Make yourself familiar with the code and/or discuss it with your Rust trainers. Note the recommended reading links at the beginning of the file.
+Change the file *lib.rs* and add the file *utils.rs* in the *battleship_wasm* package by copying the content from [lib.rs](../999-final/battleship_wasm/src/lib.rs) and [utils.rs](../999-final/battleship_wasm/src/utils.rs). Make yourself familiar with the code and/or discuss it with your Rust trainers. Note the recommended reading links at the beginning of the file.
 
 ## *web.rs*
 
-Change the file *web.rs* in the *battleship_wasm tests* package by copying the content from [web.rs](../999-final/battleship_wasm/tests/web.rs). Make yourself familiar with the code and/or discuss it with your Rust trainers. Note the recommended reading links at the beginning of the file.
+Add the file *tests/web.rs* to the *battleship_wasm* package by copying the content from [web.rs](../999-final/battleship_wasm/tests/web.rs). Make yourself familiar with the code and/or discuss it with your Rust trainers.
 
 ## Verify
 
+Run the following commands in the *battleship_wasm* folder:
+
 * Use `wasm-pack build` to verify that your project compiles.
 * Use `cargo clippy` to verfiy that you follow Rust coding guidelines.
-* Use `wasm-pack test` to verify that all tests pass.
+* Use `wasm-pack test --headless --chrome` to verify that all tests pass. Use `--firefox` instead of `--chrome` if you prefer Firefox.
