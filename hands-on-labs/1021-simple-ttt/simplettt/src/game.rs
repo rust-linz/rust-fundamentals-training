@@ -1,4 +1,19 @@
-use crate::{board_content::{BoardContent, SquareContent}, board_index::BoardIndex};
+use crate::{
+    board_content::{BOARD_SIDE_LENGTH, BoardContent, SquareContent},
+    board_index::BoardIndex,
+};
+
+/// All lines that win the game (rows, columns, diagonals) as (column, row) coordinates
+const WINNING_LINES: [[(usize, usize); BOARD_SIDE_LENGTH]; 8] = [
+    [(0, 0), (1, 0), (2, 0)],
+    [(0, 1), (1, 1), (2, 1)],
+    [(0, 2), (1, 2), (2, 2)],
+    [(0, 0), (0, 1), (0, 2)],
+    [(1, 0), (1, 1), (1, 2)],
+    [(2, 0), (2, 1), (2, 2)],
+    [(0, 0), (1, 1), (2, 2)],
+    [(2, 0), (1, 1), (0, 2)],
+];
 
 pub struct Game {
     pub content: BoardContent,
@@ -14,8 +29,7 @@ impl Game {
     }
 
     pub fn set(&mut self, ix: BoardIndex) -> Result<(), &'static str> {
-        let current_value = self.content[ix];
-        if current_value.is_some() {
+        if self.content[ix].is_some() {
             return Err("Square already set");
         }
         self.content[ix] = Some(self.current_player);
@@ -28,51 +42,13 @@ impl Game {
         Ok(())
     }
 
-    #[allow(dead_code)]
-    pub fn who_is_next(&self) -> SquareContent {
-        self.current_player
-    }
-}
-
-
-pub trait WinnerDetector {
-    fn get_winner(&self) -> Option<SquareContent>;
-}
-
-impl WinnerDetector for Game
-{
     /// Get the winner in the tic tac toe game; return None if no winner
-    fn get_winner(&self) -> Option<SquareContent> {
-        for row in 0..3 {
-            if self.content[BoardIndex::from_col_row(0, row)].is_some()
-                && self.content[BoardIndex::from_col_row(0, row)] == self.content[BoardIndex::from_col_row(1, row)]
-                && self.content[BoardIndex::from_col_row(1, row)] == self.content[BoardIndex::from_col_row(2, row)]
-            {
-                return self.content[BoardIndex::from_col_row(1, row)];
-            }
-        }
+    pub fn get_winner(&self) -> Option<SquareContent> {
+        WINNING_LINES.iter().find_map(|line| {
+            let [a, b, c] = line.map(|(col, row)| self.content[BoardIndex::from_col_row(col, row)]);
 
-        for col in 0..3 {
-            if self.content[BoardIndex::from_col_row(col, 0)].is_some()
-                && self.content[BoardIndex::from_col_row(col, 0)] == self.content[BoardIndex::from_col_row(col, 1)]
-                && self.content[BoardIndex::from_col_row(col, 0)] == self.content[BoardIndex::from_col_row(col, 2)]
-            {
-                return self.content[BoardIndex::from_col_row(col, 0)];
-            }
-        }
-
-        if self.content[BoardIndex::from_col_row(0, 0)].is_some()
-            && self.content[BoardIndex::from_col_row(0, 0)] == self.content[BoardIndex::from_col_row(1, 1)]
-            && self.content[BoardIndex::from_col_row(1, 1)] == self.content[BoardIndex::from_col_row(2, 2)] {
-            return self.content[BoardIndex::from_col_row(0, 0)];
-        }
-
-        if self.content[BoardIndex::from_col_row(0, 2)].is_some()
-            && self.content[BoardIndex::from_col_row(0, 2)] == self.content[BoardIndex::from_col_row(1, 1)]
-            && self.content[BoardIndex::from_col_row(1, 1)] == self.content[BoardIndex::from_col_row(2, 0)] {
-                return self.content[BoardIndex::from_col_row(0, 2)];
-        }
-
-        None
+            // Note: If all squares are empty, `a` is None and the search continues
+            if a == b && b == c { a } else { None }
+        })
     }
 }

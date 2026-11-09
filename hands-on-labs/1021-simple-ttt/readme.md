@@ -4,7 +4,7 @@
 
 Implement a simple, console-based TicTacToe game.
 
-The console app displays the board and asks the user where she wants to set (format *A1*, *B2*, etc.). After each set, the board is displayed again and the app asks for another location. This process has to continue until we have a winner.
+The console app displays the board and asks the user where she wants to set (format *A1*, *B2*, etc., the letter is the column, the digit is the row). After each set, the board is displayed again and the app asks for another location. This process has to continue until we have a winner or the board is full (draw).
 
 The following sample output illustrates the concept:
 
@@ -35,7 +35,7 @@ Enter location (A1-C3): B2
 ┃  |  |  ┃
 ┗━━┷━━┷━━┛
 
-Enter location (A1-C3): A2
+Enter location (A1-C3): B1
 ┏━━┯━━┯━━┓
 ┃XX|XX|  ┃
 ┠──┼──┼──┨
@@ -44,7 +44,7 @@ Enter location (A1-C3): A2
 ┃  |  |  ┃
 ┗━━┷━━┷━━┛
 
-Enter location (A1-C3): A3
+Enter location (A1-C3): C1
 ┏━━┯━━┯━━┓
 ┃XX|XX|OO┃
 ┠──┼──┼──┨
@@ -53,7 +53,7 @@ Enter location (A1-C3): A3
 ┃  |  |  ┃
 ┗━━┷━━┷━━┛
 
-Enter location (A1-C3): C2
+Enter location (A1-C3): B3
 ┏━━┯━━┯━━┓
 ┃XX|XX|OO┃
 ┠──┼──┼──┨
@@ -62,7 +62,7 @@ Enter location (A1-C3): C2
 ┃  |XX|  ┃
 ┗━━┷━━┷━━┛
 
-Enter location (A1-C3): C1
+Enter location (A1-C3): A3
 ┏━━┯━━┯━━┓
 ┃XX|XX|OO┃
 ┠──┼──┼──┨

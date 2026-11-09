@@ -1,6 +1,15 @@
-use std::{ops::{Index, IndexMut}, fmt};
+use std::{
+    fmt,
+    ops::{Index, IndexMut},
+};
 
 use crate::board_index::BoardIndex;
+
+/// Number of rows and columns of the board
+pub const BOARD_SIDE_LENGTH: usize = 3;
+
+/// Total number of squares on the board
+pub const BOARD_SQUARE_COUNT: usize = BOARD_SIDE_LENGTH * BOARD_SIDE_LENGTH;
 
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum SquareContent {
@@ -18,14 +27,19 @@ impl From<SquareContent> for char {
 }
 
 pub struct BoardContent {
-    board_content: [Option<SquareContent>; 3 * 3],
+    board_content: [Option<SquareContent>; BOARD_SQUARE_COUNT],
 }
 
 impl BoardContent {
     pub fn new() -> Self {
         BoardContent {
-            board_content: [None; 3 * 3],
+            board_content: [None; BOARD_SQUARE_COUNT],
         }
+    }
+
+    /// Returns true if no empty square is left
+    pub fn is_full(&self) -> bool {
+        self.board_content.iter().all(Option::is_some)
     }
 }
 
@@ -53,13 +67,13 @@ impl fmt::Display for BoardContent {
             let mut result = String::new();
             result.reserve_exact(
                 chars[0].len_utf8()
-                    + 3 * 2 * chars[1].len_utf8()
-                    + (3 - 1) * chars[2].len_utf8()
+                    + BOARD_SIDE_LENGTH * 2 * chars[1].len_utf8()
+                    + (BOARD_SIDE_LENGTH - 1) * chars[2].len_utf8()
                     + chars[3].len_utf8()
                     + '\n'.len_utf8(),
             );
             result.push(chars[0]);
-            for _ in 0..3 - 1 {
+            for _ in 0..BOARD_SIDE_LENGTH - 1 {
                 result.push(chars[1]);
                 result.push(chars[1]);
                 result.push(chars[2]);
@@ -81,32 +95,34 @@ impl fmt::Display for BoardContent {
         let mut result = String::new();
         result.reserve_exact(
             top.len()
-                + middle.len() * (3 - 1)
+                + middle.len() * (BOARD_SIDE_LENGTH - 1)
                 + bottom.len()
                 + (2 * '┃'.len_utf8()
-                    + (3 - 1) * '|'.len_utf8()
-                    + 3 * 2 * ' '.len_utf8()
+                    + (BOARD_SIDE_LENGTH - 1) * '|'.len_utf8()
+                    + BOARD_SIDE_LENGTH * 2 * ' '.len_utf8()
                     + '\n'.len_utf8())
-                    * 3,
+                    * BOARD_SIDE_LENGTH,
         );
 
         result.push_str(&top);
 
-        // Note: Here we use our rows iterator
-        for row in 0..3 {
+        for row in 0..BOARD_SIDE_LENGTH {
             result.push('┃');
-            for col in 0..3 {
-                let char = match self.board_content[row * 3 + col] { None => ' ', Some(x) => x.into() };
+            for col in 0..BOARD_SIDE_LENGTH {
+                let char = match self.board_content[row * BOARD_SIDE_LENGTH + col] {
+                    None => ' ',
+                    Some(x) => x.into(),
+                };
                 result.push(char);
                 result.push(char);
-                if col < 2 {
+                if col < BOARD_SIDE_LENGTH - 1 {
                     result.push('|');
                 }
             }
 
             result.push('┃');
             result.push('\n');
-            if row < 2 {
+            if row < BOARD_SIDE_LENGTH - 1 {
                 result.push_str(&middle);
             }
         }

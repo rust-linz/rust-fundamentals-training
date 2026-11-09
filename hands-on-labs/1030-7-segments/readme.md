@@ -1,4 +1,4 @@
-# 7 Segments Display Expercise
+# 7 Segments Display Exercise
 
 ## Description
 
@@ -21,8 +21,6 @@ Here is a sample output of the program:
      _   _       _   _   _   _   _   _
   |  _|  _| |_| |_  |_    | |_| |_| | |
   | |_   _|   |  _| |_|   | |_|  _| |_|
-
-08:32:05 rainer@DESKTOP-B6V5TGG console_display ±|main ✗|→ 
 ```
 
 If you are completely new to Rust, try to solve as much as possible on your own. If you are stuck, ask your trainer or take a look at the sample solution that you can find in the same folder as this _readme_ file.
@@ -45,7 +43,7 @@ If you are completely new to Rust, try to solve as much as possible on your own.
     /// 
     /// The resulting value is a byte where each bit represents
     /// a segment of the 7-segment display. The bits are ordered
-    /// as follows (see also https://en.wikipedia.org/wiki/File:7_Segment_Display_with_Labeled_Segments.svg):
+    /// as follows (see also <https://en.wikipedia.org/wiki/File:7_Segment_Display_with_Labeled_Segments.svg>):
     /// 
     /// * bit 0 = segment A
     /// * bit 1 = segment B
@@ -89,8 +87,8 @@ If you are completely new to Rust, try to solve as much as possible on your own.
     /// # Arguments
     /// 
     /// * `byte` - The byte representing the 7-segment display.
-    ///            This value is typically generated using the
-    ///            `decimal_to_segments` function.
+    ///   This value is typically generated using the
+    ///   `decimal_to_segments` function.
     /// 
     /// # Panics
     /// 
@@ -101,16 +99,16 @@ If you are completely new to Rust, try to solve as much as possible on your own.
     }
     ```
 
-2. Test your implementation of `draw_7_segments` with some unit tests.
+4. Test your implementation of `draw_7_segments` with some unit tests.
 
 Here are some useful tips:
 
 * Use Rust's [`panic!` macro](https://doc.rust-lang.org/std/macro.panic.html) to panic if the input is invalid.
-* Use Rust's [`unreachable!` macro](https://doc.rust-lang.org/std/macro.unreachable.html) if you know that a certain code path is unreachable under normal circumstances.
+* Rust's [`unreachable!` macro](https://doc.rust-lang.org/std/macro.unreachable.html) is for code paths that cannot be reached if the program is correct. Invalid arguments passed to a public function are not such a case, use `panic!` for them.
 
 ### Bonus Exercise: _rstest_
 
-If you event want to go further, create a [parameterized test using _rstest_](https://docs.rs/rstest/latest/rstest/#creating-parametrized-tests).
+If you even want to go further, create a [parameterized test using _rstest_](https://docs.rs/rstest/latest/rstest/#creating-parametrized-tests).
 
 ### Implement the Console App
 
@@ -119,7 +117,7 @@ Reference the [_crossterm_ crate](https://docs.rs/crossterm/latest/crossterm/). 
 ```rust
 let mut stdout = std::io::stdout();
 execute!(stdout, crossterm::terminal::Clear(ClearType::All)).unwrap();
-execute!(stdout, crossterm::cursor::Hide{}).unwrap();
+execute!(stdout, crossterm::cursor::Hide).unwrap();
 ```
 
 Implement the `main` method. It should perform the following tasks:

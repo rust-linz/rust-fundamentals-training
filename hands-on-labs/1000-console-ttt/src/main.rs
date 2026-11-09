@@ -12,11 +12,24 @@ fn main() {
         let location = read_location();
         println!("{location:?}");
 
+        // A square can only be set once, ask again if it is already taken
+        if board[location.row][location.col] != ' ' {
+            println!("Square is already taken");
+            continue;
+        }
+
         board[location.row][location.col] = current_player;
         let winner = get_winner(&board);
         if winner != ' ' {
             print_board(&board);
-            println!("{} wins!", winner);
+            println!("{winner} wins!");
+            break;
+        }
+
+        // No winner and no empty square left: The game ends in a draw
+        if board.iter().flatten().all(|&square| square != ' ') {
+            print_board(&board);
+            println!("It's a draw!");
             break;
         }
 
@@ -34,28 +47,25 @@ struct Location {
     col: usize,
 }
 
+/// All lines that win the game (rows, columns, diagonals) as (row, col) coordinates
+const WINNING_LINES: [[(usize, usize); SIZE]; 8] = [
+    [(0, 0), (0, 1), (0, 2)],
+    [(1, 0), (1, 1), (1, 2)],
+    [(2, 0), (2, 1), (2, 2)],
+    [(0, 0), (1, 0), (2, 0)],
+    [(0, 1), (1, 1), (2, 1)],
+    [(0, 2), (1, 2), (2, 2)],
+    [(0, 0), (1, 1), (2, 2)],
+    [(0, 2), (1, 1), (2, 0)],
+];
+
 /// Get the winner in the tic tac toe game; return blank if no winner
 fn get_winner(board: &[[char; SIZE]; SIZE]) -> char {
-    for item in board.iter().take(3) {
-        if item[0] != ' ' && item[0] == item[1] && item[1] == item[2] {
-            return item[0];
+    for line in WINNING_LINES {
+        let [a, b, c] = line.map(|(row, col)| board[row][col]);
+        if a != ' ' && a == b && b == c {
+            return a;
         }
-    }
-
-    // This is how you would use a for loop with an index in Rust.
-    // Iterators are preferred when possible.
-    for col in 0..3 {
-        if board[0][col] != ' ' && board[0][col] == board[1][col] && board[1][col] == board[2][col] {
-            return board[0][col];
-        }
-    }
-
-    if board[0][0] != ' ' && board[0][0] == board[1][1] && board[1][1] == board[2][2] {
-        return board[0][0];
-    }
-
-    if board[0][2] != ' ' && board[0][2] == board[1][1] && board[1][1] == board[2][0] {
-        return board[0][2];
     }
 
     ' '
@@ -63,7 +73,7 @@ fn get_winner(board: &[[char; SIZE]; SIZE]) -> char {
 
 /// Reads location from the user through stdin/stdout
 fn read_location() -> Location {
-    use std::io::{stdin, stdout, Write};
+    use std::io::{Write, stdin, stdout};
 
     loop {
         // Ask the user for a location
@@ -72,20 +82,21 @@ fn read_location() -> Location {
 
         // Read the input
         let mut input = String::new();
-        stdin().read_line(&mut input).unwrap();
-        let input = input.as_bytes();
+        if stdin().read_line(&mut input).unwrap() == 0 {
+            // End of input (e.g. Ctrl+D), asking again would loop forever
+            eprintln!("No more input, ending game");
+            std::process::exit(1);
+        }
 
-        // Pare the input. Input must be in the form of A1, B2, etc. plus trailing \n
-        if input.len() == 3 {
-            let row = input[0] - b'A';
-            let col = input[1] - b'1';
-            if row < 3 && col < 3 {
-                // Input is fine, end loop with the result
-                break Location {
-                    row: row as usize,
-                    col: col as usize,
-                };
-            }
+        // Parse the input. Input must be in the form of A1, B2, etc. (letter = column,
+        // digit = row). Note that `trim` removes the trailing line break
+        // (\n on Linux/macOS, \r\n on Windows).
+        if let [col @ b'A'..=b'C', row @ b'1'..=b'3'] = input.trim().as_bytes() {
+            // Input is fine, end loop with the result
+            break Location {
+                row: (row - b'1') as usize,
+                col: (col - b'A') as usize,
+            };
         }
 
         // Input is invalid, ask again
@@ -93,12 +104,12 @@ fn read_location() -> Location {
     }
 }
 
-fn print_board(board: &[[char; SIZE];SIZE]) {
+fn print_board(board: &[[char; SIZE]; SIZE]) {
     println!("┌───┬───┬───┐");
-    for (row_ix, row) in board.iter().enumerate().take(SIZE) {
+    for (row_ix, row) in board.iter().enumerate() {
         print!("│");
-        for item in row.iter().take(SIZE) {
-            print!(" {} │", item);
+        for item in row {
+            print!(" {item} │");
         }
         println!();
         if row_ix < SIZE - 1 {

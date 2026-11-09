@@ -38,7 +38,13 @@ const fn repeat_impl<const N: usize>(c: u8) -> Buf<N> {
 macro_rules! repeat {
     ($c:expr, $n:expr) => {{
         const CONCAT_BUF: Buf<$n> = repeat_impl($c);
-        unsafe { core::str::from_utf8_unchecked(&CONCAT_BUF.0) }
+
+        // `from_utf8` is a const fn, so in a const context, an invalid
+        // (i.e. non-ASCII) byte becomes a compile error. No `unsafe` needed.
+        match core::str::from_utf8(&CONCAT_BUF.0) {
+            Ok(s) => s,
+            Err(_) => panic!("repeat! only works with single-byte characters"),
+        }
     }};
 }
 
@@ -71,12 +77,17 @@ impl Decorator {
 /// * `decorator` - The decorator to repeat.
 /// * `n` - The number of times to repeat the decorator.
 pub fn repeated_decorator(decorator: Decorator, n: usize) -> String {
+    if n == 0 {
+        return String::new();
+    }
+
     // Get the decorator string
     let decorator_str = decorator.as_str();
 
     // Create string that will receive the repeated string. Note that
     // `decorator_str.len()` returns the number of bytes, not the number of characters.
-    // Additionally, it is a const function, so it is evaluated at compile time.
+    // Additionally, it is a const function. That means it *can* be evaluated at compile
+    // time when called in a const context. Here, it is a regular call at runtime.
     let mut result =
         String::with_capacity(n * (decorator_str.len() + SEPARATOR_LENGTH) - SEPARATOR_LENGTH);
 
@@ -103,7 +114,7 @@ pub fn repeated_decorator_iter(
     decorator: Decorator,
     n: usize,
 ) -> impl Iterator<Item = &'static str> {
-    (0..2 * n - 1).map(move |i| {
+    (0..(2 * n).saturating_sub(1)).map(move |i| {
         if i % 2 == 0 {
             decorator.as_str()
         } else {
@@ -113,24 +124,24 @@ pub fn repeated_decorator_iter(
 }
 
 /// Returns a string with the given numbers between bars and separating spaces between them.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `numbers` - The numbers to format
 pub fn repeated_numbers_iter(numbers: impl Iterator<Item = u16>) -> String {
     let mut result;
     if let Some(size) = numbers.size_hint().1 {
-        // Note how we use `size_hint` to pre-allocate the string.
-        result = String::with_capacity(
-            (BAR.len_utf8() * 2 + TOP_DECORATOR.len() - 2) * size + SEPARATOR_LENGTH * (size - 1),
-        );
+        // Note how we use `size_hint` to pre-allocate the string. A cell consists of
+        // two (multi-byte) bars plus the (single-byte) characters between them.
+        let cell_len = BAR.len_utf8() * 2 + TOP_DECORATOR.chars().count() - 2;
+        result = String::with_capacity(cell_len * size + SEPARATOR_LENGTH * size.saturating_sub(1));
     } else {
         // If we don't know the size, we just use the default capacity.
         result = String::new();
     }
 
     // Add the copies of the string with separating spaces. Separating spaces
-    // are ommitted before the first number.
+    // are omitted before the first number.
     let mut first = true;
     numbers.map(number_between_bars).for_each(|s| {
         if first {
@@ -145,11 +156,11 @@ pub fn repeated_numbers_iter(numbers: impl Iterator<Item = u16>) -> String {
 }
 
 /// Returns a string containing the given number enclosed in bars (see `BAR` character).
-/// 
+///
 /// Example: `number_between_bars(42)` returns `"│   42 │"`.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `n` - The number to enclose in bars.
 pub fn number_between_bars(n: u16) -> String {
     format!("│ {n:>4} │")
@@ -169,6 +180,7 @@ mod tests {
     #[rstest]
     #[case(Decorator::Top, 3, format!("{0}{1}{0}{1}{0}", TOP_DECORATOR, SEPARATOR))]
     #[case(Decorator::Top, 1, TOP_DECORATOR.into())]
+    #[case(Decorator::Top, 0, String::new())]
     fn test_repeat_str(#[case] s: Decorator, #[case] n: usize, #[case] expected: String) {
         assert_eq!(repeated_decorator(s, n), expected);
     }
@@ -176,6 +188,7 @@ mod tests {
     #[rstest]
     #[case(Decorator::Top, 3, vec![TOP_DECORATOR, SEPARATOR, TOP_DECORATOR, SEPARATOR, TOP_DECORATOR])]
     #[case(Decorator::Top, 1, vec![TOP_DECORATOR])]
+    #[case(Decorator::Top, 0, vec![])]
     fn test_repeat_iter(#[case] s: Decorator, #[case] n: usize, #[case] expected: Vec<&str>) {
         assert!(repeated_decorator_iter(s, n).eq(expected));
     }
@@ -188,6 +201,7 @@ mod tests {
     #[rstest]
     #[case(vec![1, 2, 3], format!("{1}{0}{2}{0}{3}", SEPARATOR, number_between_bars(1), number_between_bars(2), number_between_bars(3)))]
     #[case(vec![1], number_between_bars(1))]
+    #[case(vec![], String::new())]
     fn test_repeated_numbers_iter(#[case] s: Vec<u16>, #[case] expected: String) {
         assert_eq!(repeated_numbers_iter(s.into_iter()), expected);
     }

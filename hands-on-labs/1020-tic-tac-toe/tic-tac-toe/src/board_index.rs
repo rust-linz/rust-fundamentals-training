@@ -1,6 +1,13 @@
-use std::{fmt::Display, ops::{Add, Sub, Index, IndexMut}, str::FromStr};
+use std::{
+    fmt::Display,
+    ops::{Add, Index, IndexMut, Sub},
+    str::FromStr,
+};
 
-use crate::{board_content::BoardContent, square_content::SquareContent};
+use crate::{
+    board_content::{BOARD_SIDE_LENGTH, BOARD_SQUARE_COUNT, BoardContent},
+    square_content::SquareContent,
+};
 
 // Learning: Tuple structs are just a type wrapped around other types
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Default, Ord, PartialOrd)]
@@ -20,7 +27,7 @@ impl BoardIndex {
     }
 
     pub fn from_index(index: usize) -> BoardIndex {
-        if index >= 3 * 3 {
+        if index >= BOARD_SQUARE_COUNT {
             panic!("Index out of bounds");
         }
 
@@ -28,59 +35,73 @@ impl BoardIndex {
     }
 
     pub fn from_col_row(col: usize, row: usize) -> BoardIndex {
-        if col >= 3 {
+        if col >= BOARD_SIDE_LENGTH {
             panic!("Column out of bounds");
         }
 
-        if row >= 3 {
+        if row >= BOARD_SIDE_LENGTH {
             panic!("Row out of bounds");
         }
 
-        BoardIndex(row * 3 + col)
+        BoardIndex(row * BOARD_SIDE_LENGTH + col)
     }
 
     pub fn column(&self) -> usize {
-        self.0 % 3
+        self.0 % BOARD_SIDE_LENGTH
     }
 
     pub fn row(&self) -> usize {
-        self.0 / 3
+        self.0 / BOARD_SIDE_LENGTH
     }
 
     pub fn try_next(&self, direction: Direction) -> Option<BoardIndex> {
         match direction {
-            Direction::Horizontal if self.column() < 2 => Some(BoardIndex::from_index(self.0 + 1)),
-            Direction::Vertical if self.row() < 2 => Some(BoardIndex::from_index(self.0 + 3)),
-            _ => None
+            Direction::Horizontal if self.column() < BOARD_SIDE_LENGTH - 1 => {
+                Some(BoardIndex::from_index(self.0 + 1))
+            }
+            Direction::Vertical if self.row() < BOARD_SIDE_LENGTH - 1 => {
+                Some(BoardIndex::from_index(self.0 + BOARD_SIDE_LENGTH))
+            }
+            _ => None,
         }
     }
 
     pub fn try_previous(&self, direction: Direction) -> Option<BoardIndex> {
         match direction {
             Direction::Horizontal if self.column() > 0 => Some(BoardIndex::from_index(self.0 - 1)),
-            Direction::Vertical if self.row() > 0 => Some(BoardIndex::from_index(self.0 - 3)),
-            _ => None
+            Direction::Vertical if self.row() > 0 => {
+                Some(BoardIndex::from_index(self.0 - BOARD_SIDE_LENGTH))
+            }
+            _ => None,
         }
     }
 
     pub fn next_column(&self) -> BoardIndex {
-        if self.column() >= 2 { panic!("Already at last column"); }
+        if self.column() >= BOARD_SIDE_LENGTH - 1 {
+            panic!("Already at last column");
+        }
         BoardIndex::from_index(self.0 + 1)
     }
 
     pub fn next_row(&self) -> BoardIndex {
-        if self.row() >= 2 { panic!("Already at last row"); }
-        BoardIndex::from_index(self.0 + 3)
+        if self.row() >= BOARD_SIDE_LENGTH - 1 {
+            panic!("Already at last row");
+        }
+        BoardIndex::from_index(self.0 + BOARD_SIDE_LENGTH)
     }
 
     pub fn previous_column(&self) -> BoardIndex {
-        if self.column() == 0 { panic!("Already at first column"); }
+        if self.column() == 0 {
+            panic!("Already at first column");
+        }
         BoardIndex::from_index(self.0 - 1)
     }
 
     pub fn previous_row(&self) -> BoardIndex {
-        if self.row() == 0 { panic!("Already at first row"); }
-        BoardIndex::from_index(self.0 - 3)
+        if self.row() == 0 {
+            panic!("Already at first row");
+        }
+        BoardIndex::from_index(self.0 - BOARD_SIDE_LENGTH)
     }
 }
 
@@ -97,15 +118,27 @@ impl From<BoardIndex> for String {
     }
 }
 
-impl From<usize> for BoardIndex {
-    fn from(ix: usize) -> Self {
-        BoardIndex::from_index(ix)
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct IndexOutOfBounds;
+
+impl Display for IndexOutOfBounds {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Index is outside of the board")
     }
 }
 
-impl From<&str> for BoardIndex {
-    fn from(ix: &str) -> Self {
-        ix.parse().unwrap()
+impl std::error::Error for IndexOutOfBounds {}
+
+// Note: Not every usize is a valid board index, so this conversion can fail
+impl TryFrom<usize> for BoardIndex {
+    type Error = IndexOutOfBounds;
+
+    fn try_from(ix: usize) -> Result<Self, Self::Error> {
+        if ix < BOARD_SQUARE_COUNT {
+            Ok(BoardIndex(ix))
+        } else {
+            Err(IndexOutOfBounds)
+        }
     }
 }
 
@@ -123,12 +156,12 @@ impl FromStr for BoardIndex {
 
         // Parse column letter (A..C, a..c)
         let col = match location[0] {
-            r @ b'A'..=b'C' => (r - b'A') as usize, // Check experimental `if let` syntax
+            r @ b'A'..=b'C' => (r - b'A') as usize,
             r @ b'a'..=b'c' => (r - b'a') as usize,
             _ => return Err("Invalid column"),
         };
 
-        // Parse the row letter(s) (1..3)
+        // Parse the row digit (1..3)
         let row = match location[1] {
             c @ b'1'..=b'3' => (c - b'1') as usize,
             _ => return Err("Invalid row"),
@@ -154,7 +187,7 @@ impl Add<usize> for BoardIndex {
     type Output = Self;
 
     fn add(self, other: usize) -> Self {
-        (self.0 + other).into()
+        BoardIndex::from_index(self.0 + other)
     }
 }
 
@@ -162,7 +195,7 @@ impl Sub<usize> for BoardIndex {
     type Output = Self;
 
     fn sub(self, other: usize) -> Self {
-        (self.0 - other).into()
+        BoardIndex::from_index(self.0 - other)
     }
 }
 
@@ -198,14 +231,22 @@ mod tests {
     }
 
     #[test]
-    fn from_usize() {
-        assert_eq!(BoardIndex::from_index(3), 3.into());
+    fn try_from_usize() {
+        assert_eq!(Ok(BoardIndex::from_index(3)), BoardIndex::try_from(3usize));
+    }
+
+    #[test]
+    fn try_from_usize_out_of_bounds() {
+        assert_eq!(
+            Err(IndexOutOfBounds),
+            BoardIndex::try_from(BOARD_SQUARE_COUNT)
+        );
     }
 
     #[test]
     #[should_panic]
     fn from_index_out_of_bounds() {
-        BoardIndex::from_index(3 * 3);
+        BoardIndex::from_index(BOARD_SQUARE_COUNT);
     }
 
     #[test]
@@ -236,7 +277,13 @@ mod tests {
     fn from_str_highest() {
         // Learning: We can use parse, but we can also call from_str directly
         let ix = BoardIndex::from_str("C3").unwrap();
-        assert_eq!(3usize * 3 - 1, ix.into());
+        assert_eq!(BOARD_SQUARE_COUNT - 1, ix.into());
+    }
+
+    #[test]
+    fn from_str_letter_is_column_digit_is_row() {
+        assert_eq!(BoardIndex::from_col_row(0, 1), "A2".parse().unwrap());
+        assert_eq!(BoardIndex::from_col_row(1, 0), "B1".parse().unwrap());
     }
 
     #[test]
@@ -247,9 +294,9 @@ mod tests {
     #[test]
     fn into_str() {
         // Learning: "Into::<String>" is called "Turbofish" syntax.
-        //           We cann call a trait method directly on a given type.
+        //           We can call a trait method directly on a given type.
         // Note: We have not implemented Into, just From. Why is turbofish
-        //       with Into still possible? The solution lies in the generic 
+        //       with Into still possible? The solution lies in the generic
         //       implementation of Into for types implementing from. See
         //       https://github.com/rust-lang/rust/blob/eba3228b2a9875d268ff3990903d04e19f6cdb0c/library/core/src/convert/mod.rs#L533
         // Learning: You can implement traits based on other traits 🤯
@@ -263,11 +310,11 @@ mod tests {
 
     #[rstest]
     #[case("B01")] // too long
-    #[case("B4")] // too high column
-    #[case("B0")] // too low column
-    #[case("B")] // missing column
-    #[case("3")] // missing row
-    #[case("99")] // missing row
+    #[case("B4")] // too high row
+    #[case("B0")] // too low row
+    #[case("B")] // missing row
+    #[case("3")] // missing column
+    #[case("99")] // invalid column
     fn try_parse_errors(#[case] location: &'static str) {
         assert!(BoardIndex::from_str(location).is_err());
     }
@@ -309,7 +356,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn add_overflow() {
-        let _ = BoardIndex::from_index(3 * 3 - 1) + 1;
+        let _ = BoardIndex::from_index(BOARD_SQUARE_COUNT - 1) + 1;
     }
 
     #[test]
@@ -319,20 +366,44 @@ mod tests {
     }
 
     #[rstest]
-    #[case(BoardIndex::from_index(0), Direction::Horizontal, Some(BoardIndex::from_index(1)))]
-    #[case(BoardIndex::from_index(0), Direction::Vertical, Some(BoardIndex::from_index(3)))]
+    #[case(
+        BoardIndex::from_index(0),
+        Direction::Horizontal,
+        Some(BoardIndex::from_index(1))
+    )]
+    #[case(
+        BoardIndex::from_index(0),
+        Direction::Vertical,
+        Some(BoardIndex::from_index(3))
+    )]
     #[case(BoardIndex::from_index(2), Direction::Horizontal, None)]
     #[case(BoardIndex::from_col_row(0, 2), Direction::Vertical, None)]
-    fn try_get_next(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
+    fn try_get_next(
+        #[case] ix: BoardIndex,
+        #[case] direction: Direction,
+        #[case] expected_ix: Option<BoardIndex>,
+    ) {
         assert_eq!(expected_ix, ix.try_next(direction));
     }
 
     #[rstest]
-    #[case(BoardIndex::from_index(1), Direction::Horizontal, Some(BoardIndex::from_index(0)))]
-    #[case(BoardIndex::from_col_row(0, 1), Direction::Vertical, Some(BoardIndex::from_index(0)))]
+    #[case(
+        BoardIndex::from_index(1),
+        Direction::Horizontal,
+        Some(BoardIndex::from_index(0))
+    )]
+    #[case(
+        BoardIndex::from_col_row(0, 1),
+        Direction::Vertical,
+        Some(BoardIndex::from_index(0))
+    )]
     #[case(BoardIndex::from_index(0), Direction::Horizontal, None)]
     #[case(BoardIndex::from_col_row(2, 0), Direction::Vertical, None)]
-    fn try_get_prev(#[case] ix: BoardIndex, #[case] direction: Direction, #[case] expected_ix: Option<BoardIndex>) {
+    fn try_get_prev(
+        #[case] ix: BoardIndex,
+        #[case] direction: Direction,
+        #[case] expected_ix: Option<BoardIndex>,
+    ) {
         assert_eq!(expected_ix, ix.try_previous(direction));
     }
 
@@ -372,11 +443,20 @@ mod tests {
 
     #[test]
     fn next_column() {
-        assert_eq!(2, BoardIndex::from_str("B1").unwrap().next_column().column());
+        assert_eq!(
+            2,
+            BoardIndex::from_str("B1").unwrap().next_column().column()
+        );
     }
 
     #[test]
     fn previous_column() {
-        assert_eq!(0, BoardIndex::from_str("B3").unwrap().previous_column().column());
+        assert_eq!(
+            0,
+            BoardIndex::from_str("B3")
+                .unwrap()
+                .previous_column()
+                .column()
+        );
     }
 }

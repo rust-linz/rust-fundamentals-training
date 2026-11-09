@@ -1,26 +1,26 @@
 /// Generate characters to print for a 7-segment display.
-/// 
+///
 /// The resulting vector contains tuples of the form (position, character).
 /// The position is a byte where the higher 4 bits represent the x-coordinate
 /// and the lower 4 bits represent the y-coordinate of the character.
 /// X and y coordinates are between 0 and 2.
-/// 
+///
 /// Here are all the digits with their representation:
-/// 
+///
 /// ```txt
 ///      _   _       _   _   _   _   _   _
 ///   |  _|  _| |_| |_  |_    | |_| |_| | |
 ///   | |_   _|   |  _| |_|   | |_|  _| |_|
 /// ```
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `byte` - The byte representing the 7-segment display.
-///            This value is typically generated using the
-///            `decimal_to_segments` function.
-/// 
+///   This value is typically generated using the
+///   `decimal_to_segments` function.
+///
 /// # Panics
-/// 
+///
 /// This function panics if the input is not a valid 7-segment
 /// representation (i.e. if it is larger than 0b111_1111).
 pub fn draw_7_segments(byte: u8) -> Vec<(u8, char)> {
@@ -55,23 +55,23 @@ pub fn draw_7_segments(byte: u8) -> Vec<(u8, char)> {
 }
 
 /// Convert a decimal digit to a 7-segment representation.
-/// 
+///
 /// The resulting value is a byte where each bit represents
 /// a segment of the 7-segment display. The bits are ordered
-/// as follows (see also https://en.wikipedia.org/wiki/File:7_Segment_Display_with_Labeled_Segments.svg):
-/// 
+/// as follows (see also <https://en.wikipedia.org/wiki/File:7_Segment_Display_with_Labeled_Segments.svg>):
+///
 /// * bit 0 = segment A
 /// * bit 1 = segment B
 /// * ...
-/// 
+///
 /// Therefore, the digit 0 is represented by the value 0b011_1111.
-/// 
+///
 /// # Arguments
-/// 
+///
 /// * `digit` - The decimal digit to convert.
-/// 
+///
 /// # Panics
-/// 
+///
 /// This function panics if the input is not a decimal digit (0-9).
 pub fn decimal_to_segments(digit: u8) -> u8 {
     match digit {
@@ -85,7 +85,7 @@ pub fn decimal_to_segments(digit: u8) -> u8 {
         7 => 0b000_0111,
         8 => 0b111_1111,
         9 => 0b110_1111,
-        _ => unreachable!(),
+        _ => panic!("Invalid digit: {digit}"),
     }
 }
 
@@ -111,8 +111,8 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "unreachable")]
-    fn test_decimal_to_segments_unreachable() {
+    #[should_panic(expected = "Invalid digit: 10")]
+    fn test_decimal_to_segments_invalid_input() {
         decimal_to_segments(10);
     }
 

@@ -5,6 +5,6 @@ edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-rstest = "0.26"
-mockall = "0.14"
+[dev-dependencies]
+rstest = "0.28"
+mockall = "0.15"

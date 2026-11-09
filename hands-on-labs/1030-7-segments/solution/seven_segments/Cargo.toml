@@ -8,4 +8,4 @@ edition = "2024"
 [dependencies]
 
 [dev-dependencies]
-rstest = "0.26"
+rstest = "0.28"

@@ -2,29 +2,34 @@
 
 use std::{fmt, ops::Index};
 
-use crate::{board_content::BoardContent, square_content::SquareContent};
+use crate::{
+    board_content::{BOARD_SIDE_LENGTH, BoardContent},
+    square_content::SquareContent,
+};
 
 // Represents a single row in BoardContent
 pub struct Row<'a> {
     // Note: Lifetime annotation here means that the struct `Row`
-    // cannot outlive the reference it hold in the `board` field.
+    // cannot outlive the reference it holds in the `board` field.
     board: &'a BoardContent,
     pub row_index: usize,
 }
 
 impl<'a> Row<'a> {
     pub fn new(board: &'a BoardContent, row: usize) -> Self {
-        Row { board, row_index: row }
+        Row {
+            board,
+            row_index: row,
+        }
     }
 
-    #[allow(dead_code)]
     pub fn as_slice(&self) -> &[Option<SquareContent>] {
-        &self.board.as_slice()[(self.row_index * 3)..((self.row_index + 1) * 3)]
+        &self.board.as_slice()
+            [(self.row_index * BOARD_SIDE_LENGTH)..((self.row_index + 1) * BOARD_SIDE_LENGTH)]
     }
 
-    #[allow(dead_code)]
     pub fn has_next(&self) -> bool {
-        self.row_index < 2
+        self.row_index < BOARD_SIDE_LENGTH - 1
     }
 }
 
@@ -33,11 +38,11 @@ impl<'a> Index<usize> for Row<'a> {
     type Output = Option<SquareContent>;
 
     fn index(&self, ix: usize) -> &Self::Output {
-        if ix >= 3 {
+        if ix >= BOARD_SIDE_LENGTH {
             panic!("Index out of bounds");
         }
 
-        &self.board[self.row_index * 3 + ix]
+        &self.board[self.row_index * BOARD_SIDE_LENGTH + ix]
     }
 }
 
@@ -52,18 +57,21 @@ impl<'a> RowsIterator<'a> {
     }
 }
 
-// Learning: How to implement a customer iterator
+// Learning: How to implement a custom iterator
 impl<'a> Iterator for RowsIterator<'a> {
     type Item = Row<'a>;
 
     fn next(&mut self) -> Option<Row<'a>> {
-        if self.next_row >= 3 {
+        if self.next_row >= BOARD_SIDE_LENGTH {
             return None;
         }
 
         let current = self.next_row;
         self.next_row += 1;
-        Some(Row { board: self.board, row_index: current })
+        Some(Row {
+            board: self.board,
+            row_index: current,
+        })
     }
 }
 
@@ -80,7 +88,7 @@ pub trait Rows {
 // Learning: Implement our trait for BoardContent
 impl Rows for BoardContent {
     fn row(&self, row: usize) -> Row<'_> {
-        if row >= 3 {
+        if row >= BOARD_SIDE_LENGTH {
             panic!("Index out of bounds");
         }
 
@@ -100,13 +108,13 @@ impl fmt::Display for BoardContent {
             let mut result = String::new();
             result.reserve_exact(
                 chars[0].len_utf8()
-                    + 3 * 2 * chars[1].len_utf8()
-                    + (3 - 1) * chars[2].len_utf8()
+                    + BOARD_SIDE_LENGTH * 2 * chars[1].len_utf8()
+                    + (BOARD_SIDE_LENGTH - 1) * chars[2].len_utf8()
                     + chars[3].len_utf8()
                     + '\n'.len_utf8(),
             );
             result.push(chars[0]);
-            for _ in 0..3 - 1 {
+            for _ in 0..BOARD_SIDE_LENGTH - 1 {
                 result.push(chars[1]);
                 result.push(chars[1]);
                 result.push(chars[2]);
@@ -128,13 +136,13 @@ impl fmt::Display for BoardContent {
         let mut result = String::new();
         result.reserve_exact(
             top.len()
-                + middle.len() * (3 - 1)
+                + middle.len() * (BOARD_SIDE_LENGTH - 1)
                 + bottom.len()
                 + (2 * '┃'.len_utf8()
-                    + (3 - 1) * '|'.len_utf8()
-                    + 3 * 2 * ' '.len_utf8()
+                    + (BOARD_SIDE_LENGTH - 1) * '|'.len_utf8()
+                    + BOARD_SIDE_LENGTH * 2 * ' '.len_utf8()
                     + '\n'.len_utf8())
-                    * 3,
+                    * BOARD_SIDE_LENGTH,
         );
 
         result.push_str(&top);
@@ -142,18 +150,21 @@ impl fmt::Display for BoardContent {
         // Note: Here we use our rows iterator
         for row in self.rows() {
             result.push('┃');
-            for col in 0..3 {
-                let char = match row[col] { None => ' ', Some(x) => x.into() };
+            for col in 0..BOARD_SIDE_LENGTH {
+                let char = match row[col] {
+                    None => ' ',
+                    Some(x) => x.into(),
+                };
                 result.push(char);
                 result.push(char);
-                if col < 2 {
+                if col < BOARD_SIDE_LENGTH - 1 {
                     result.push('|');
                 }
             }
 
             result.push('┃');
             result.push('\n');
-            if row.row_index < 2 {
+            if row.row_index < BOARD_SIDE_LENGTH - 1 {
                 result.push_str(&middle);
             }
         }
@@ -174,10 +185,10 @@ mod tests {
         let square_content = Some(SquareContent::X);
         b[3] = square_content;
 
-        // Note that we need the following variable to extend the lifetime of 
-        // the `Row` instance. Otherwise, we could not call `data()` as our row
-        // would have been clean up before the call. So the following line would NOT work:
-        // let rs = b.row(1).data(); // <<< DOES NOT COMPILE
+        // Note that we need the following variable to extend the lifetime of
+        // the `Row` instance. Otherwise, the slice returned by `as_slice()` would
+        // outlive our temporary row. So the following line would NOT work:
+        // let rs = b.row(1).as_slice(); // <<< DOES NOT COMPILE
         let row = b.row(1);
         let rs = row.as_slice();
         assert_eq!(rs.len(), 3);
@@ -208,6 +219,9 @@ mod tests {
         // ┃  |  |  ┃
         // ┗━━┷━━┷━━┛
 
-        assert_eq!("┏━━┯━━┯━━┓\n┃  |  |  ┃\n┠──┼──┼──┨\n┃  |XX|  ┃\n┠──┼──┼──┨\n┃  |  |  ┃\n┗━━┷━━┷━━┛\n", str);
+        assert_eq!(
+            "┏━━┯━━┯━━┓\n┃  |  |  ┃\n┠──┼──┼──┨\n┃  |XX|  ┃\n┠──┼──┼──┨\n┃  |  |  ┃\n┗━━┷━━┷━━┛\n",
+            str
+        );
     }
 }

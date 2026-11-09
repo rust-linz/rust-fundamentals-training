@@ -1,39 +1,34 @@
+use board_content::BoardContent;
 use board_index::BoardIndex;
 
-use crate::{board_content::{BoardContent, SquareContent}, game::WinnerDetector};
-
-mod board_index;
 mod board_content;
+mod board_index;
 mod game;
 
 fn main() {
-    let mut bc = BoardContent::new();
-    let _my_cell = bc[BoardIndex::from_col_row(0, 0)];
-    bc[BoardIndex::from_col_row(0, 0)] = Some(SquareContent::X);
-
-    let _bi: BoardIndex = "A1".parse().unwrap();
-
     let mut game = game::Game::new(BoardContent::new());
 
     println!("{}", game.content);
-    
-    while game.get_winner().is_none() {
+
+    while game.get_winner().is_none() && !game.content.is_full() {
         let loc = read_location();
-        game.set(loc).unwrap();
+        if let Err(e) = game.set(loc) {
+            println!("{e}");
+            continue;
+        }
+
         println!("{}", game.content);
     }
 
-    println!("Winner: {:?}", match game.get_winner() {
-        Some(SquareContent::X) => "X",
-        Some(SquareContent::O) => "O",
-        None => "None",
-    });
+    match game.get_winner() {
+        Some(winner) => println!("Winner: {}", char::from(winner)),
+        None => println!("It's a draw!"),
+    }
 }
-
 
 /// Reads location from the user through stdin/stdout
 fn read_location() -> BoardIndex {
-    use std::io::{stdin, stdout, Write};
+    use std::io::{Write, stdin, stdout};
 
     loop {
         // Ask the user for a location
@@ -42,20 +37,17 @@ fn read_location() -> BoardIndex {
 
         // Read the input
         let mut input = String::new();
-        stdin().read_line(&mut input).unwrap();
-        let input = input.as_bytes();
-
-        // Pare the input. Input must be in the form of A1, B2, etc. plus trailing \n
-        if input.len() == 3 {
-            let row = input[0] - b'A';
-            let col = input[1] - b'1';
-            if row < 3 && col < 3 {
-                // Input is fine, end loop with the result
-                break BoardIndex::from_col_row(col as usize, row as usize);
-            }
+        if stdin().read_line(&mut input).unwrap() == 0 {
+            // End of input (e.g. Ctrl+D), asking again would loop forever
+            eprintln!("No more input, ending game");
+            std::process::exit(1);
         }
 
-        // Input is invalid, ask again
-        println!("Invalid location");
+        // Parse the input using our FromStr implementation. Note that `trim`
+        // removes the trailing line break (\n on Linux/macOS, \r\n on Windows).
+        match input.trim().parse() {
+            Ok(location) => break location,
+            Err(e) => println!("Invalid location: {e}"), // Ask again
+        }
     }
 }

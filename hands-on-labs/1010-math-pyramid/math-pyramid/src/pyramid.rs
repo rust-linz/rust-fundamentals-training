@@ -12,16 +12,16 @@ pub fn calculate_pyramid<T: Copy + Add<Output = T>, F: Fn(usize, &[T])>(
     level: usize,
     processor: &F,
 ) {
-    // Allocate memory for the next level.
-    let mut new_numbers = Vec::with_capacity(numbers.len() - 1);
-
-    // Calculate the next level.
-    for (a, b) in numbers.iter().zip(numbers.iter().skip(1)) {
-        new_numbers.push(*a + *b);
-    }
-
     // If we haven't reached the top of the pyramid, recursively calculate the next level.
     if numbers.len() > 1 {
+        // Allocate memory for the next level.
+        let mut new_numbers = Vec::with_capacity(numbers.len() - 1);
+
+        // Calculate the next level.
+        for (a, b) in numbers.iter().zip(numbers.iter().skip(1)) {
+            new_numbers.push(*a + *b);
+        }
+
         calculate_pyramid(&new_numbers, level + 1, processor);
     }
 
@@ -31,19 +31,22 @@ pub fn calculate_pyramid<T: Copy + Add<Output = T>, F: Fn(usize, &[T])>(
 
 #[cfg(test)]
 mod tests {
-     use super::*;
+    use std::cell::Cell;
 
-     #[test]
-     fn test_calculate_pyramid() {
+    use super::*;
+
+    #[test]
+    fn test_calculate_pyramid() {
         let numbers = vec![1, 2, 3];
-        let expected = vec![
-            vec![1, 2, 3],
-            vec![3, 5],
-            vec![8],
-        ];
+        let expected = [vec![1, 2, 3], vec![3, 5], vec![8]];
 
+        // The processor is an `Fn`, so we need interior mutability to count its calls.
+        let calls = Cell::new(0);
         calculate_pyramid(&numbers, 0, &|level, numbers| {
             assert_eq!(numbers, &expected[level]);
+            calls.set(calls.get() + 1);
         });
-     }
+
+        assert_eq!(calls.get(), expected.len());
+    }
 }

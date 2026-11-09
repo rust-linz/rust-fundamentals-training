@@ -1,6 +1,25 @@
-use std::{ops::{Index, IndexMut}, fmt::Display};
+use std::{
+    fmt::Display,
+    ops::{Index, IndexMut},
+};
 
-use crate::{board_index::BoardIndex, square_content::SquareContent, row::Rows};
+use crate::{
+    board_content::{BOARD_SIDE_LENGTH, BOARD_SQUARE_COUNT},
+    board_index::BoardIndex,
+    square_content::SquareContent,
+};
+
+/// All lines that win the game (rows, columns, diagonals) as board indexes
+const WINNING_LINES: [[usize; BOARD_SIDE_LENGTH]; 8] = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
 
 pub struct Game<T> {
     content: T,
@@ -18,6 +37,17 @@ pub enum ErrorKind {
     WrongPlayerSetOrder,
 }
 
+impl Display for SetError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self.error_kind {
+            ErrorKind::SquareAlreadyHasValue => "Square is already taken",
+            ErrorKind::WrongPlayerSetOrder => "Players have to take turns",
+        })
+    }
+}
+
+impl std::error::Error for SetError {}
+
 #[cfg_attr(test, mockall::automock)]
 pub trait SquareAccessor {
     fn get(&self, ix: BoardIndex) -> Option<SquareContent>;
@@ -26,7 +56,8 @@ pub trait SquareAccessor {
 
 impl<T> SquareAccessor for T
 where
-    T: Index<BoardIndex, Output = Option<SquareContent>> + IndexMut<BoardIndex, Output = Option<SquareContent>>,
+    T: Index<BoardIndex, Output = Option<SquareContent>>
+        + IndexMut<BoardIndex, Output = Option<SquareContent>>,
 {
     fn get(&self, ix: BoardIndex) -> Option<SquareContent> {
         self[ix]
@@ -46,7 +77,7 @@ impl<T: SquareAccessor> Game<T> {
     }
 
     fn is_valid(&self) -> bool {
-        let sum = (0..9)
+        let sum = (0..BOARD_SQUARE_COUNT)
             .map(|ix| match self.content.get(BoardIndex::from_index(ix)) {
                 None => 0,
                 Some(SquareContent::X) => 1,
@@ -82,49 +113,26 @@ impl<T: SquareAccessor> Game<T> {
     pub fn who_is_next(&self) -> SquareContent {
         self.current_player
     }
+
+    /// Returns true if no empty square is left
+    pub fn is_board_full(&self) -> bool {
+        (0..BOARD_SQUARE_COUNT).all(|ix| self.content.get(BoardIndex::from_index(ix)).is_some())
+    }
 }
 
 pub trait WinnerDetector {
     fn get_winner(&self) -> Option<SquareContent>;
 }
 
-impl<T> WinnerDetector for Game<T>
-where
-    T: SquareAccessor + Rows,
-{
+impl<T: SquareAccessor> WinnerDetector for Game<T> {
     /// Get the winner in the tic tac toe game; return None if no winner
     fn get_winner(&self) -> Option<SquareContent> {
-        for row in self.content.rows() {
-            if row[0].is_some()
-                && row[0] == row[1]
-                && row[1] == row[2]
-            {
-                return row[0];
-            }
-        }
+        WINNING_LINES.iter().find_map(|line| {
+            let [a, b, c] = line.map(|ix| self.content.get(BoardIndex::from_index(ix)));
 
-        for col in 0..3 {
-            if self.content.get(BoardIndex::from_col_row(col, 0)).is_some()
-                && self.content.get(BoardIndex::from_col_row(col, 0)) == self.content.get(BoardIndex::from_col_row(col, 1))
-                && self.content.get(BoardIndex::from_col_row(col, 0)) == self.content.get(BoardIndex::from_col_row(col, 2))
-            {
-                return self.content.get(BoardIndex::from_col_row(col, 0));
-            }
-        }
-
-        if self.content.get(BoardIndex::from_col_row(0, 0)).is_some()
-            && self.content.get(BoardIndex::from_col_row(0, 0)) == self.content.get(BoardIndex::from_col_row(1, 1))
-            && self.content.get(BoardIndex::from_col_row(1, 1)) == self.content.get(BoardIndex::from_col_row(2, 2)) {
-            return self.content.get(BoardIndex::from_col_row(0, 0));
-        }
-
-        if self.content.get(BoardIndex::from_col_row(0, 2)).is_some()
-            && self.content.get(BoardIndex::from_col_row(0, 2)) == self.content.get(BoardIndex::from_col_row(1, 1))
-            && self.content.get(BoardIndex::from_col_row(1, 1)) == self.content.get(BoardIndex::from_col_row(2, 0)) {
-                return self.content.get(BoardIndex::from_col_row(0, 2));
-        }
-
-        None
+            // Note: If all squares are empty, `a` is None and the search continues
+            if a == b && b == c { a } else { None }
+        })
     }
 }
 
@@ -137,8 +145,62 @@ impl<T: Display> Display for Game<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::board_content::BoardContent;
     use mockall::predicate::eq;
     use rstest::rstest;
+
+    #[rstest]
+    #[case([0, 1, 2])]
+    #[case([3, 4, 5])]
+    #[case([6, 7, 8])]
+    #[case([0, 3, 6])]
+    #[case([1, 4, 7])]
+    #[case([2, 5, 8])]
+    #[case([0, 4, 8])]
+    #[case([2, 4, 6])]
+    fn winner(#[case] line: [usize; BOARD_SIDE_LENGTH]) {
+        let mut board = BoardContent::new();
+        for ix in line {
+            board[ix] = Some(SquareContent::O);
+        }
+
+        assert_eq!(Some(SquareContent::O), Game::new(board).get_winner());
+    }
+
+    #[test]
+    fn no_winner() {
+        let mut board = BoardContent::new();
+        board[0] = Some(SquareContent::X);
+        board[1] = Some(SquareContent::O);
+        board[2] = Some(SquareContent::X);
+
+        assert_eq!(None, Game::new(board).get_winner());
+    }
+
+    #[test]
+    fn set_occupied_square_fails() {
+        let mut game = Game::new(BoardContent::new());
+        assert!(game.set(BoardIndex::from_index(0)).is_ok());
+
+        let expected = SetError {
+            error_kind: ErrorKind::SquareAlreadyHasValue,
+        };
+        assert_eq!(Err(expected), game.set(BoardIndex::from_index(0)));
+
+        // The failed attempt must not change whose turn it is
+        assert_eq!(SquareContent::O, game.who_is_next());
+    }
+
+    #[test]
+    fn board_full() {
+        let mut game = Game::new(BoardContent::new());
+        for ix in 0..BOARD_SQUARE_COUNT {
+            assert!(!game.is_board_full());
+            game.set(BoardIndex::from_index(ix)).unwrap();
+        }
+
+        assert!(game.is_board_full());
+    }
 
     #[test]
     fn is_valid() {
@@ -187,6 +249,6 @@ mod tests {
             content: mock,
             current_player: SquareContent::X,
         };
-        assert!(game.set(0.into()).is_ok());
+        assert!(game.set(BoardIndex::from_index(0)).is_ok());
     }
 }
