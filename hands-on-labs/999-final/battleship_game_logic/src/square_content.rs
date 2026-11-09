@@ -23,25 +23,20 @@
     * Unit testing: https://doc.rust-lang.org/rust-by-example/testing/unit_testing.html
 */
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
 #[repr(u8)]
 pub enum SquareContent {
     Water,
     Ship,
     HitShip,
     SunkenShip,
+    #[default]
     Unknown,
 }
 
 impl SquareContent {
     pub fn is_ship(&self) -> bool {
         matches!(self, SquareContent::Ship | SquareContent::HitShip | SquareContent::SunkenShip)
-    }
-}
-
-impl Default for SquareContent {
-    fn default() -> Self {
-        SquareContent::Unknown
     }
 }
 

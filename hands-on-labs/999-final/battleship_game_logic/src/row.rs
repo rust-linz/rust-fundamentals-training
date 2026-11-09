@@ -87,9 +87,9 @@ mod tests {
         b[BOARD_SIDE_LENGTH] = square_content;
 
         // Note that we need the following variable to extend the lifetime of 
-        // the `Row` instance. Otherwise, we could not call `data()` as our row
+        // the `Row` instance. Otherwise, we could not call `as_slice()` as our row
         // would have been clean up before the call. So the following line would NOT work:
-        // let rs = b.row(1).data(); // <<< DOES NOT COMPILE
+        // let rs = b.row(1).as_slice(); // <<< DOES NOT COMPILE
         let row = b.row(1);
         let rs = row.as_slice();
         assert_eq!(rs.len(), BOARD_SIDE_LENGTH);

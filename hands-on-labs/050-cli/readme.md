@@ -12,7 +12,7 @@ Use `cargo build` to verify that your project compiles.
 
 ## Dependencies
 
-Copy the dependencies into the library's *Cargo.toml* from [Cargo.toml](../999-final/console_game/Cargo.toml). Lookup all the referenced crates on [crates.io](https://crates.io/) and find out what they are used for. You do not need to understand all the details. Overview knowledge is sufficient. Note how we reference our game logic in *battleship_game_logic*.
+Copy the dependencies into the *Cargo.toml* of the *console_game* package from [Cargo.toml](../999-final/console_game/Cargo.toml). Lookup all the referenced crates on [crates.io](https://crates.io/) and find out what they are used for. You do not need to understand all the details. Overview knowledge is sufficient. Note how we reference our game logic in *battleship_game_logic*.
 
 ## *main.rs*
 

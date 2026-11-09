@@ -256,6 +256,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::clone_on_copy)] // This test is about the `Clone` implementation
     fn clone() {
         let b = BattleshipBoardContent::new_initialized(SquareContent::SunkenShip);
         let b2 = b.clone();
@@ -289,7 +290,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn indexing_out_of_bounds() {
-        BattleshipBoardContent::new()[100];
+        let _ = BattleshipBoardContent::new()[100];
     }
 
     #[test]

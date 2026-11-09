@@ -2,7 +2,7 @@
 
 ## Introduction
 
-So far, we have implemented useful data structures to hold the content of the board. Next, we want to focus on the game logic for placing ships. The usual Battleship rules apply: Each ship occupies a number of *consecutive* squares on the grid, arranged *either horizontally or vertically* (not diagnoally). There *must not be directly adjacent* to each other (i.e. at least one water cell has to be between ships).
+So far, we have implemented useful data structures to hold the content of the board. Next, we want to focus on the game logic for placing ships. The usual Battleship rules apply: Each ship occupies a number of *consecutive* squares on the grid, arranged *either horizontally or vertically* (not diagonally). Ships *must not touch each other*, not even diagonally (i.e. at least one water cell has to be between ships).
 
 The following table contains the ships that are placed on each player's grid:
 

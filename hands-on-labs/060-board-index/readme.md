@@ -12,7 +12,7 @@ Of course, you will again learn about a lot of important traits during this exer
 
 Add the files *board_index.rs* and *board_index_range.rs* to the *battleship_game_logic* package. Copy the contents from [board_index.rs](../999-final/battleship_game_logic/src/board_index.rs) and [board_index_range.rs](../999-final/battleship_game_logic/src/board_index_range.rs) or implement it yourself based on the included unit tests. Make yourself familiar with the code and/or discuss it with your Rust trainers. Note the recommended reading links at the beginning of the files.
 
-Don't forget to add the new module to *lib.rs*.
+Don't forget to add both new modules to *lib.rs*.
 
 ## Verify
 

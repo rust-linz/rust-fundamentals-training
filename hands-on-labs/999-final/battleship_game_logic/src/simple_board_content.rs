@@ -84,7 +84,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn indexing_out_of_bounds() {
-        SimpleBoardContent::new()[100];
+        let _ = SimpleBoardContent::new()[100];
     }
 
     #[test]

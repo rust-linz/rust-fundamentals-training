@@ -165,7 +165,7 @@ impl FromStr for BoardIndex {
         // Parse the row letter(s) (1..10)
         // Note: No mut here
         let row = if location.len() == 3 {
-            if location[1..] != [b'1', b'0'] {
+            if location[1..] != *b"10" {
                 // Note slice pattern
                 return Err("Invalid row");
             }

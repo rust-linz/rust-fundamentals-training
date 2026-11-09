@@ -26,4 +26,4 @@ Practice debugging throughout the following exercises. You can take the content 
 
 ## Discussions
 
-Analyze how the iterator implementation on `Row` is used in the implementation of the `Display` trait for `GenericBoardContent`.
+Analyze how the iterator implementation on `RowsIterator` is used in the implementation of the `Display` trait for `GenericBoardContent`.

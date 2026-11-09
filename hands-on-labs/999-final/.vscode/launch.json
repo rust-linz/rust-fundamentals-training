@@ -13,7 +13,9 @@
                 "args": [
                     "test",
                     "--no-run",
-                    "--lib"
+                    "--lib",
+                    "-p",
+                    "battleship_game_logic"
                 ]
             },
             "args": []

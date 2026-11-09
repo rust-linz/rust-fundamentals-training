@@ -48,3 +48,16 @@ At the end of each exercise, discuss what you have learned. Here are some questi
 * Did you apply Rust concepts or tools that reminded you of similar concepts from other programming languages you know? How is Rust different?
 * What surprised you, positively and negatively?
 * What concepts did you find particularly hard to understand?
+
+## Additional Exercises
+
+The folders with three-digit numbers contain the steps of the Battleship lab described above, and *999-final* contains its reference solution. The folders with four-digit numbers contain additional exercises. Each of them is independent of Battleship and of the other exercises, and comes with its own instructions and sample solution.
+
+| Exercise | Description |
+| -------- | ----------- |
+| [Console Tic Tac Toe](1000-console-ttt/readme.md) | Two-player game in a single file for practicing arrays, loops, functions, structs, and console input and output |
+| [Math Pyramid](1010-math-pyramid/readme.md) | Program that generates math pyramids as quizzes for school children |
+| [Tic Tac Toe](1020-tic-tac-toe/readme.md) | Game built level by level, starting with data types for the square and board content |
+| [Simple Tic Tac Toe](1021-simple-ttt/readme.md) | Console-based game that is described by its requirements only |
+| [7 Segments Display](1030-7-segments/readme.md) | ASCII-based 7-segment display for practicing numeric types, bit operations, libraries, workspaces, and unit tests |
+| [Rusty Nerdle](1040-rusty-nerdle/readme.md) | Number guessing game similar to *nerdle* that runs in the browser with WebAssembly |

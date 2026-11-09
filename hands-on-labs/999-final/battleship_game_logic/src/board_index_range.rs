@@ -29,9 +29,9 @@ impl BoardIndexRangeInclusive {
 
     pub fn length(&self) -> usize {
         if self.0.start().column() == self.0.end().column() {
-           (self.0.start().row() as i8 - self.0.end().row() as i8).abs() as usize + 1
+            self.0.start().row().abs_diff(self.0.end().row()) + 1
         } else {
-           (self.0.start().column() as i8 - self.0.end().column() as i8).abs() as usize + 1
+            self.0.start().column().abs_diff(self.0.end().column()) + 1
         }
     }
 }

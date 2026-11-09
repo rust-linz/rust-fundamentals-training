@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The next step for our game logic is code that can find out whether there is a ship on a given location. Additionally, it can recognize if the ship's location is already fully known (i.e. now unknown cells adjecent to the ship's beginning or end). This functionality is super important when e.g. building a computer player for Battleship.
+The next step for our game logic is code that can find out whether there is a ship on a given location. Additionally, it can recognize if the ship's location is already fully known (i.e. no unknown cells adjacent to the ship's beginning or end). This functionality is super important when e.g. building a computer player for Battleship.
 
 ## *ship_finder.rs*
 

@@ -50,7 +50,7 @@ fn find_ship_edge(
             current = x;
         }
 
-        if next == None || !board[current].is_ship() {
+        if next.is_none() || !board[current].is_ship() {
             break;
         }
     }
@@ -232,10 +232,10 @@ mod tests {
                     BoardIndex::from_col_row(col + 1, row),
                     BoardIndex::from_col_row(col + 2, row),
                 ];
-                locations.into_iter().for_each(|l| {
+                locations.iter().for_each(|l| {
                     board[*l] = SquareContent::Ship;
                 });
-                locations.into_iter().for_each(|l| match board.try_find_ship(*l) {
+                locations.iter().for_each(|l| match board.try_find_ship(*l) {
                     ShipFindingResult::CompleteShip(x) if complete => assert_eq!(3, x.length()),
                     ShipFindingResult::PartialShip(x) if !complete => assert_eq!(3, x.length()),
                     _ => panic!("Invalid result"),
@@ -256,10 +256,10 @@ mod tests {
                     BoardIndex::from_col_row(col, row + 1),
                     BoardIndex::from_col_row(col, row + 2),
                 ];
-                locations.into_iter().for_each(|l| {
+                locations.iter().for_each(|l| {
                     board[*l] = SquareContent::Ship;
                 });
-                locations.into_iter().for_each(|l| match board.try_find_ship(*l) {
+                locations.iter().for_each(|l| match board.try_find_ship(*l) {
                     ShipFindingResult::CompleteShip(x) if complete => assert_eq!(3, x.length()),
                     ShipFindingResult::PartialShip(x) if !complete => assert_eq!(3, x.length()),
                     _ => panic!("Invalid result"),

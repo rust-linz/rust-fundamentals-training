@@ -65,13 +65,13 @@ impl SinglePlayerGame {
                     self.shooting_board[ix] = SquareContent::HitShip;
 
                     // Check whether the hit sank the ship
-                    if let ShipFindingResult::CompleteShip(r) = self.board.try_find_ship(ix) {
-                        if r.clone().into_iter().all(|i| matches!(self.shooting_board[i], SquareContent::HitShip | SquareContent::SunkenShip)) {
-                            // The hit sank the ship -> change all ship quares to SunkenShip
-                            content = SquareContent::SunkenShip;
-                            for i in r {
-                                self.shooting_board[i] = SquareContent::SunkenShip;
-                            }
+                    if let ShipFindingResult::CompleteShip(r) = self.board.try_find_ship(ix)
+                        && r.clone().into_iter().all(|i| matches!(self.shooting_board[i], SquareContent::HitShip | SquareContent::SunkenShip))
+                    {
+                        // The hit sank the ship -> change all ship quares to SunkenShip
+                        content = SquareContent::SunkenShip;
+                        for i in r {
+                            self.shooting_board[i] = SquareContent::SunkenShip;
                         }
                     }
 
@@ -191,6 +191,6 @@ mod tests {
         game.shoot("A2".into());
 
         assert_eq!(2, game.log().count());
-        assert_eq!(BoardIndex::from_str("A1").unwrap(), game.log().nth(0).unwrap().location);
+        assert_eq!(BoardIndex::from_str("A1").unwrap(), game.log().next().unwrap().location);
     }
 }
