@@ -3,9 +3,10 @@
     "target": "esnext",
     "module": "esnext",
     "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "noEmit": true,
     "strict": false,
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "bundler",
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
 }

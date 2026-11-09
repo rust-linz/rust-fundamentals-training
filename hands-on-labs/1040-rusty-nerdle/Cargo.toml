@@ -1,0 +1,27 @@
+[package]
+name = "nerdle"
+version = "0.1.0"
+authors = ["Rainer <rainer@software-architects.at>"]
+edition = "2024"
+
+# Crate types cdylib and rlib are important.
+# cdylib is for creating a .wasm file. rlib is important for testing with "wasm-pack test".
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# wasm-bindgen is the most important dependency. It generates the glue code
+# between Rust and JavaScript. Read more at https://wasm-bindgen.github.io/wasm-bindgen/.
+wasm-bindgen = "0.2"
+console_error_panic_hook = "0.1"
+serde = { version = "1", features = ["derive"] }
+# serde-wasm-bindgen converts between Rust data structures and JavaScript values.
+serde-wasm-bindgen = "0.6"
+rand = "0.10"
+# rand uses getrandom for its random seed. In the browser, the wasm_js feature
+# makes it use the Web Crypto API.
+getrandom = { version = "0.4", features = ["wasm_js"] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+evalexpr = "13"

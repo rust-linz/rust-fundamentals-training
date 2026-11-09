@@ -49,11 +49,11 @@ body {
 }
 
 .key:hover {
-  filter: #bbb;
+  background-color: #bbb;
 }
 
 .key:active {
-  filter: #999;
+  background-color: #999;
 }
 
 .key.enter {

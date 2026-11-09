@@ -4,6 +4,7 @@ import { Result } from './result';
 export class Board {
   private currentRow = 0;
   private currentCol = 0;
+  private isGameOver = false;
   private output: HTMLDivElement[][];
   private errorArea: HTMLDivElement;
 
@@ -24,7 +25,7 @@ export class Board {
     // header
     const header = document.createElement('div');
     header.id = 'header';
-    header.innerText = `Enter a formular resulting in ${this.result}`;
+    header.innerText = `Enter a formula resulting in ${this.result}`;
     this.container.appendChild(header);
 
     // output
@@ -69,8 +70,9 @@ export class Board {
     }
 
     document.addEventListener('keyup', (event: KeyboardEvent) => {
-      if ((event.key >= '0' && event.key <= '9') || keys.includes(event.key)) {
-        this.addInput(event.key);
+      const key = event.key === 'Backspace' ? 'Delete' : event.key;
+      if ((key >= '0' && key <= '9') || keys.includes(key)) {
+        this.addInput(key);
       }
     });
 
@@ -81,6 +83,10 @@ export class Board {
   }
 
   private addInput(input: string): void {
+    if (this.isGameOver) {
+      return;
+    }
+
     this.errorArea.innerText = '';
 
     if (input === 'Delete') {
@@ -126,9 +132,11 @@ export class Board {
             }
             break;
           case 'won':
+            this.isGameOver = true;
             setTimeout(() => alert('YIPPIE'));
             break;
           case 'lost':
+            this.isGameOver = true;
             setTimeout(() => alert('GAME OVER'));
             break;
         }
