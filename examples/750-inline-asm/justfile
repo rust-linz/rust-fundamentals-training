@@ -1,0 +1,17 @@
+# justfile for 750-inline-asm
+
+# Build and run the example.
+run:
+    cargo run --release
+
+# Run clippy with warnings treated as errors.
+lint:
+    cargo clippy -- -D warnings
+
+# Show the assembly the compiler generated, including our own instructions.
+# Everything between #APP and #NO_APP comes from an asm! block.
+# On x86_64 we ask for Intel syntax (the syntax asm! uses) instead of the
+# default AT&T syntax, which writes operands in reverse order.
+show-asm:
+    cargo rustc --release -- --emit asm {{ if arch() == "x86_64" { "-C llvm-args=-x86-asm-syntax=intel" } else { "" } }}
+    grep -n -B3 -A3 'APP' target/release/deps/inline_asm-*.s
