@@ -16,8 +16,7 @@ Place *n* queens on an *n×n* chessboard so that no queen can attack any other q
 ├── queens_c/          C library: algorithm implementation + header + Makefile
 ├── 01-build-rs/       Approach 1 — build.rs compiles C via the cc crate
 ├── 02-static-lib/     Approach 2 — links a pre-built static library (.a)
-├── 03-dynamic-lib-macos/  Approach 3 (macOS) — links a pre-built dynamic library (.dylib)
-├── 03-dynamic-lib-linux/  Approach 3 (Linux) — links a pre-built shared library (.so)
+├── 03-dynamic-lib/    Approach 3 — links a pre-built dynamic library (.so / .dylib)
 └── justfile           All build / run / test / lint commands
 ```
 
@@ -68,15 +67,15 @@ build time, not at runtime.
 
 ---
 
-### Approach 3 — dynamic library (`03-dynamic-lib-macos` / `03-dynamic-lib-linux`)
+### Approach 3 — dynamic library (`03-dynamic-lib`)
 
 A dynamic library is built with `make`. The Rust binary records only a
 **reference** to the library; the OS dynamic linker loads it at runtime.
 
-Dynamic libraries are platform-specific, so this approach comes in two variants.
-Their Rust code is identical; only `build.rs` differs:
+Dynamic libraries are platform-specific. `build.rs` reads the target OS from
+`CARGO_CFG_TARGET_OS` and builds the matching library:
 
-| | macOS (`03-dynamic-lib-macos`) | Linux (`03-dynamic-lib-linux`) |
+| | macOS | Linux |
 |---|---|---|
 | Library file | `libqueens.dylib` | `libqueens.so` |
 | Compiler flag | `gcc -dynamiclib` | `gcc -shared` |
@@ -92,15 +91,15 @@ Because the library is loaded at runtime, you must tell the dynamic linker
 where to find it:
 
 ```bash
-# macOS (from 03-dynamic-lib-macos/)
+# macOS (from 03-dynamic-lib/)
 DYLD_LIBRARY_PATH=../queens_c ./target/debug/queens
 
-# Linux (from 03-dynamic-lib-linux/)
+# Linux (from 03-dynamic-lib/)
 LD_LIBRARY_PATH=../queens_c ./target/debug/queens
 ```
 
-The `justfile` sets this automatically for `just run-03` and `just test-03`,
-picking the variant that matches your OS.
+The `justfile` sets the right variable for your OS automatically for
+`just run-03` and `just test-03`.
 
 ---
 
@@ -126,6 +125,14 @@ pub struct RawQueensBoard {
     pub positions: [c_int; 16],   // mirrors  int positions[QUEENS_MAX_N]  in C
 }
 ```
+
+These bindings are written **by hand**. Nothing checks that they still match
+`queens.h`: if the C struct or a signature changes and `ffi.rs` is not updated,
+the program has undefined behaviour. For larger C APIs, use
+[`bindgen`](https://github.com/rust-lang/rust-bindgen), which generates
+`ffi.rs` from the C header (typically in `build.rs`). It is the counterpart to
+`cbindgen`, which generates a C header from Rust code (see example
+[701-c-interop_2](../701-c-interop_2/)).
 
 ### `src/lib.rs` — safe Rust wrappers
 
@@ -155,7 +162,7 @@ just all
 # Or run each approach individually
 just run-01    # approach 1: cc crate (no pre-build needed)
 just run-02    # approach 2: static library
-just run-03    # approach 3: dynamic library (macOS or Linux variant)
+just run-03    # approach 3: dynamic library (.so on Linux, .dylib on macOS)
 
 # Run tests
 just test      # all three projects
@@ -196,6 +203,6 @@ only need to worry about it if you run the binary directly.
 | `Vec` as a C output buffer | `src/lib.rs` — `find_all()` |
 | `std::ffi::c_int` | `src/ffi.rs`, `src/lib.rs` |
 | `cc` crate in `build.rs` | `01-build-rs/build.rs` |
-| `cargo:rustc-link-*` directives | `02-static-lib/build.rs`, `03-dynamic-lib-*/build.rs` |
-| Static vs dynamic linking | `02-static-lib/build.rs`, `03-dynamic-lib-*/build.rs` |
+| `cargo:rustc-link-*` directives | `02-static-lib/build.rs`, `03-dynamic-lib/build.rs` |
+| Static vs dynamic linking | `02-static-lib/build.rs`, `03-dynamic-lib/build.rs` |
 | `DYLD_LIBRARY_PATH` / `LD_LIBRARY_PATH` at runtime | `justfile` — `run-03`, `test-03` |

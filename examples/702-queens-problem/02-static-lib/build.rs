@@ -51,4 +51,5 @@ fn main() {
     println!("cargo:rustc-link-lib=static=queens");
     println!("cargo:rerun-if-changed=../queens_c/queens.c");
     println!("cargo:rerun-if-changed=../queens_c/queens.h");
+    println!("cargo:rerun-if-changed=../queens_c/Makefile");
 }

@@ -1,0 +1,13 @@
+rs_dir := "../area_calculator_rs"
+
+# A Rust staticlib depends on the native libraries that Rust's std uses.
+# Get the list for your platform with:
+#   cargo rustc --lib -- --print native-static-libs
+native_libs := "-lgcc_s -lutil -lrt -lpthread -lm -ldl -lc"
+
+build:
+    cd {{rs_dir}} && cargo build
+    gcc -Wall -std=c11 main.c -o main -I{{rs_dir}}/target/include -L{{rs_dir}}/target/debug -larea_calculator_rs {{native_libs}}
+
+run: build
+    ./main

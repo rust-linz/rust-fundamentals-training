@@ -19,11 +19,11 @@ queens.o: queens.c queens.h
 libqueens.a: queens.o
 	ar rcs libqueens.a queens.o
 
-# macOS: -dynamiclib produces a .dylib (used by 03-dynamic-lib-macos).
+# macOS: -dynamiclib produces a .dylib (used by 03-dynamic-lib on macOS).
 libqueens.dylib: queens.o
 	$(CC) -dynamiclib -o libqueens.dylib queens.o
 
-# Linux: -shared produces a .so (used by 03-dynamic-lib-linux).
+# Linux: -shared produces a .so (used by 03-dynamic-lib on Linux).
 libqueens.so: queens.o
 	$(CC) -shared -o libqueens.so queens.o
 

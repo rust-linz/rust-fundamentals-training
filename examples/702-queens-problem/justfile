@@ -9,42 +9,34 @@
 #                   The archive is built with `make` before the Rust build.
 #                   Library code is embedded in the binary at link time.
 #
-#   03-dynamic-lib-* — links a pre-built dynamic library.
+#   03-dynamic-lib — links a pre-built dynamic library.
 #                    Only a reference is stored in the binary; the OS loads
-#                    the library at runtime. There is one variant per OS:
-#                      03-dynamic-lib-macos  libqueens.dylib, DYLD_LIBRARY_PATH
-#                      03-dynamic-lib-linux  libqueens.so,    LD_LIBRARY_PATH
-#                    The *-03 recipes below pick the variant for the current OS.
+#                    the library at runtime. The file name and the environment
+#                    variable the OS loader uses differ per platform:
+#                      macOS  libqueens.dylib, DYLD_LIBRARY_PATH
+#                      Linux  libqueens.so,    LD_LIBRARY_PATH
 #
 # Usage: just <recipe>
 # Run `just --list` to see all available recipes.
 
-queens_c   := justfile_directory() / "queens_c"
-proj_01    := justfile_directory() / "01-build-rs"
-proj_02    := justfile_directory() / "02-static-lib"
-proj_03_macos := justfile_directory() / "03-dynamic-lib-macos"
-proj_03_linux := justfile_directory() / "03-dynamic-lib-linux"
+queens_c := justfile_directory() / "queens_c"
+proj_01  := justfile_directory() / "01-build-rs"
+proj_02  := justfile_directory() / "02-static-lib"
+proj_03  := justfile_directory() / "03-dynamic-lib"
+
+# Platform-specific names for approach 3.
+dynamic_lib  := if os() == "macos" { "libqueens.dylib" } else { "libqueens.so" }
+lib_path_var := if os() == "macos" { "DYLD_LIBRARY_PATH" } else { "LD_LIBRARY_PATH" }
 
 # ── C library targets ─────────────────────────────────────────────────────────
 
-# Required before building 02-static-lib.
 # Compile queens_c/queens.c into a static archive (libqueens.a).
 build-static:
     make -C {{queens_c}} libqueens.a
 
-# Compile queens_c/queens.c into a dynamic library (libqueens.dylib).
-# Required before building 03-dynamic-lib-macos.
-[macos]
-[doc("Compile queens_c/queens.c into a dynamic library (libqueens.dylib).")]
+# Compile queens_c/queens.c into a dynamic library (.so on Linux, .dylib on macOS).
 build-dynamic:
-    make -C {{queens_c}} libqueens.dylib
-
-# Compile queens_c/queens.c into a shared library (libqueens.so).
-# Required before building 03-dynamic-lib-linux.
-[linux]
-[doc("Compile queens_c/queens.c into a shared library (libqueens.so).")]
-build-dynamic:
-    make -C {{queens_c}} libqueens.so
+    make -C {{queens_c}} {{dynamic_lib}}
 
 # ── Run ───────────────────────────────────────────────────────────────────────
 
@@ -57,20 +49,11 @@ run-02: build-static
     cargo run --manifest-path {{proj_02}}/Cargo.toml
 
 # Approach 3: dynamic library — loaded by the OS at runtime.
-# DYLD_LIBRARY_PATH tells the macOS dynamic linker where to find libqueens.dylib.
-# Without it the binary will fail immediately with "dyld: Library not loaded".
-[macos]
-[doc("Approach 3: dynamic library — loaded by the OS at runtime (macOS variant).")]
+# LD_LIBRARY_PATH (Linux) / DYLD_LIBRARY_PATH (macOS) tells the dynamic linker
+# where to find the library. Without it the binary fails at startup with
+# "error while loading shared libraries" (Linux) or "Library not loaded" (macOS).
 run-03: build-dynamic
-    DYLD_LIBRARY_PATH={{queens_c}} cargo run --manifest-path {{proj_03_macos}}/Cargo.toml
-
-# Approach 3: dynamic library — loaded by the OS at runtime.
-# LD_LIBRARY_PATH tells the Linux dynamic linker where to find libqueens.so.
-# Without it the binary fails with "error while loading shared libraries".
-[linux]
-[doc("Approach 3: dynamic library — loaded by the OS at runtime (Linux variant).")]
-run-03: build-dynamic
-    LD_LIBRARY_PATH={{queens_c}} cargo run --manifest-path {{proj_03_linux}}/Cargo.toml
+    {{lib_path_var}}={{queens_c}} cargo run --manifest-path {{proj_03}}/Cargo.toml
 
 # Run all three examples in sequence.
 all: run-01 run-02 run-03
@@ -83,15 +66,10 @@ test-01:
 test-02: build-static
     cargo test --manifest-path {{proj_02}}/Cargo.toml
 
-# DYLD_LIBRARY_PATH / LD_LIBRARY_PATH is required for the test binary as
+# LD_LIBRARY_PATH / DYLD_LIBRARY_PATH is required for the test binary as
 # well — it dynamically links the library just like the regular binary.
-[macos]
 test-03: build-dynamic
-    DYLD_LIBRARY_PATH={{queens_c}} cargo test --manifest-path {{proj_03_macos}}/Cargo.toml
-
-[linux]
-test-03: build-dynamic
-    LD_LIBRARY_PATH={{queens_c}} cargo test --manifest-path {{proj_03_linux}}/Cargo.toml
+    {{lib_path_var}}={{queens_c}} cargo test --manifest-path {{proj_03}}/Cargo.toml
 
 # Run all tests across all three projects.
 test: test-01 test-02 test-03
@@ -104,13 +82,8 @@ lint-01:
 lint-02: build-static
     cargo clippy --manifest-path {{proj_02}}/Cargo.toml -- -D warnings
 
-[macos]
 lint-03: build-dynamic
-    cargo clippy --manifest-path {{proj_03_macos}}/Cargo.toml -- -D warnings
-
-[linux]
-lint-03: build-dynamic
-    cargo clippy --manifest-path {{proj_03_linux}}/Cargo.toml -- -D warnings
+    cargo clippy --manifest-path {{proj_03}}/Cargo.toml -- -D warnings
 
 # Run clippy on all three projects.
 lint: lint-01 lint-02 lint-03
@@ -122,5 +95,4 @@ clean:
     make -C {{queens_c}} clean
     cargo clean --manifest-path {{proj_01}}/Cargo.toml
     cargo clean --manifest-path {{proj_02}}/Cargo.toml
-    cargo clean --manifest-path {{proj_03_macos}}/Cargo.toml
-    cargo clean --manifest-path {{proj_03_linux}}/Cargo.toml
+    cargo clean --manifest-path {{proj_03}}/Cargo.toml

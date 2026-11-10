@@ -108,19 +108,24 @@ pub fn find_first(n: usize) -> Option<QueensBoard> {
 
 /// Returns up to `max` solutions.
 ///
-/// Pass `max = 0` to retrieve **all** solutions (calls `count_solutions`
-/// internally to size the buffer).
+/// Pass `max = 0` to retrieve **all** solutions.
 ///
 /// Returns an empty `Vec` for `n == 0` or `n > 16`.
 ///
-/// **Note:** The buffer is pre-allocated to hold `max` (or all) solutions.
-/// For large `n` this can require substantial memory (e.g. n=16 has 14,772,512
+/// **Note:** The buffer is pre-allocated to hold `min(max, number of
+/// solutions)` boards. To know that number, this function calls
+/// `count_solutions` first, so the C solver runs twice. For large `n`, all
+/// solutions can require substantial memory (e.g. n=16 has 14,772,512
 /// solutions, each 68 bytes ≈ 1 GB). Prefer a reasonable `max` for large `n`.
 pub fn find_all(n: usize, max: usize) -> Vec<QueensBoard> {
     if n == 0 || n > QUEENS_MAX_N {
         return Vec::new();
     }
-    let limit = if max == 0 { count_solutions(n) } else { max };
+    // Never allocate more boards than there are solutions. `max` comes from
+    // the caller and can be arbitrarily large (e.g. `usize::MAX`). Sizing the
+    // buffer by `max` alone would exhaust memory, or overflow `c_int` below.
+    let total = count_solutions(n);
+    let limit = if max == 0 { total } else { max.min(total) };
     if limit == 0 {
         return Vec::new();
     }
@@ -144,6 +149,7 @@ pub fn find_all(n: usize, max: usize) -> Vec<QueensBoard> {
         ffi::queens_find_all(
             c_int::try_from(n).expect("n <= 16 fits in c_int"),
             raw_solutions.as_mut_ptr(),
+            // limit <= count_solutions(n), which came from a c_int.
             c_int::try_from(limit).expect("limit fits in c_int"),
         )
     };
@@ -321,6 +327,12 @@ mod tests {
         for s in &solutions {
             assert!(is_valid(s));
         }
+    }
+
+    #[test]
+    fn find_all_huge_max_is_limited_to_solution_count() {
+        // Must neither allocate `usize::MAX` boards nor panic.
+        assert_eq!(find_all(8, usize::MAX).len(), 92);
     }
 
     #[test]

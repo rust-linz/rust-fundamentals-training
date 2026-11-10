@@ -1,0 +1,13 @@
+[package]
+name = "area_calculator_rs"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.96"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+
+[build-dependencies]
+cbindgen = "0.29.4"
